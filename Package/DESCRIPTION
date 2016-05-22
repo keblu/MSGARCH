@@ -1,0 +1,24 @@
+Package: MSGARCH
+Type: Package
+Title: Markov-Switching GARCH models and extension
+Version: 0.01
+Date: 2016-05-22
+Authors@R: c(person("Keven", "Bluteau", role = c("aut", "cre"),
+             email = "Keven.Bluteau@unine.ch"),
+             person("David", "Ardia", role = c("aut"),
+             email = "David.Ardia@unine.ch"),
+             person("Kris", "Boudt", role = c("aut"),
+             email = "kris.boudt@vub.ac.be"),
+             person("Brian", "Peterson", role = c("aut"),
+             email = "brian@braverock.com"))
+Author: Keven Bluteau [aut, cre],
+        David Ardia [aut]
+		Kris Boudt [aut]
+		Brian Peterson [aut]
+Maintainer: Keven Bluteau <keven.bluteau@unine.ch>
+Description: The MSGARCH package offer methods to fit, simulate, and forecast various Markov-Switching GARCH models. 
+License: GPL (>= 2)
+Imports: Rcpp, RcppArmadillo, adaptMCMC, DEoptim, nloptr
+LinkingTo: Rcpp, RcppArmadillo
+Depends: RcppArmadillo
+
