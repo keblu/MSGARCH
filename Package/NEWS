@@ -1,2 +1,4 @@
+Changes in Version 0.02
+  o Build setup for evaluation of a simple Markov-Switching GARCH as base for several other specifications
 Changes in Version 0.01
   o Package setup
