@@ -21,7 +21,11 @@ class Normal
 {
   double lncst;    // constant term for "kernel" 
 public:    
+<<<<<<< HEAD
   double M1;    
+=======
+  
+>>>>>>> origin/master
   // constructor
   Normal() {
     lncst = - 0.5*log(2*M_PI);
@@ -40,8 +44,11 @@ public:
   // check prior (always TRUE)
   bool calc_r1() {return 1;}                      
   
+<<<<<<< HEAD
   void set_M1() {M1 = sqrt(2 / M_PI);}
   
+=======
+>>>>>>> origin/master
   // empty
   void prep_kernel() { };                         
   
@@ -66,10 +73,13 @@ class Symmetric
 {  
   underlying f1;    // symmetric distribution
 public:
+<<<<<<< HEAD
   double Eabsz;     // := E[|z|] 
   double EzIpos;    // := E[z * I(z>=0)]  = Prob(z >= 0) * E[z | z >= 0]
   double EzIneg;    // := E[z * I(z<0)]   = Prob(z < 0)  * E[z | z < 0]
   double Ez2Ineg;   // := E[z^2 * I(z<0)] = Prob(z < 0)  * E[z^2 | z < 0]
+=======
+>>>>>>> origin/master
   
   // constructor function called by higher-level classes (e.g. GARCH). 
   // arguments are passed by reference and modified according to the distribution
@@ -99,12 +109,15 @@ public:
     return f1.kernel(vol, yi);                     // if in A (log density);  // if not  
   }
   
+<<<<<<< HEAD
   void prep_moments1() {f1.set_M1();}         // prep-function for moments of order 1
   void set_Eabsz() {Eabsz = f1.M1;}           // = E[|z|] 
   void set_EzIpos() {EzIpos =  0.5 * f1.M1;}  // = E[z * I(z>=0)] = Prob(z >= 0) * E[z | z >= 0]
   void set_EzIneg() {EzIneg = - 0.5 * f1.M1;} // = E[z * I(z<0)] = Prob(z < 0) * E[z | z < 0]
   void set_Ez2Ineg() {Ez2Ineg = 0.5;}         // = E[z^2 * I(z<0)] = Prob(z < 0) * E[z^2 | z < 0]
   
+=======
+>>>>>>> origin/master
   
   // returns a random vector of length "n"
   NumericVector rndgen(const int& n) {
@@ -193,6 +206,7 @@ public:
   }
 };
 
+<<<<<<< HEAD
 template <typename distribution>
 class Gjr 
 {
@@ -433,4 +447,6 @@ public:
 };
 
 
+=======
+>>>>>>> origin/master
 #endif // spec.h

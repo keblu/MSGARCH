@@ -327,7 +327,11 @@ NumericVector SingleRegime<Model>::eval_model(NumericMatrix& all_thetas, const N
 //==================================== CLASS DEFINITIONS ========================================//
 
 typedef SingleRegime <Garch <Symmetric <Normal>  > >   Garch_normal_sym;
+<<<<<<< HEAD
 typedef SingleRegime <Gjr   <Symmetric <Normal>  > >   Gjr_normal_sym;
 typedef SingleRegime <Egarch <Symmetric <Normal>  > >   Egarch_normal_sym;
 typedef SingleRegime <Tgarch <Symmetric <Normal>  > >   Tgarch_normal_sym;
+=======
+
+>>>>>>> origin/master
 #endif // SingleRegime.h

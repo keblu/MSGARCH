@@ -16,7 +16,11 @@ f.estim.mle = function(y, spec, ctr = list(), delta = 0){
   
   require("DEoptim")
   ctr.optim   = list(trace = 0, maxit = 50000)
+<<<<<<< HEAD
   ctr.deoptim = DEoptim::DEoptim.control(NP = 50 * length(spec$theta0), itermax = 500, trace = 50,initialpop = matrix(spec$theta0,nrow = 50 * length(spec$theta0),ncol = length(spec$theta0)))
+=======
+  ctr.deoptim = DEoptim::DEoptim.control(NP = 50 * length(spec$theta0), itermax = 500, trace = 50)
+>>>>>>> origin/master
   ctr.slsqp   = list(maxeval = 10000, xtol_rel = 1e-8)
   
   ctr = MSGARCH::f.process.ctr(ctr)
