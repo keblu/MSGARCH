@@ -1,2 +1,5 @@
 loadModule("MSgarch", TRUE)
 loadModule("Garch", TRUE)
+loadModule("Egarch", TRUE)
+loadModule("Gjr", TRUE)
+loadModule("Tgarch", TRUE)
