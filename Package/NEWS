@@ -1,2 +1,6 @@
+Changes in Version 0.03
+  o Added GJR, Egarch, and Tgarch, added Starting spec value as starting population for DEoptim since there was problem with convergence regarding MSGARCH with Tgarch (For MSGARCH model it is recommended to use do.init)
+Changes in Version 0.02
+  o Build setup for evaluation of a simple Markov-Switching GARCH as base for several other specification
 Changes in Version 0.01
   o Package setup

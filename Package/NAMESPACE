@@ -1,0 +1,7 @@
+useDynLib(MSGARCH)
+import(RcppArmadillo)
+import(Rcpp)
+import(adaptMCMC)
+export(f.spec)
+import(methods)
+exportPattern("^[[:alpha:]]+")
