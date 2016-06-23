@@ -10,7 +10,8 @@ f.process.ctr = function(ctr = list()) {
 #' @param y time series
 #' @param spec specification object
 #' @param ctr : control parameters
-#' @return theta0 and Sigma0 MLE estimates
+#' @param delta : modify the parameters range
+#' @return theta0 and negative log-likelihood
 #' @export
 f.estim.mle = function(y, spec, ctr = list(), delta = 0){
   
