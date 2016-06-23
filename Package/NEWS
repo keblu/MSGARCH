@@ -1,3 +1,5 @@
+Changes in Version 0.04
+  o Added Student and GED distribution
 Changes in Version 0.03
   o Added GJR, Egarch, and Tgarch, added Starting spec value as starting population for DEoptim since there was problem with convergence regarding MSGARCH with Tgarch (For MSGARCH model it is recommended to use do.init)
 Changes in Version 0.02

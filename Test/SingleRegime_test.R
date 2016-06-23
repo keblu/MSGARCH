@@ -15,8 +15,17 @@ models = list(MSGARCH::Gjr_normal_sym)
 models = list(MSGARCH::Egarch_normal_sym)
 models = list(MSGARCH::Tgarch_normal_sym)
 
+models = list(MSGARCH::Garch_student_sym)
+models = list(MSGARCH::Gjr_student_sym)
+models = list(MSGARCH::Egarch_student_sym)
+models = list(MSGARCH::Tgarch_student_sym)
 
-#y = Data[,1] #for real data test
+models = list(MSGARCH::Garch_ged_sym)
+models = list(MSGARCH::Gjr_ged_sym)
+models = list(MSGARCH::Egarch_ged_sym)
+models = list(MSGARCH::Tgarch_ged_sym)
+
+# y = Data[,1]
 spec = MSGARCH::f.spec(models)
 
 spec$K

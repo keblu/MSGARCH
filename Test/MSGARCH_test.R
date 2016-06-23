@@ -18,9 +18,26 @@ models = list(MSGARCH::Egarch_normal_sym,MSGARCH::Egarch_normal_sym,MSGARCH::Ega
 models = list(MSGARCH::Tgarch_normal_sym,MSGARCH::Tgarch_normal_sym)
 models = list(MSGARCH::Tgarch_normal_sym,MSGARCH::Tgarch_normal_sym,MSGARCH::Tgarch_normal_sym)
 
+models = list(MSGARCH::Garch_student_sym,MSGARCH::Garch_student_sym)
+models = list(MSGARCH::Garch_student_sym,MSGARCH::Garch_student_sym,MSGARCH::Garch_student_sym)
+models = list(MSGARCH::Gjr_student_sym,MSGARCH::Gjr_student_sym)
+models = list(MSGARCH::Gjr_student_sym,MSGARCH::Gjr_student_sym,MSGARCH::Gjr_student_sym)
+models = list(MSGARCH::Egarch_student_sym,MSGARCH::Egarch_student_sym)
+models = list(MSGARCH::Egarch_student_sym,MSGARCH::Egarch_student_sym,MSGARCH::Egarch_student_sym)
+models = list(MSGARCH::Tgarch_student_sym,MSGARCH::Tgarch_student_sym)
+models = list(MSGARCH::Tgarch_student_sym,MSGARCH::Tgarch_student_sym,MSGARCH::Tgarch_student_sym)
+
+models = list(MSGARCH::Garch_ged_sym,MSGARCH::Garch_ged_sym)
+models = list(MSGARCH::Garch_ged_sym,MSGARCH::Garch_ged_sym,MSGARCH::Garch_ged_sym)
+models = list(MSGARCH::Gjr_ged_sym,MSGARCH::Gjr_ged_sym)
+models = list(MSGARCH::Gjr_ged_sym,MSGARCH::Gjr_ged_sym,MSGARCH::Gjr_ged_sym)
+models = list(MSGARCH::Egarch_ged_sym,MSGARCH::Egarch_ged_sym)
+models = list(MSGARCH::Egarch_ged_sym,MSGARCH::Egarch_ged_sym,MSGARCH::Egarch_ged_sym)
+models = list(MSGARCH::Tgarch_ged_sym,MSGARCH::Tgarch_ged_sym)
+models = list(MSGARCH::Tgarch_ged_sym,MSGARCH::Tgarch_ged_sym,MSGARCH::Tgarch_ged_sym)
 
 models = list(MSGARCH::Garch_normal_sym,MSGARCH::Egarch_normal_sym,MSGARCH::Gjr_normal_sym)
-#y = Data[1:750,1]*100 #for real data test
+# y = Data[,1] 
 
 spec = MSGARCH::f.spec(models)
 
