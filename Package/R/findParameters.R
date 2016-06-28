@@ -1,3 +1,7 @@
+#############################################################
+### Find mode and covariance matrix
+#############################################################
+
 #' Find theta0 parameter
 #' @param f.kernel kernel function to be optimized
 #' @param theta0 starting value for the optimization

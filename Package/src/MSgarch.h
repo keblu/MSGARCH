@@ -278,7 +278,7 @@ inline prior MSgarch::calc_prior(const NumericVector& theta) {
     NumericVector theta_it = extract_theta_it(theta, k);  // parameters of model 'it'
     NumericVector P_it     = extract_P_it(theta, k);      // transition probabilities from model 'it'
     pr = (*it)->spec_calc_prior(theta_it);                // prior of model 'it'
-    r1_joint = r1_joint && pr.r1 && is_true(all(0 < P_it & P_it < 1)); 
+    r1_joint = r1_joint && pr.r1 && is_true(all((0 < P_it) & (P_it < 1))); 
     r2_joint += pr.r2 + sum(dnorm(P_it, P_mean, P_sd, 1)); 
     k++;
   }

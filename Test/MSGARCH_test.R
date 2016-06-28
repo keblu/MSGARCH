@@ -6,7 +6,6 @@ rm(list = ls())
 
 require("MSGARCH")     # <--- YOU MUST CREATE THIS PACKAGE FIRST
 
-
 # create spec
 
 models = list(MSGARCH::Garch_normal_sym,MSGARCH::Garch_normal_sym)
@@ -17,6 +16,8 @@ models = list(MSGARCH::Egarch_normal_sym,MSGARCH::Egarch_normal_sym)
 models = list(MSGARCH::Egarch_normal_sym,MSGARCH::Egarch_normal_sym,MSGARCH::Egarch_normal_sym)
 models = list(MSGARCH::Tgarch_normal_sym,MSGARCH::Tgarch_normal_sym)
 models = list(MSGARCH::Tgarch_normal_sym,MSGARCH::Tgarch_normal_sym,MSGARCH::Tgarch_normal_sym)
+models = list(MSGARCH::Gas_normal_sym,MSGARCH::Gas_normal_sym)
+models = list(MSGARCH::Gas_normal_sym,MSGARCH::Gas_normal_sym,MSGARCH::Gas_normal_sym)
 
 models = list(MSGARCH::Garch_student_sym,MSGARCH::Garch_student_sym)
 models = list(MSGARCH::Garch_student_sym,MSGARCH::Garch_student_sym,MSGARCH::Garch_student_sym)
@@ -26,6 +27,8 @@ models = list(MSGARCH::Egarch_student_sym,MSGARCH::Egarch_student_sym)
 models = list(MSGARCH::Egarch_student_sym,MSGARCH::Egarch_student_sym,MSGARCH::Egarch_student_sym)
 models = list(MSGARCH::Tgarch_student_sym,MSGARCH::Tgarch_student_sym)
 models = list(MSGARCH::Tgarch_student_sym,MSGARCH::Tgarch_student_sym,MSGARCH::Tgarch_student_sym)
+models = list(MSGARCH::Gas_student_sym,MSGARCH::Gas_student_sym)
+models = list(MSGARCH::Gas_student_sym,MSGARCH::Gas_student_sym,MSGARCH::Gas_student_sym)
 
 models = list(MSGARCH::Garch_ged_sym,MSGARCH::Garch_ged_sym)
 models = list(MSGARCH::Garch_ged_sym,MSGARCH::Garch_ged_sym,MSGARCH::Garch_ged_sym)
@@ -35,6 +38,8 @@ models = list(MSGARCH::Egarch_ged_sym,MSGARCH::Egarch_ged_sym)
 models = list(MSGARCH::Egarch_ged_sym,MSGARCH::Egarch_ged_sym,MSGARCH::Egarch_ged_sym)
 models = list(MSGARCH::Tgarch_ged_sym,MSGARCH::Tgarch_ged_sym)
 models = list(MSGARCH::Tgarch_ged_sym,MSGARCH::Tgarch_ged_sym,MSGARCH::Tgarch_ged_sym)
+models = list(MSGARCH::Gas_ged_sym,MSGARCH::Gas_ged_sym)
+models = list(MSGARCH::Gas_ged_sym,MSGARCH::Gas_ged_sym,MSGARCH::Gas_ged_sym)
 
 models = list(MSGARCH::Garch_normal_sym,MSGARCH::Egarch_normal_sym,MSGARCH::Gjr_normal_sym)
 # y = Data[,1] 
@@ -58,6 +63,10 @@ thetaSim = spec$theta0
 nobs = 5000
 y = spec$f.sim(n = nobs, theta = thetaSim, burnin = 500, outputState = TRUE)$value
 
+################## Real Data TEST ########################################################################
+quantmod::getSymbols('AAPL',src='yahoo')
+y = quantmod::periodReturn(AAPL,period='daily',subset='2007::')
+y = as.vector(y)*100
 ################## MLE ESTIMATION TEST ######################################################################## 
 theta_mle = MSGARCH::f.estim.mle(y = y, spec = spec)
 theta_mle_init = MSGARCH::f.estim.mle(y = y, spec = spec, ctr = list(do.init = TRUE))

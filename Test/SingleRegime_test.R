@@ -14,16 +14,19 @@ models = list(MSGARCH::Garch_normal_sym)
 models = list(MSGARCH::Gjr_normal_sym)
 models = list(MSGARCH::Egarch_normal_sym)
 models = list(MSGARCH::Tgarch_normal_sym)
+models = list(MSGARCH::Gas_normal_sym)
 
 models = list(MSGARCH::Garch_student_sym)
 models = list(MSGARCH::Gjr_student_sym)
 models = list(MSGARCH::Egarch_student_sym)
 models = list(MSGARCH::Tgarch_student_sym)
+models = list(MSGARCH::Gas_normal_sym)
 
 models = list(MSGARCH::Garch_ged_sym)
 models = list(MSGARCH::Gjr_ged_sym)
 models = list(MSGARCH::Egarch_ged_sym)
 models = list(MSGARCH::Tgarch_ged_sym)
+models = list(MSGARCH::Gas_normal_sym)
 
 # y = Data[,1]
 spec = MSGARCH::f.spec(models)
@@ -45,6 +48,10 @@ thetaSim = spec$theta0
 nobs = 5000
 y = spec$f.sim(n = nobs, theta = thetaSim, burnin = 500, outputState = FALSE)
 
+################## Real Data TEST ########################################################################
+quantmod::getSymbols('AAPL',src='yahoo')
+y = quantmod::periodReturn(AAPL,period='daily',subset='2007::')
+y = as.vector(y)*100
 ################## MLE ESTIMATION TEST ######################################################################## 
 theta_mle = MSGARCH::f.estim.mle(y = y,spec = spec)
 theta_mle_init = MSGARCH::f.estim.mle(y = y,spec = spec,ctr = list(do.init = TRUE))

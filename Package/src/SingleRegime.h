@@ -330,14 +330,19 @@ typedef SingleRegime <Garch <Symmetric <Normal>  > >   Garch_normal_sym;
 typedef SingleRegime <Gjr   <Symmetric <Normal>  > >   Gjr_normal_sym;
 typedef SingleRegime <Egarch <Symmetric <Normal>  > >   Egarch_normal_sym;
 typedef SingleRegime <Tgarch <Symmetric <Normal>  > >   Tgarch_normal_sym;
+typedef SingleRegime <Gas    <Symmetric <Normal>  > >   Gas_normal_sym;
 
 typedef SingleRegime <Garch <Symmetric <Student>  > >   Garch_student_sym;
 typedef SingleRegime <Gjr   <Symmetric <Student>  > >   Gjr_student_sym;
 typedef SingleRegime <Egarch <Symmetric <Student>  > >   Egarch_student_sym;
 typedef SingleRegime <Tgarch <Symmetric <Student>  > >   Tgarch_student_sym;
+typedef SingleRegime <Gas    <Symmetric <Student>  > >   Gas_student_sym;
 
 typedef SingleRegime <Garch <Symmetric <Ged>  > >   Garch_ged_sym;
 typedef SingleRegime <Gjr   <Symmetric <Ged>  > >   Gjr_ged_sym;
 typedef SingleRegime <Egarch <Symmetric <Ged>  > >   Egarch_ged_sym;
 typedef SingleRegime <Tgarch <Symmetric <Ged>  > >   Tgarch_ged_sym;
+typedef SingleRegime <Gas    <Symmetric <Ged>  > >   Gas_ged_sym;
+
+
 #endif // SingleRegime.h

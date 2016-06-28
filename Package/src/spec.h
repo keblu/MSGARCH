@@ -16,6 +16,39 @@ struct prior
   bool r1;       // TRUE if the coefficients respect the prior, FALSE if not
   double r2;     // loglikelihood of the coefficients
 };
+
+// signum function
+inline double signum(const double& x) {return (0 < x) - (x < 0);}
+
+// check if x is infinite OR a NaN
+inline bool IsInfNan(const double& x) {return traits::is_infinite<REALSXP>(x) || ISNAN(x);}
+
+// Auxiliary function for adaptive Simpson's Rule: https://en.wikipedia.org/wiki/Adaptive_Simpson%27s_method
+template <typename C>  
+double adaptiveSimpsonsAux(double (C::*f)(const double&), C* pf, double a, double b, 
+                           double epsilon, double S, double fa, double fb, double fc, int bottom) {                 
+  double c  = (a + b)/2, h = b - a;                                                                  
+  double d  = (a + c)/2, e = (c + b)/2;                                                              
+  double fd = (pf->*f)(d), fe = (pf->*f)(e);                                                                      
+  double Sleft  = (h/12) * (fa + 4*fd + fc);                                                           
+  double Sright = (h/12) * (fc + 4*fe + fb);                                                          
+  double S2 = Sleft + Sright; 
+  if (bottom <= 100 || fabs(S2 - S)/(1e-10 + fabs(S2)) <= epsilon || IsInfNan(S2))                                                     
+    return S2 + (S2 - S)/8;                                                                        
+  return   adaptiveSimpsonsAux(f, pf, a, c, epsilon, Sleft,  fa, fc, fd, bottom-1)                     
+    + adaptiveSimpsonsAux(f, pf, c, b, epsilon, Sright, fc, fb, fe, bottom-1);                     
+}
+
+// Adaptive Simpson's Rule in integrate in interval [a, b] https://en.wikipedia.org/wiki/Adaptive_Simpson%27s_method
+template <typename C>  
+double adaptiveSimpsons(double (C::*f)(const double&), C* pf, double a, double b, 
+                        double epsilon, int maxRecursion) {   // error tolerance and recursion cap
+  double c  = (a + b)/2, h = b - a;                                                                  
+  double fa = (pf->*f)(a), fb = (pf->*f)(b), fc = (pf->*f)(c);                                                           
+  double S  = (h/6) * (fa + 4*fc + fb);                                                                
+  return adaptiveSimpsonsAux(f, pf, a, b, epsilon, S, fa, fb, fc, maxRecursion);                   
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Normal 
 {
@@ -58,6 +91,10 @@ public:
   
   // applies inverse transform sampling on a Uniform(0,1) draw
   double invsample(const double& u) {return R::qnorm(u, 0, 1, 1, 0);} 
+  
+  // returns the ratio involved in the GAS(1,1) model
+  double Sratio(const double& x) {return -x;}     
+  
 };
 
 //---------------------- Student-t distribution ----------------------//
@@ -123,6 +160,10 @@ public:
   
   // applies inverse transform sampling on a Uniform(0,1) draw
   double invsample(const double& u) {return R::qt(u, nu, 1, 0) / P;} 
+  
+  // returns the ratio involved in the GAS(1,1) model
+  double Sratio(const double& x) {return - (nu + 1)*x / (nu - 2 + pow(x, 2));}
+  
 };
 
 //---------------------- Generalized error distribution ----------------------//
@@ -184,11 +225,18 @@ public:
               :  0.5 * (1 + R::pgamma(0.5 * pow( x / lambda, nu), 1/nu, 1, 1, 0)));
   } 
   
+  
   // applies inverse transform sampling on a Uniform(0,1) draw
   double invsample(const double& u) {
     return ((u < 0.5)?  -lambda * pow(2 * R::qgamma(1-2*u, 1/nu, 1, 1, 0), 1/nu)
               :   lambda * pow(2 * R::qgamma(2*u-1, 1/nu, 1, 1, 0), 1/nu) );
   } 
+  
+  double Sratio(const double& x) {
+    return ((x == 0)?  0 
+              :  - 0.5 * nu * signum(x) * exp((nu - 1) * log(fabs(x)) - nu * log(lambda)));
+  }
+  
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -245,6 +293,10 @@ public:
       out[i] = f1.invsample(u[i]);
     return out;
   }
+  
+  // returns the ratio involved in the GAS(1,1) model
+  double calc_S(const double& x) {return 1 + x * f1.Sratio(x);}
+  
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <typename distribution>
@@ -558,6 +610,105 @@ public:
   NumericVector rndgen(const int& n) {return fz.rndgen(n);}
   double calc_pdf(const double& x) {return fz.calc_pdf(x);}
   double calc_cdf(const double& x) {return fz.calc_cdf(x);}
+  double calc_kernel(const volatility& vol, const double& yi) {
+    return fz.calc_kernel(vol, yi);
+  }
+};
+
+//---------------------- Gas ----------------------// 
+template <typename distribution>
+class Gas 
+{
+  distribution fz;                // distribution of innovations (e.g. Symmetric<Normal>)
+  double alpha0, alpha1, beta;    // coefficients
+  double invES2;                  // = 1 / E[S^2]
+  bool fz_r1;                     // indicates if distribution "fz" has sensible parameters
+public:
+  std::string name;                      // name of the model
+  int nb_coeffs;                         // total number of coefficients (including those of "fz")
+  int nb_coeffs_model; 
+  CharacterVector label;                 // labels of coefficients
+  NumericVector coeffs_mean, coeffs_sd;  // means and standard deviations for prior distributions 
+  NumericVector Sigma0;                  // diagonal of matrix Sigma0 
+  NumericVector lower, upper;            // lower and upper bounds for coefficients
+  double ineq_lb, ineq_ub;               // lower and upper bounds for inequality constraint
+  
+  // constructor
+  Gas() {
+    ineq_lb     = 1e-4; 
+    ineq_ub     = 0.9999; 
+    label       = CharacterVector::create("alpha0", "alpha1", "beta");
+    coeffs_mean = NumericVector::create(   0.1,      0.1,      0.9  );
+    coeffs_sd   = NumericVector::create(   2,        2,        2    );
+    Sigma0      = NumericVector::create(   1,        1,        1    );
+    lower       = NumericVector::create(   1e-4,     1e-4,     1e-4 );
+    upper       = NumericVector::create(   100,      10,     0.9999);
+    nb_coeffs   = label.size();
+    nb_coeffs_model = 3;
+    name        = "Gas_";
+    fz.constructor(name, nb_coeffs, coeffs_mean, coeffs_sd, Sigma0, label, lower, upper);
+  }
+  
+  // returns the S variable as defined in the "GAS.pdf" document (nested call)
+  double calc_S(const double& z) {return fz.calc_S(z);}
+  
+  // integrated function for computing invES2
+  double integrand_ES2(const double& z) {
+    double out = pow(calc_S(z), 2) * fz.calc_pdf(z);
+    // returns "0" in case of numerical indetermination
+    return (IsInfNan(out)? 0 : out); 
+  }
+  
+  // computes ES2 if the distribution has sensible parameters
+  void set_invES2() { 
+    fz_r1  = fz.calc_r1();
+    invES2 = (fz_r1? 1 / adaptiveSimpsons(&Gas::integrand_ES2, this, -1000, 1000, 1e-5, 160)  :  NAN);
+  }
+  
+  // set all parameters (including those of the distribution).
+  // this function should always be called first 
+  void loadparam(const NumericVector& theta) {
+    alpha0 = theta[0],  alpha1 = theta[1],  beta = theta[2];
+    int Ind = 3;
+    fz.loadparam(theta, Ind);
+    set_invES2();           
+  }
+  
+  // empty
+  void prep_ineq_vol() { };
+  
+  // TODO  
+  double ineq_func() {
+    return beta - 2 * alpha1 * invES2;
+  } 
+  
+  // computes r1 
+  bool calc_r1() {
+    return fz_r1
+    && alpha0 > lower[0] && alpha1 > lower[1] && beta > lower[2] && beta < upper[2] 
+    && (ineq_func() > ineq_lb);
+  }
+  
+  // initialize volatility to its undonditional expected value  
+  volatility set_vol(const double& y0) {
+    volatility out;
+    out.h   = alpha0 / (1 - beta); 
+    out.lnh = log(out.h);
+    return out;
+  }
+  
+  // increment volatility
+  void increment_vol(volatility& vol, const double& yim1) { 
+    double S = calc_S(yim1 / sqrt(vol.h));
+    vol.h   = alpha0 + vol.h * (beta - 2 * alpha1 * invES2 * S);  
+    vol.lnh = log(vol.h);
+  }
+  
+  // some nested-call functions
+  void prep_kernel() {fz.prep_kernel();}                     
+  NumericVector rndgen(const int& n) {return fz.rndgen(n);}   
+  double calc_pdf(const double& x) {return fz.calc_pdf(x);}   
+  double calc_cdf(const double& x) {return fz.calc_cdf(x);}   
   double calc_kernel(const volatility& vol, const double& yi) {
     return fz.calc_kernel(vol, yi);
   }
