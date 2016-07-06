@@ -332,11 +332,23 @@ typedef SingleRegime <Egarch <Symmetric <Normal>  > >   Egarch_normal_sym;
 typedef SingleRegime <Tgarch <Symmetric <Normal>  > >   Tgarch_normal_sym;
 typedef SingleRegime <Gas    <Symmetric <Normal>  > >   Gas_normal_sym;
 
+typedef SingleRegime <Garch <Skewed <Normal>  > >   Garch_normal_skew;
+typedef SingleRegime <Gjr   <Skewed <Normal>  > >   Gjr_normal_skew;
+typedef SingleRegime <Egarch <Skewed <Normal>  > >   Egarch_normal_skew;
+typedef SingleRegime <Tgarch <Skewed <Normal>  > >   Tgarch_normal_skew;
+typedef SingleRegime <Gas    <Skewed <Normal>  > >   Gas_normal_skew;
+
 typedef SingleRegime <Garch <Symmetric <Student>  > >   Garch_student_sym;
 typedef SingleRegime <Gjr   <Symmetric <Student>  > >   Gjr_student_sym;
 typedef SingleRegime <Egarch <Symmetric <Student>  > >   Egarch_student_sym;
 typedef SingleRegime <Tgarch <Symmetric <Student>  > >   Tgarch_student_sym;
 typedef SingleRegime <Gas    <Symmetric <Student>  > >   Gas_student_sym;
+
+typedef SingleRegime <Garch <Skewed <Student>  > >   Garch_student_skew;
+typedef SingleRegime <Gjr   <Skewed <Student>  > >   Gjr_student_skew;
+typedef SingleRegime <Egarch <Skewed <Student>  > >   Egarch_student_skew;
+typedef SingleRegime <Tgarch <Skewed <Student>  > >   Tgarch_student_skew;
+typedef SingleRegime <Gas    <Skewed <Student>  > >   Gas_student_skew;
 
 typedef SingleRegime <Garch <Symmetric <Ged>  > >   Garch_ged_sym;
 typedef SingleRegime <Gjr   <Symmetric <Ged>  > >   Gjr_ged_sym;
@@ -344,5 +356,10 @@ typedef SingleRegime <Egarch <Symmetric <Ged>  > >   Egarch_ged_sym;
 typedef SingleRegime <Tgarch <Symmetric <Ged>  > >   Tgarch_ged_sym;
 typedef SingleRegime <Gas    <Symmetric <Ged>  > >   Gas_ged_sym;
 
+typedef SingleRegime <Garch <Skewed <Ged>  > >   Garch_ged_skew;
+typedef SingleRegime <Gjr   <Skewed <Ged>  > >   Gjr_ged_skew;
+typedef SingleRegime <Egarch <Skewed <Ged>  > >   Egarch_ged_skew;
+typedef SingleRegime <Tgarch <Skewed <Ged>  > >   Tgarch_ged_skew;
+typedef SingleRegime <Gas    <Skewed <Ged>  > >   Gas_ged_skew;
 
 #endif // SingleRegime.h

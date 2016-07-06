@@ -28,6 +28,23 @@ models = list(MSGARCH::Egarch_ged_sym)
 models = list(MSGARCH::Tgarch_ged_sym)
 models = list(MSGARCH::Gas_normal_sym)
 
+models = list(MSGARCH::Garch_normal_skew)
+models = list(MSGARCH::Gjr_normal_skew)
+models = list(MSGARCH::Egarch_normal_skew)
+models = list(MSGARCH::Tgarch_normal_skew)
+models = list(MSGARCH::Gas_normal_skew)
+
+models = list(MSGARCH::Garch_student_skew)
+models = list(MSGARCH::Gjr_student_skew)
+models = list(MSGARCH::Egarch_student_skew)
+models = list(MSGARCH::Tgarch_student_skew)
+models = list(MSGARCH::Gas_normal_skew)
+
+models = list(MSGARCH::Garch_ged_skew)
+models = list(MSGARCH::Gjr_ged_skew)
+models = list(MSGARCH::Egarch_ged_skew)
+models = list(MSGARCH::Tgarch_ged_skew)
+models = list(MSGARCH::Gas_normal_skew)
 # y = Data[,1]
 spec = MSGARCH::f.spec(models)
 
