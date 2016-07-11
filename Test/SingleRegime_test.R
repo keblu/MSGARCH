@@ -48,6 +48,12 @@ models = list(MSGARCH::Gas_normal_skew)
 # y = Data[,1]
 spec = MSGARCH::f.spec(models)
 
+
+spec = MSGARCH::f.spec(models,mixture = FALSE, DistRegInd = FALSE)
+spec = MSGARCH::f.spec(models,mixture = TRUE, DistRegInd = FALSE)
+spec = MSGARCH::f.spec(models,mixture = FALSE, DistRegInd = TRUE)
+spec = MSGARCH::f.spec(models,mixture = TRUE, DistRegInd = TRUE)
+
 spec$K
 spec$name
 spec$label
@@ -60,6 +66,9 @@ spec$lower
 spec$kSigma
 spec$Sigma0
 spec$theta0
+spec$mixture
+spec$DistRegInd
+
 ################## SIM TEST ########################################################################
 thetaSim = spec$theta0
 nobs = 5000
