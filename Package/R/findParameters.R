@@ -1,25 +1,9 @@
-#############################################################
-### Find mode and covariance matrix
-#############################################################
-
-#' Find theta0 parameter
-#' @param f.kernel kernel function to be optimized
-#' @param theta0 starting value for the optimization
-#' @param lower lower bound
-#' @param upper upper bound
-#' @param f.ineq inequality function for solnp
-#' @param ineqlb lower bound inequality for solnp
-#' @param inequb upper bound inequality for solnp
-#' @param type type of optimization: solnp, Nelder-Mead or BFGS
-#' @param do.init: should we use DEoptim to find starting values?
-#' @return theta0 value at optimum
-#' @import DEoptim nloptr Rsolnp
 f.find.theta0 = function(f.kernel, theta0, lower = NULL, upper = NULL, 
                          f.ineq = NULL, ineqlb = NULL, inequb = NULL, 
                          type = c('robust', 'solnp')){
   
   ctr.optim   = list(trace = 0, maxit = 50000)
-  ctr.deoptim = DEoptim::DEoptim.control(NP = 50 * length(theta0), itermax = 500, trace = 50)
+  ctr.deoptim = DEoptim::DEoptim.control(NP = 50 * length(theta0), itermax = 500, trace = FALSE)
   ctr.slsqp   = list(maxeval = 10000, xtol_rel = 1e-8)
   
   f.nll = function(x) -f.kernel(x, log = TRUE)
@@ -36,9 +20,9 @@ f.find.theta0 = function(f.kernel, theta0, lower = NULL, upper = NULL,
       out = tmp$par
       TRUE
     }, warning = function(warn){
-      MSGARCH::f.error(str)
+      f.error(str)
     }, error = function(err){
-      MSGARCH::f.error(str)
+      f.error(str)
     })
     
     if (!isTRUE(is.ok)) {
@@ -53,9 +37,9 @@ f.find.theta0 = function(f.kernel, theta0, lower = NULL, upper = NULL,
         out = tmp$par
         TRUE
       }, warning = function(warn){
-        MSGARCH::f.error(str)
+        f.error(str)
       }, error = function(err){
-        MSGARCH::f.error(str)
+        f.error(str)
       })
       }
   }
@@ -71,15 +55,15 @@ f.find.theta0 = function(f.kernel, theta0, lower = NULL, upper = NULL,
                           control = ctr.solnp)$pars
       TRUE
     }, warning = function(warn){
-      MSGARCH::f.error(str)
+      f.error(str)
     }, error = function(err){
-      MSGARCH::f.error(str)
+      f.error(str)
     })
   }
   
   if (!isTRUE(is.ok)) {
     str = "f.find.theta0 -> starting value"
-    MSGARCH::f.error(str)
+    f.error(str)
     out = theta0  
   }
   

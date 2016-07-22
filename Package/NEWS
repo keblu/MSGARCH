@@ -1,3 +1,5 @@
+Changes in Version 0.08
+  o Add Bayesian estimation, change some variable names, Add full Roxygen documentation, Add create.spec function wrapper, add utility function (VaR, ES, AIC, BIC, PIT, PRED), Add data for test.
 Changes in Version 0.07
   o Mixture of Garch and regime independent Distributioon option
 Changes in Version 0.06

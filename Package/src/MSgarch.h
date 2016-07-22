@@ -460,7 +460,7 @@ inline Rcpp::List MSgarch::f_sim(const int& n, const NumericVector& theta, const
   }
   NumericVector yy(y.begin() + burnin, y.end());
   NumericVector SS(S.begin() + burnin, S.end());
-  return(Rcpp::List::create(Rcpp::Named("value")=yy,
+  return(Rcpp::List::create(Rcpp::Named("draws")=yy,
                             Rcpp::Named("state")=SS));
   
 }
@@ -487,8 +487,10 @@ inline Rcpp::List MSgarch::f_rnd(const int& n, const NumericVector& theta, const
     z    = rndgen(S[i]);                  // sample new innovation
     draw[i] = z * sqrt(vol[S[i]].h);         // new draw
   }
-  return(Rcpp::List::create(Rcpp::Named("value")=draw,
-                            Rcpp::Named("state")=S));
+  NumericVector yy(draw.begin() , draw.end());
+  NumericVector SS(S.begin() , S.end());
+  return(Rcpp::List::create(Rcpp::Named("draws")=yy,
+                            Rcpp::Named("state")=SS));
 }
 
 //------------------------------ Compute loglikelihood matrix  ------------------------------//

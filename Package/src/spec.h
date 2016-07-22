@@ -471,7 +471,7 @@ public:
 
 
 template <typename distribution>
-class Garch 
+class sGARCH 
 {
   distribution fz;                // distribution of innovations (e.g. Symmetric<Normal>)
   double alpha0, alpha1, beta;    // coefficients
@@ -487,7 +487,7 @@ public:
   double ineq_lb, ineq_ub;               // lower and upper bounds for inequality constraint
   
   // constructor
-  Garch() {
+  sGARCH() {
     ineq_lb     = 1e-4;
     ineq_ub     = 0.9999;
     label       = CharacterVector::create("alpha0", "alpha1", "beta" );
@@ -498,7 +498,7 @@ public:
     upper       = NumericVector::create(   100,      0.9999,   0.9999);
     nb_coeffs   = label.size();
     nb_coeffs_model = 3;
-    name        = "Garch_";
+    name        = "sGARCH_";
     fz.constructor(name, nb_coeffs, coeffs_mean, coeffs_sd, Sigma0, label, lower, upper);  
   }
   
@@ -548,7 +548,7 @@ public:
 };
 
 template <typename distribution>
-class Gjr 
+class gjrGARCH
 {
   distribution fz;                      // distribution of innovations (e.g. Symmetric<Normal>)
   double alpha0, alpha1, alpha2, beta;  // coefficients
@@ -563,7 +563,7 @@ public:
   double ineq_lb, ineq_ub;               // lower and upper bounds for inequality constraint
   
   // constructor
-  Gjr() {
+  gjrGARCH() {
     ineq_lb     = 1e-4;
     ineq_ub     = 0.9999;
     label       = CharacterVector::create("alpha0", "alpha1", "alpha2", "beta" );
@@ -574,7 +574,7 @@ public:
     upper       = NumericVector::create(   100,      0.9999,   10,      0.9999);
     nb_coeffs   = label.size();
     nb_coeffs_model = 4;
-    name        = "Gjr_";
+    name        = "gjrGARCH_";
     fz.constructor(name, nb_coeffs, coeffs_mean, coeffs_sd, Sigma0, label, lower, upper); 
   }
   
@@ -625,7 +625,7 @@ public:
 };
 
 template <typename distribution>
-class Egarch 
+class eGARCH
 {
   distribution fz;                      // distribution of innovations (e.g. Symmetric<Normal>)
   double alpha0, alpha1, alpha2, beta;  // coefficients
@@ -640,7 +640,7 @@ public:
   double ineq_lb, ineq_ub;               // lower and upper bounds for inequality constraint
   
   // constructor
-  Egarch() {
+  eGARCH() {
     ineq_lb     = -0.9999; 
     ineq_ub     = 0.9999; 
     label       = CharacterVector::create("alpha0", "alpha1", "alpha2", "beta" );
@@ -651,7 +651,7 @@ public:
     upper       = NumericVector::create(   50,       5,        5,        0.9999);  
     nb_coeffs   = label.size();
     nb_coeffs_model = 4;
-    name        = "Egarch_";
+    name        = "eGARCH_";
     fz.constructor(name, nb_coeffs, coeffs_mean, coeffs_sd, Sigma0, label, lower, upper); 
   }
   
@@ -703,7 +703,7 @@ public:
 };
 
 template <typename distribution>
-class Tgarch 
+class tGARCH 
 {
   distribution fz;                      // distribution of innovations (e.g. Symmetric<Normal>)
   double alpha0, alpha1, alpha2, beta;  // coefficients
@@ -718,7 +718,7 @@ public:
   double ineq_lb, ineq_ub;               // lower and upper bounds for inequality constraint
   
   // constructor
-  Tgarch() {
+  tGARCH() {
     ineq_lb     = 1e-4;
     ineq_ub     = 0.9999;
     label       = CharacterVector::create("alpha0", "alpha1", "alpha2", "beta" );
@@ -729,7 +729,7 @@ public:
     upper       = NumericVector::create(   100,      10,      10,        10    );
     nb_coeffs   = label.size();
     nb_coeffs_model = 4;
-    name        = "Tgarch_";
+    name        = "tGARCH_";
     fz.constructor(name, nb_coeffs, coeffs_mean, coeffs_sd, Sigma0, label, lower, upper);
   }
   
@@ -788,7 +788,7 @@ public:
 
 //---------------------- Gas ----------------------// 
 template <typename distribution>
-class Gas 
+class GAS 
 {
   distribution fz;                // distribution of innovations (e.g. Symmetric<Normal>)
   double alpha0, alpha1, beta;    // coefficients
@@ -805,7 +805,7 @@ public:
   double ineq_lb, ineq_ub;               // lower and upper bounds for inequality constraint
   
   // constructor
-  Gas() {
+  GAS() {
     ineq_lb     = 1e-4; 
     ineq_ub     = 0.9999; 
     label       = CharacterVector::create("alpha0", "alpha1", "beta");
@@ -816,7 +816,7 @@ public:
     upper       = NumericVector::create(   100,      10,     0.9999);
     nb_coeffs   = label.size();
     nb_coeffs_model = 3;
-    name        = "Gas_";
+    name        = "GAS_";
     fz.constructor(name, nb_coeffs, coeffs_mean, coeffs_sd, Sigma0, label, lower, upper);
   }
   
@@ -833,7 +833,7 @@ public:
   // computes ES2 if the distribution has sensible parameters
   void set_invES2() { 
     fz_r1  = fz.calc_r1();
-    invES2 = (fz_r1? 1 / adaptiveSimpsons(&Gas::integrand_ES2, this, -1000, 1000, 1e-5, 160)  :  NAN);
+    invES2 = (fz_r1? 1 / adaptiveSimpsons(&GAS::integrand_ES2, this, -1000, 1000, 1e-5, 160)  :  NAN);
   }
   
   // set all parameters (including those of the distribution).

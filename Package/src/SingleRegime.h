@@ -326,40 +326,40 @@ NumericVector SingleRegime<Model>::eval_model(NumericMatrix& all_thetas, const N
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //==================================== CLASS DEFINITIONS ========================================//
 
-typedef SingleRegime <Garch <Symmetric <Normal>  > >   Garch_normal_sym;
-typedef SingleRegime <Gjr   <Symmetric <Normal>  > >   Gjr_normal_sym;
-typedef SingleRegime <Egarch <Symmetric <Normal>  > >   Egarch_normal_sym;
-typedef SingleRegime <Tgarch <Symmetric <Normal>  > >   Tgarch_normal_sym;
-typedef SingleRegime <Gas    <Symmetric <Normal>  > >   Gas_normal_sym;
+typedef SingleRegime <sGARCH <Symmetric <Normal>  > >   sGARCH_norm_sym;
+typedef SingleRegime <gjrGARCH   <Symmetric <Normal>  > >   gjrGARCH_norm_sym;
+typedef SingleRegime <eGARCH <Symmetric <Normal>  > >   eGARCH_norm_sym;
+typedef SingleRegime <tGARCH <Symmetric <Normal>  > >   tGARCH_norm_sym;
+typedef SingleRegime <GAS    <Symmetric <Normal>  > >   GAS_norm_sym;
 
-typedef SingleRegime <Garch <Skewed <Normal>  > >   Garch_normal_skew;
-typedef SingleRegime <Gjr   <Skewed <Normal>  > >   Gjr_normal_skew;
-typedef SingleRegime <Egarch <Skewed <Normal>  > >   Egarch_normal_skew;
-typedef SingleRegime <Tgarch <Skewed <Normal>  > >   Tgarch_normal_skew;
-typedef SingleRegime <Gas    <Skewed <Normal>  > >   Gas_normal_skew;
+typedef SingleRegime <sGARCH <Skewed <Normal>  > >   sGARCH_norm_skew;
+typedef SingleRegime <gjrGARCH   <Skewed <Normal>  > >   gjrGARCH_norm_skew;
+typedef SingleRegime <eGARCH <Skewed <Normal>  > >   eGARCH_norm_skew;
+typedef SingleRegime <tGARCH <Skewed <Normal>  > >   tGARCH_norm_skew;
+typedef SingleRegime <GAS    <Skewed <Normal>  > >   GAS_norm_skew;
 
-typedef SingleRegime <Garch <Symmetric <Student>  > >   Garch_student_sym;
-typedef SingleRegime <Gjr   <Symmetric <Student>  > >   Gjr_student_sym;
-typedef SingleRegime <Egarch <Symmetric <Student>  > >   Egarch_student_sym;
-typedef SingleRegime <Tgarch <Symmetric <Student>  > >   Tgarch_student_sym;
-typedef SingleRegime <Gas    <Symmetric <Student>  > >   Gas_student_sym;
+typedef SingleRegime <sGARCH <Symmetric <Student>  > >   sGARCH_std_sym;
+typedef SingleRegime <gjrGARCH   <Symmetric <Student>  > >   gjrGARCH_std_sym;
+typedef SingleRegime <eGARCH <Symmetric <Student>  > >   eGARCH_std_sym;
+typedef SingleRegime <tGARCH <Symmetric <Student>  > >   tGARCH_std_sym;
+typedef SingleRegime <GAS    <Symmetric <Student>  > >   GAS_std_sym;
 
-typedef SingleRegime <Garch <Skewed <Student>  > >   Garch_student_skew;
-typedef SingleRegime <Gjr   <Skewed <Student>  > >   Gjr_student_skew;
-typedef SingleRegime <Egarch <Skewed <Student>  > >   Egarch_student_skew;
-typedef SingleRegime <Tgarch <Skewed <Student>  > >   Tgarch_student_skew;
-typedef SingleRegime <Gas    <Skewed <Student>  > >   Gas_student_skew;
+typedef SingleRegime <sGARCH <Skewed <Student>  > >   sGARCH_std_skew;
+typedef SingleRegime <gjrGARCH   <Skewed <Student>  > >   gjrGARCH_std_skew;
+typedef SingleRegime <eGARCH <Skewed <Student>  > >   eGARCH_std_skew;
+typedef SingleRegime <tGARCH <Skewed <Student>  > >   tGARCH_std_skew;
+typedef SingleRegime <GAS    <Skewed <Student>  > >   GAS_std_skew;
 
-typedef SingleRegime <Garch <Symmetric <Ged>  > >   Garch_ged_sym;
-typedef SingleRegime <Gjr   <Symmetric <Ged>  > >   Gjr_ged_sym;
-typedef SingleRegime <Egarch <Symmetric <Ged>  > >   Egarch_ged_sym;
-typedef SingleRegime <Tgarch <Symmetric <Ged>  > >   Tgarch_ged_sym;
-typedef SingleRegime <Gas    <Symmetric <Ged>  > >   Gas_ged_sym;
+typedef SingleRegime <sGARCH <Symmetric <Ged>  > >   sGARCH_ged_sym;
+typedef SingleRegime <gjrGARCH   <Symmetric <Ged>  > >   gjrGARCH_ged_sym;
+typedef SingleRegime <eGARCH <Symmetric <Ged>  > >   eGARCH_ged_sym;
+typedef SingleRegime <tGARCH <Symmetric <Ged>  > >   tGARCH_ged_sym;
+typedef SingleRegime <GAS    <Symmetric <Ged>  > >   GAS_ged_sym;
 
-typedef SingleRegime <Garch <Skewed <Ged>  > >   Garch_ged_skew;
-typedef SingleRegime <Gjr   <Skewed <Ged>  > >   Gjr_ged_skew;
-typedef SingleRegime <Egarch <Skewed <Ged>  > >   Egarch_ged_skew;
-typedef SingleRegime <Tgarch <Skewed <Ged>  > >   Tgarch_ged_skew;
-typedef SingleRegime <Gas    <Skewed <Ged>  > >   Gas_ged_skew;
+typedef SingleRegime <sGARCH <Skewed <Ged>  > >   sGARCH_ged_skew;
+typedef SingleRegime <gjrGARCH   <Skewed <Ged>  > >   gjrGARCH_ged_skew;
+typedef SingleRegime <eGARCH <Skewed <Ged>  > >   eGARCH_ged_skew;
+typedef SingleRegime <tGARCH <Skewed <Ged>  > >   tGARCH_ged_skew;
+typedef SingleRegime <GAS    <Skewed <Ged>  > >   GAS_ged_skew;
 
 #endif // SingleRegime.h
