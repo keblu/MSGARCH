@@ -32,7 +32,7 @@
 #' spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #' 
-#' theta = MSGARCH::fit.mle(spec = spec, y = sp500ret, ctr = list(do.init = TRUE))
+#' fit = MSGARCH::fit.mle(spec = spec, y = sp500ret, ctr = list(do.init = TRUE))
 #' @import DEoptim nloptr Rsolnp
 #' @export
 fit.mle <- function(spec, y, ctr = list())

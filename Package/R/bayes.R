@@ -2,7 +2,7 @@
 #' @description Method that performs Bayesian estimation of a \code{\link{MSGARCH_SPEC}} object on a set of observations.
 #' @param spec Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.
 #' @param y  Vector (of size T) of observations.
-#' @param l.ctr  A list of control parameters. \cr
+#' @param ctr  A list of control parameters. \cr
 #'        The control parameters have three components:
 #'        \itemize{
 #'        \item \code{N.burn} (integer >= 0): Number of discarded draws. (default: \code{N.burn = 1000})
@@ -31,7 +31,7 @@
 #' spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #' 
-#' theta = spec$fit.bayes(spec = spec, y = sp500ret, 
+#' fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret, 
 #'                          l.ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
 #'                          
 #' @references Andreas, S. (2012). \code{adaptMCMC}: Implementation of a Generic Adaptive Monte Carlo Markov Chain Sampler. \url{https://cran.r-project.org/web/packages/adaptMCMC/}.

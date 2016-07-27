@@ -46,7 +46,7 @@ data("sp500ret")
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
-theta = MSGARCH::fit.mle(spec = spec, y = sp500ret, ctr = list(do.init = TRUE))
+fit = MSGARCH::fit.mle(spec = spec, y = sp500ret, ctr = list(do.init = TRUE))
 }
 \references{
 Ardia, D.; Mullen, K. M.; Peterson, B. G. & Ulrich, J. (2015). \code{DEoptim}: Differential Evolution in \R. \url{https://cran.r-project.org/web/packages/DEoptim/}.

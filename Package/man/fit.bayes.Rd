@@ -11,7 +11,7 @@ fit.bayes(spec, y, l.ctr)
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{l.ctr}{A list of control parameters. \cr
+\item{ctr}{A list of control parameters. \cr
 The control parameters have three components:
 \itemize{
 \item \code{N.burn} (integer >= 0): Number of discarded draws. (default: \code{N.burn = 1000})
@@ -48,7 +48,7 @@ data("sp500ret")
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
-theta = spec$fit.bayes(spec = spec, y = sp500ret, 
+fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret, 
                          l.ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
                          
 }
