@@ -18,7 +18,7 @@ set.seed(123)
 sim = MSGARCH::sim(spec = spec, n = 1000, theta = spec$theta0, burnin = 500, do.state = TRUE)
 
 plot(sim)
-expect_that(round(y$draws[1],6),equals(0.213346))
+expect_that(round(sim$draws[1],6),equals(0.213346))
 }
 )
 ##################################################################
