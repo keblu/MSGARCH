@@ -17,8 +17,8 @@ This means that we assume that before modeling, the user has filter the mean fro
 single-regime GARCH process and regime-switching process as well as many conditional distributions. 
 This allows for a rich modeling environment for Markov-switching GARCH model.
 This flexibility can come with problematic since the user must take care when optimizing
-since the optimizer is not always guaranteed to converge. As option, we provide the \code{\link{f.kernel}} 
-function which allows the user to develop his own optimization process if none of the optimization options that
+since the optimizer is not always guaranteed to converge. As option, we provide the \code{\link{kernel}} 
+method which allows the user to develop his own optimization process if none of the optimization options that
 the package provides is adequate. \cr
  
 The authors acknowledge Google for financial support via the Google Summer of Code 2016

@@ -1,0 +1,47 @@
+
+
+#' Compute Akaike information criterion (AIC).
+#' @param fit Fit object of type \code{\link{MSGARCH_MLE_FIT}} created with \code{\link{fit.mle}} or \code{\link{MSGARCH_BAY_FIT}} created with \code{\link{fit.bayes}}.
+#' @return AIC value.
+#' @examples 
+#'data("sp500ret")
+#'
+#'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
+#'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+#'                              
+#'fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+#'
+#'AIC = MSGARCH::AIC(fit = fit)
+#' @details If a matrix of MCMC posterior draws estimates is given, the AIC on the posterior mean is calculated.
+#' @references Akaike, H. (1974). A New Look at the Statistical Model Identification. \emph{IEEE Transactions on Automatic Control}, 19, pp. 716-723.
+#' @export
+AIC <- function(fit)
+{
+  UseMethod("AIC", fit)
+}
+
+#' @export
+AIC.MSGARCH_MLE_FIT <- function(fit){
+  
+  aic = f.AIC(fit$spec, fit$theta, fit$y)
+  return(aic)
+}
+
+#' @export
+AIC.MSGARCH_BAY_FIT <- function(fit){
+  
+  aic = f.AIC(fit$spec, fit$theta, fit$y)
+  return(aic)
+}
+
+f.AIC = function(spec, theta, y) {
+  
+  if (is.vector(theta)) {
+    theta = matrix(theta, nr = 1)
+  }
+  theta = matrix(colMeans(theta), nrow = 1)
+  LL = MSGARCH::kernel(spec, theta, y = y, log = TRUE)
+  k = dim(theta)[2]
+  aic = 2 * LL - 2 * k
+  return(aic)
+}

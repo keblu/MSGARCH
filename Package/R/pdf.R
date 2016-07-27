@@ -1,11 +1,12 @@
-#' Predictive density function.
-#' @description Method returning the predictive probability density of a vector of points.
+#' Probability density function at T + 1.
+#' @description Method returning the probability density of a vector of points.
 #' @param spec Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.
-#' @param x  Vector (of size N) of point to be evaluated
+#' @param x Vector (of size N) of point to be evaluated
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
 #' @param log  Boolean indicating if the log-density is returned. (default: \code{log = TRUE})
-#' @details  If a matrix of MCMC posterior draws estimates is given, the Bayesian predictive density is calculated.
+#' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
+#'  The \code{\link{pdf}} method uses the last variance estimate by filtering.
 #' @examples 
 #'data("sp500ret")
 #'
@@ -16,16 +17,16 @@
 #'
 #'x = rnorm(100)
 #'
-#'pred = MSGARCH::pred(spec = spec, x = x, theta = theta, y = sp500ret, log = TRUE)
-#' @return Predictive density or log-density of \code{x} (vector of size N).
+#'pdf = MSGARCH::pdf(spec = spec, x = x, theta = theta, y = sp500ret, log = FALSE)
+#' @return Probability density or log-density of the points \code{x} (vector of size N or matrix of size M x N).
 #' @export
-pred <- function(spec, x, theta, y, log = TRUE)
+pdf <- function(spec, x, theta, y, log = TRUE)
 {
-  UseMethod("pred", spec)
+  UseMethod("pdf", spec)
 }
 
 #' @export
-pred.MSGARCH_SPEC = function(spec, x, theta, y, log = TRUE) {
+pdf.MSGARCH_SPEC = function(spec, x, theta, y, log = TRUE) {
   
   y = as.matrix(y)
   if (isTRUE(spec$is.shape.ind)) {
@@ -40,16 +41,9 @@ pred.MSGARCH_SPEC = function(spec, x, theta, y, log = TRUE) {
     theta = matrix(theta, nrow = 1)
   }
   
-  N = nrow(theta)
-  nx = length(x)
-  
-  out = matrix(data = NA, nrow = N, ncol = nx)
-  for (i in 1:N) {
-    out[i, ] = MSGARCH::pdf(spec, x, theta = theta[i, ], y = y, log = FALSE)
-  }
-  out = colMeans(out)
-  if (log) {
-    out = log(out)
+  out = matrix(data = NA,nrow = nrow(theta),ncol = length(x))
+  for(i in 1:nrow(theta)){
+    out[i,] = spec$rcpp.func$pdf_Rcpp(x, theta[i,], y, log)
   }
   return(out)
 }

@@ -11,7 +11,7 @@
 #' @param do.shape.ind  Boolean indicating if the distribution are Regime-Independent. If the argument is \code{TRUE}, all distributions are
 #'                           the same and the distribution parameters does not dependent on the regime in which the distribution is attributed to.
 #'                           If the argument is \code{TRUE}, all distributions in the distribution argument and all skew argument must be the same. (default: \code{do.shape.ind = FALSE}) 
-#' @return A list containing functions and variables related to the created specification. \cr
+#' @return A list  of class \code{\link{MSGARCH_SPEC}} containing variables related to the created specification. \cr
 #' The list contains:\cr
 #' 
 #'  Variables:
@@ -30,21 +30,25 @@
 #' \item \code{do.init} : Boolean indicating the default \code{do.init}  argument.
 #' \item \code{label} : Vector (of size d) of parameters label.
 #' \item \code{name} : Vector (of size K) of specification name.
+#' \item \code{func} : List of \R functions internaly used.
+#' \item \code{rcpp.func} : List of \code{Rcpp} functions internaly used.
 #' }
-#' Functions:
+#' The \code{\link{MSGARCH_SPEC}} class possesses these methods:
 #' \itemize{
-#' \item \code{\link{f.sim}} : Simulation function.
-#' \item \code{\link{f.ht}}  : Conditional variance in each regime.
-#' \item \code{\link{f.kernel}} : Kernel function.
-#' \item \code{\link{f.unc.vol}} : Unconditional variance in each regime.
-#' \item \code{\link{f.pred}} : Predictive density function.
-#' \item \code{\link{f.pit}} : Probability Integral Transform at T + 1.
-#' \item \code{\link{f.risk}} : Value-at-Risk And Expected-Shortfall functions.
-#' \item \code{\link{f.rnd}} : Simulation function at T + 1.
-#' \item \code{\link{f.pdf}} : Probability density function at T + 1.
-#' \item \code{\link{f.cdf}} : Cumulative density function at T + 1.
-#' \item \code{\link{f.Pstate}} : State probabilities filtering function.
-#' \item \code{\link{f.Plast}} : State probabilities at T + 1.
+#' \item \code{\link{sim}} : Simulation method.
+#' \item \code{\link{ht}}  : Conditional variance in each regime.
+#' \item \code{\link{kernel}} : Kernel method.
+#' \item \code{\link{unc.vol}} : Unconditional variance in each regime.
+#' \item \code{\link{pred}} : Predictive density method.
+#' \item \code{\link{pit}} : Probability Integral Transform at T + 1.
+#' \item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods.
+#' \item \code{\link{rnd}} : Simulation method at T + 1.
+#' \item \code{\link{pdf}} : Probability density function at T + 1.
+#' \item \code{\link{cdf}} : Cumulative density function at T + 1.
+#' \item \code{\link{Pstate}} : State probabilities filtering method.
+#' \item \code{\link{Plast}} : State probabilities at T + 1.
+#' \item \code{\link{fit.mle}} : Maximum Likelihood estimation.
+#' \item \code{\link{fit.bayes}} : Bayesian estimation.
 #' }
 #' @useDynLib MSGARCH
 #' @details The Markov-Switching specification created is based on the Haas et al. (2004a) MSGARCH specification.
@@ -66,7 +70,7 @@
 #'                              do.skew = c(TRUE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #' @import Rcpp RcppArmadillo
 #' @export
-f.create.spec = function(model = c("sGARCH", "sGARCH"), distribution = c("norm", "norm"), 
+create.spec = function(model = c("sGARCH", "sGARCH"), distribution = c("norm", "norm"), 
   do.skew = c(FALSE, FALSE), do.mix = FALSE, do.shape.ind = FALSE) {
   require(MSGARCH)
   distribution = distribution[1:length(model)]
@@ -144,6 +148,6 @@ f.create.spec = function(model = c("sGARCH", "sGARCH"), distribution = c("norm",
   out = suppressWarnings(expr = f.spec(models = models.list, do.mix = do.mix, 
                                        do.shape.ind = do.shape.ind))
   
-  class(out) = "MSGARCH"
+  class(out) = "MSGARCH_SPEC"
   return(out)
 }
