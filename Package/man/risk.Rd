@@ -2,7 +2,7 @@
 % Please edit documentation in R/risk.R
 \name{risk}
 \alias{risk}
-\title{Value-at-Risk And Expected-shortfall functions.}
+\title{Value-at-Risk And Expected-shortfall functions at T + 1.}
 \usage{
 risk(spec, theta, y, level = c(0.95, 0.99), ES = TRUE)
 }
@@ -13,29 +13,34 @@ risk(spec, theta, y, level = c(0.95, 0.99), ES = TRUE)
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{level}{Vector (of size A) of Value-at-risk and Expected-shortfall levels. (default: \code{level = c(0.95,0.99)})}
+\item{level}{Vector (of size R) of Value-at-risk and Expected-shortfall levels.\cr
+(Default: \code{level = c(0.95,0.99)})}
 
-\item{ES}{Boolean indicating if Expected-shortfall is also calculated. (default: \code{ES = TRUE})}
+\item{ES}{Boolean indicating if Expected-shortfall is also calculated. (Default: \code{ES = TRUE})}
 }
 \value{
 A list containing one or two components:
 \itemize{
-\item \code{VaR} : Value-at-Risk at the choosen levels (vector of size A).
-\item \code{ES}  : Expected-shortfall at the choosen levels (vector of size A).
+\item \code{VaR} : Value-at-Risk at T + 1 at the choosen levels (vector of size R).
+\item \code{ES}  : Expected-shortfall at T + 1 at the choosen levels (vector of size R).
 }
 }
 \description{
-Method returning the Value-at-Risk and Expected-shortfall.
+Method returning the Value-at-Risk and Expected-shortfall at T + 1.
 }
 \details{
 If a matrix of MCMC posterior draws estimates is given, the Bayesian Value-at-Risk and Expected-shortfall are calculated.
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
-
+set.seed(123)
+                             
+# compute the Value-at-Risk and Expected-shortfall 
 risk = MSGARCH::risk(spec = spec, theta = spec$theta0, y = sp500ret,
                     level = c(0.95,0.99), ES = TRUE)
 }

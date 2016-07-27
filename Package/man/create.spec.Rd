@@ -10,52 +10,51 @@ create.spec(model = c("sGARCH", "sGARCH"), distribution = c("norm", "norm"),
 \arguments{
 \item{model}{Vector (of size K) containing the variance model specifications.
  Valid models  are  \code{"sGARCH"},  \code{"eGARCH"},
-\code{"gjrGARCH"}, \code{"tGARCH"}, and  \code{"GAS"}. \cr (default: \code{model = c("sGARCH", "sGARCH"}))}
+\code{"gjrGARCH"}, \code{"tGARCH"}, and  \code{"GAS"}. \cr (Default: \code{model = c("sGARCH", "sGARCH"}))}
 
 \item{distribution}{Vector (of size K) of conditional densities. Valid
-distribution are  \code{"norm"}, \code{"std"}, and  \code{"ged"}. The vector must be of the same length as the models vector. \cr (default: \code{distribution = c("norm", "norm"}))}
+distribution are  \code{"norm"}, \code{"std"}, and  \code{"ged"}. The vector must be of the same length as the models vector. \cr (Default: \code{distribution = c("norm", "norm"}))}
 
-\item{do.skew}{Vector (of size K) of boolean indicating if the conditional density is skewed. The vector must be of the same length as the distributions vector. \cr (default: \code{do.skew = c(FALSE, FALSE}))}
+\item{do.skew}{Vector (of size K) of boolean indicating if the conditional density is skewed. The vector must be of the same length as the distributions vector. \cr (Default: \code{do.skew = c(FALSE, FALSE}))}
 
 \item{do.mix}{Boolean indicating if the specification is a mixture type.  If the argument is \code{TRUE}, a Mixture of GARCH is created,
-while if the argument is \code{FALSE}, a Markov-Switching GARCH is created. (default: \code{do.mix = FALSE})}
+while if the argument is \code{FALSE}, a Markov-Switching GARCH is created (see details). (Default: \code{do.mix = FALSE})}
 
 \item{do.shape.ind}{Boolean indicating if the distribution are Regime-Independent. If the argument is \code{TRUE}, all distributions are
 the same and the distribution parameters does not dependent on the regime in which the distribution is attributed to.
-If the argument is \code{TRUE}, all distributions in the distribution argument and all skew argument must be the same. (default: \code{do.shape.ind = FALSE})}
+If the argument is \code{TRUE}, all distributions in the distribution argument and all skew argument must be the same. (Default: \code{do.shape.ind = FALSE})}
 }
 \value{
 A list  of class \code{MSGARCH_SPEC} containing variables related to the created specification. \cr
 The list contains:\cr
 
- Variables:
 \itemize{
 \item \code{theta0} : Vector (of size d) of default parameters.
 \item \code{is.mix} : Boolean indicating if the specification is a mixture.
-\item \code{is.shape.ind} : Boolean indicating if the distribution parameter are regime-independent.
+\item \code{is.shape.ind} : Boolean indicating if the distribution parameters are regime-independent.
 \item \code{K} : Number of regimes.
-\item \code{sigma0} : Default parameters variance-covariance matrix (of size K x K) used during Bayesian esimation.
+\item \code{sigma0} : Default variance-covariance matrix (of size K x K) used for the Bayesian esimation.
 \item \code{lower} : Vector (of size d) of lower parameters bound.
 \item \code{upper} : Vector (of size d) of upper parameters bound.
-\item \code{ineqlb} : Vector (of size d) of lower inequality function bound.
-\item \code{inequb} :  Vector (of size d) of upper inequality function bound.
+\item \code{ineqlb} : Vector (of size d) of lower inequality bound.
+\item \code{inequb} :  Vector (of size d) of upper inequality bound.
 \item \code{n.params} :  Vector (of size K) of the total number of parameters by regime including distribution parameters.
 \item \code{n.params.vol} :  Vector (of size K) of the total number of parameters by regime excluding distribuion parameters.
 \item \code{do.init} : Boolean indicating the default \code{do.init}  argument.
 \item \code{label} : Vector (of size d) of parameters label.
-\item \code{name} : Vector (of size K) of specification name.
+\item \code{name} : Vector (of size K) of model specification name.
 \item \code{func} : List of \R functions internaly used.
 \item \code{rcpp.func} : List of \code{Rcpp} functions internaly used.
 }
 The \code{MSGARCH_SPEC} class possesses these methods:
 \itemize{
 \item \code{\link{sim}} : Simulation method.
-\item \code{\link{ht}}  : Conditional variance in each regime.
+\item \code{\link{ht}}  : Conditional volatility in each regime.
 \item \code{\link{kernel}} : Kernel method.
-\item \code{\link{unc.vol}} : Unconditional variance in each regime.
-\item \code{\link{pred}} : Predictive density method.
+\item \code{\link{unc.vol}} : Unconditional volatility in each regime.
+\item \code{\link{pred}} : Predictive density method at T + 1.
 \item \code{\link{pit}} : Probability Integral Transform at T + 1.
-\item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods.
+\item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods at T + 1.
 \item \code{\link{rnd}} : Simulation method at T + 1.
 \item \code{\link{pdf}} : Probability density function at T + 1.
 \item \code{\link{cdf}} : Cumulative density function at T + 1.
@@ -63,6 +62,7 @@ The \code{MSGARCH_SPEC} class possesses these methods:
 \item \code{\link{Plast}} : State probabilities at T + 1.
 \item \code{\link{fit.mle}} : Maximum Likelihood estimation.
 \item \code{\link{fit.bayes}} : Bayesian estimation.
+\item \code{print} and \code{summary} : Summary of the created specification.
 }
 }
 \description{
@@ -70,15 +70,16 @@ Function for creating a variance specification before fitting and using the \R p
 }
 \details{
 The Markov-Switching specification created is based on the Haas et al. (2004a) MSGARCH specification.
-  It is a MSGARCH model that is separated in K single-regimes specification  which are updated in parallel.
+  It is a MSGARCH model that is separated in K single-regimes specifications  which are updated in parallel.
   Under this specification, the conditional variance is a function of the past data and the current state.
   The Mixture of GARCH option is based on the Haas et al. (2004b). A Mixture of GARCH is a mixture of distribution 
   where the variance process of each distribution is a single-regime process.
 }
 \examples{
-
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","gjrGARCH"), distribution = c("norm","std"),
                              do.skew = c(TRUE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+print(spec)
 }
 \references{
 Bollerslev, T. (1986). Generalized Autoregressive Conditional Heteroskedasticity. \emph{Journal of Econometrics}, 31, pp. 307-327.

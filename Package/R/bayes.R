@@ -9,28 +9,33 @@
 #'        \item \code{N.mcmc} (integer > 0) : Number of draws. (default: \code{N.mcmc = 5000})
 #'        \item \code{N.thin} (integer > 0) : Thinning factor (every \code{N.thin} draws are kept). (default: \code{N.thin = 10})
 #'        }
-#' @return  A list of class \code{MSGARCH_BAY_FIT} containing four variables:
+#' @return  A list of class \code{MSGARCH_BAY_FIT} containing four components:
 #' \itemize{
-#' \item \code{theta} : The Bayesian chain (matrix from the \R package \code{coda} (Plummer et al., 2006) of size \code{N.mcmc / N.thin}).
+#' \item \code{theta} : The MCMC chain (matrix from the \R package \code{coda} (Plummer et al., 2006) of size \code{N.mcmc / N.thin}).
 #' \item \code{accept} : Acceptation rate of the sampler.
-#' \item \code{y} : Initial vector (of size T) of observations.
-#' \item \code{spec} : Initial specification.
+#' \item \code{y} :  Vector (of size T) of observations.
+#' \item \code{spec} :  Specification.
 #' }
-#' The \code{MSGARCH_BAY_FIT} possess this method:
+#' The \code{MSGARCH_BAY_FIT} contains these methods:
 #' \itemize{
 #' \item \code{\link{AIC}} : Compute Akaike information criterion (AIC).
 #' \item \code{\link{BIC}} : Compute Bayesian information criterion (BIC).
 #' \item \code{\link{DIC}} : Compute Deviance Information Criterion (DIC).
 #' }
-#' @details The total number of draws is equal to \code{N.burn + N.mcmc}.
+#' @details The total number of draws is equal to \code{N.mcmc / N.thin}.
 #' The Bayesian estimation uses the \R package \code{adaptMCMC} (Andreas, 2012) which  
 #' implements the adaptive sampler of Vihola (2012).
 #' @examples 
+#' # load data
 #' data("sp500ret")
 #' 
+#' # create model specification
 #' spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #' 
+#' set.seed(123)
+#' 
+#' # fit the model on the data with Bayesian estimation
 #' fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret, 
 #'                          ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
 #'                          
@@ -59,7 +64,9 @@ fit.bayes.MSGARCH_SPEC = function(spec, y, ctr = list()) {
  
     for (i in 1:length(unique.spec)) {
       idx = name == unique.spec[i]
-      unc.vol = MSGARCH::unc.vol(spec = spec,theta = x)
+      options(warn=-1)
+      unc.vol = MSGARCH::unc.vol(spec = spec, theta = x)
+      options(warn=0)
       unc.vol = unc.vol[idx]
       
       if (any(is.na(unc.vol))) {

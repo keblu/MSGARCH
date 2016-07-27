@@ -23,11 +23,14 @@ Method returning the state probabilities at  T + 1.
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
+# calculate state probabilities at T + 1
 Plast = MSGARCH::Plast(spec = spec, theta = spec$theta0, y = sp500ret) 
 }
 

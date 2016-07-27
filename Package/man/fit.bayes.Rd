@@ -20,14 +20,14 @@ The control parameters have three components:
 }}
 }
 \value{
-A list of class \code{MSGARCH_BAY_FIT} containing four variables:
+A list of class \code{MSGARCH_BAY_FIT} containing four components:
 \itemize{
-\item \code{theta} : The Bayesian chain (matrix from the \R package \code{coda} (Plummer et al., 2006) of size \code{N.mcmc / N.thin}).
+\item \code{theta} : The MCMC chain (matrix from the \R package \code{coda} (Plummer et al., 2006) of size \code{N.mcmc / N.thin}).
 \item \code{accept} : Acceptation rate of the sampler.
-\item \code{y} : Initial vector (of size T) of observations.
-\item \code{spec} : Initial specification.
+\item \code{y} :  Vector (of size T) of observations.
+\item \code{spec} :  Specification.
 }
-The \code{MSGARCH_BAY_FIT} possess this method:
+The \code{MSGARCH_BAY_FIT} contains these methods:
 \itemize{
 \item \code{\link{AIC}} : Compute Akaike information criterion (AIC).
 \item \code{\link{BIC}} : Compute Bayesian information criterion (BIC).
@@ -38,16 +38,21 @@ The \code{MSGARCH_BAY_FIT} possess this method:
 Method that performs Bayesian estimation of a \code{MSGARCH_SPEC} object on a set of observations.
 }
 \details{
-The total number of draws is equal to \code{N.burn + N.mcmc}.
+The total number of draws is equal to \code{N.mcmc / N.thin}.
 The Bayesian estimation uses the \R package \code{adaptMCMC} (Andreas, 2012) which  
 implements the adaptive sampler of Vihola (2012).
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
+set.seed(123)
+
+# fit the model on the data with Bayesian estimation
 fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret, 
                          ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
                          

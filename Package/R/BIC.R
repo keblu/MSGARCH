@@ -4,13 +4,19 @@
 #' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}
 #' @references Schwarz, G. (1978). Estimating the dimension of a model. \emph{Annals of Statistics}, 6, pp. 461-464. 
 #' @examples 
+#' # load data
 #'data("sp500ret")
 #'
+#'# create model specification
 #'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
-#'                              
+#'
+#'set.seed(123)
+#'
+#'# fit the model by MLE                                                             
 #'fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 #'
+#'# compute BIC
 #'BIC = MSGARCH::BIC(fit = fit)
 #' @details If a matrix of MCMC posterior draws estimates is given, the BIC on the posterior mean is calculated.
 #' @return BIC value.

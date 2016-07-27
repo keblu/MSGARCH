@@ -2,7 +2,7 @@
 % Please edit documentation in R/ht.R
 \name{ht}
 \alias{ht}
-\title{Conditional variance in each regime.}
+\title{Conditional volatility in each regime.}
 \usage{
 ht(spec, theta, y)
 }
@@ -14,20 +14,25 @@ ht(spec, theta, y)
 \item{y}{Vector (of size T) of observations.}
 }
 \value{
-Condititional variance time serie (array of size T + 1 x M x K) for each regime.
+Condititional volatility time serie (array of size (T + 1) x M x K) in each regime.
 }
 \description{
-Method returning the conditional variance of each regime.
+Method returning the conditional volatility in each regime.
 }
 \details{
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
+# Compute the conditional volatility
 ht = MSGARCH::ht(spec = spec,theta = spec$theta0, y = sp500ret)
+
+plot(ht)
 }
 

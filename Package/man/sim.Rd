@@ -2,9 +2,9 @@
 % Please edit documentation in R/sim.R
 \name{sim}
 \alias{sim}
-\title{Simulation function.}
+\title{Process simulation method.}
 \usage{
-sim(spec, n, theta, burnin = 500, do.state = FALSE)
+sim(spec, n, theta, burnin = 500, do.state = TRUE)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
@@ -13,9 +13,9 @@ sim(spec, n, theta, burnin = 500, do.state = FALSE)
 
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
 
-\item{burnin}{(integer >= 0) Burnin period discarded (first simulation draws). (default: \code{burnin = 500})}
+\item{burnin}{(integer >= 0) Burnin period discarded (first simulation draws). (Default: \code{burnin = 500})}
 
-\item{do.state}{Boolean  indicating if the simulated state are also output. (default: \code{log = TRUE})}
+\item{do.state}{Boolean  indicating if the simulated state are also output. (Default: \code{do.state = TRUE})}
 }
 \value{
 A list of class \code{MSGARCH_SIM} containing one or two components.
@@ -24,6 +24,7 @@ A list of class \code{MSGARCH_SIM} containing one or two components.
 \item \code{state}: vector (of size n) or matrix (of size M x n) of simulated states.
  The \code{state} value appear only if \code{do.state = TRUE}.
 }
+ The \code{MSGARCH_SIM} class contains the \code{plot} method.
 }
 \description{
 Method returning a simulated process.
@@ -32,10 +33,15 @@ Method returning a simulated process.
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
 \examples{
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                             do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
-y = MSGARCH::sim(spec = spec, n = 1000, theta = spec$theta0, burnin = 500, do.state = TRUE)
+set.seed(123)
 
+# generate process
+sim = MSGARCH::sim(spec = spec, n = 1000, theta = spec$theta0, burnin = 500, do.state = TRUE)
+
+plot(sim)
 }
 

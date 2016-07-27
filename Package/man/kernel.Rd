@@ -13,13 +13,13 @@ kernel(spec, theta, y, log = TRUE)
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{log}{Boolean indicating if the log kernel is returned. (default: \code{log = TRUE})}
+\item{log}{Boolean indicating if the log kernel is returned. (Default: \code{log = TRUE})}
 }
 \value{
-Kernel or log-kernel value (scalar or vector of size M) of the vector of observations.
+(Log-)Kernel value (scalar or vector of size M) of the vector of observations.
 }
 \description{
-Method returning the kernel value of a vector of observations.
+Method returning the kernel value of a vector of observations given a model specification.
 }
 \details{
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
@@ -34,11 +34,14 @@ If a matrix of parameter estimates is given, each parameter estimates is evaluat
   }
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
+# compute the kernel
 kernel = MSGARCH::kernel(spec = spec, theta = spec$theta0, y = sp500ret, log = TRUE)
 }
 \references{

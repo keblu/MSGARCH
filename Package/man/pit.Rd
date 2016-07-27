@@ -15,28 +15,32 @@ pit(spec, x, theta, y, do.norm = FALSE)
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{do.norm}{Boolean indicating if the PIT value are transforms into standard Normal variate. (\code{do.norm = FALSE})}
+\item{do.norm}{Boolean indicating if the PIT value are transforms into standard Normal variate. (Default: \code{do.norm = FALSE})}
 }
 \value{
-Probability integral transform of the points \code{x} or Normal variate derived from the Probability integral transform of \code{x} (vector of size N).
+Probability integral transform at T + 1 of the points \code{x} or Normal variate derived from the Probability integral transform of \code{x} (vector of size N).
 }
 \description{
-Method returning the predictive Probability integral transform (PIT).
+Method returning the predictive Probability integral transform (PIT) at T + 1.
 }
 \details{
 If a matrix of MCMC posterior draws estimates is given, the Bayesian Probability integral transform is calculated.
          The \code{do.norm} argument transforms the PIT value into Normal variate so that normality test can be done.
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                            do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
                              
 set.seed(123)
 
+# generate random draws
 x = rnorm(100)
 
+# run pit method on random draws
 pit = MSGARCH::pit(spec = spec, x = x, theta = spec$theta0, y = sp500ret, do.norm = FALSE)
 }
 

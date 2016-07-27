@@ -24,13 +24,19 @@ A list containing six variables:
 Compute Deviance Information Criterion (DIC).
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
-                             
+
+set.seed(123)
+
+# fit the model by Bayesian estimation                                                            
 fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret)
 
+# compute DIC
 DIC = MSGARCH::DIC(fit = fit)
 }
 \references{

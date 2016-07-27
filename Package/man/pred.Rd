@@ -2,7 +2,7 @@
 % Please edit documentation in R/pred.R
 \name{pred}
 \alias{pred}
-\title{Predictive density function.}
+\title{Predictive density function at T + 1.}
 \usage{
 pred(spec, x, theta, y, log = TRUE)
 }
@@ -15,27 +15,31 @@ pred(spec, x, theta, y, log = TRUE)
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{log}{Boolean indicating if the log-density is returned. (default: \code{log = TRUE})}
+\item{log}{Boolean indicating if the log-density is returned. (Default: \code{log = TRUE})}
 }
 \value{
-Predictive density or log-density of \code{x} (vector of size N).
+(Log-)Predictive density at T + 1 of \code{x} (vector of size N).
 }
 \description{
-Method returning the predictive probability density of a vector of points.
+Method returning the predictive probability density at T + 1 of a vector of points.
 }
 \details{
 If a matrix of MCMC posterior draws estimates is given, the Bayesian predictive density is calculated.
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                            do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
                              
 set.seed(123)
 
+# generate random draws
 x = rnorm(100)
 
+# run pred method on random draws
 pred = MSGARCH::pred(spec = spec, x = x, theta = spec$theta0, y = sp500ret, log = TRUE)
 }
 

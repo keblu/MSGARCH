@@ -6,17 +6,19 @@
 #'        The control parameters have two components to it:
 #'        \itemize{
 #'        \item \code{theta0} : Starting parameters (vector of size d). If no starting parameters is provided, the default starting parameters of the specification are used.
-#'        \item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (default: \code{do.init = FALSE})
+#'        \item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (Default: \code{do.init = FALSE})
+#'        \item \code{NP} : Number of parameter vectors in the population in \code{DEoptim} optimization. (Default: \code{NP = 500})
+#'        \item \code{itermax} : Maximum iteration (population generation) allowed in \code{DEoptim} optimization. (Default: \code{maxit = 500})
 #'        }
-#' @return A list of class \code{MSGARCH_MLE_FIT} containing five variables:
+#' @return A list of class \code{MSGARCH_MLE_FIT} containing five components:
 #'        \itemize{
 #'        \item \code{theta} : Optimal parameters (vector of size d).
-#'        \item \code{l_likelihood} : log-likelihood of y given the optimal parameters.
-#'        \item \code{spec} : Initial specification.
+#'        \item \code{ll_likelihood} : log-likelihood of \code{y} given the optimal parameters.
+#'        \item \code{spec} : Specification.
 #'        \item \code{is.init} : Indicating if estimation was made with do.init option.
-#'        \item \code{y} : Initial vector (of size T) of observations..
+#'        \item \code{y} :  Vector (of size T) of observations..
 #'        }
-#' The \code{MSGARCH_MLE_FIT} possess these methods:
+#' The \code{MSGARCH_MLE_FIT} contains these methods:
 #' \itemize{
 #' \item \code{\link{AIC}} : Compute Akaike information criterion (AIC).
 #' \item \code{\link{BIC}} : Compute Bayesian information criterion (BIC).
@@ -27,12 +29,19 @@
 #' @references Ardia, D.; Mullen, K. M.; Peterson, B. G. & Ulrich, J. (2015). \code{DEoptim}: Differential Evolution in \R. \url{https://cran.r-project.org/web/packages/DEoptim/}.
 #' @references Johnson, S. G. (2014). The NLopt Nonlinear-Optimization. \url{https://cran.r-project.org/web/packages/NLopt/}.
 #' @examples 
+#' # load data
 #' data("sp500ret")
 #' 
+#' 
+#' # create model specification
 #' spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #' 
-#' fit = MSGARCH::fit.mle(spec = spec, y = sp500ret, ctr = list(do.init = TRUE))
+#' set.seed(123)
+#' 
+#' # fit the model on the data with ML estimation
+#' fit = MSGARCH::fit.mle(spec = spec, y = sp500ret, 
+#'                        ctr = list(do.init = TRUE, NP = 100, itermax = 100))
 #' @import DEoptim nloptr
 #' @export
 fit.mle <- function(spec, y, ctr = list())
@@ -43,13 +52,14 @@ fit.mle <- function(spec, y, ctr = list())
 #' @export
 fit.mle.MSGARCH_SPEC = function(spec, y, ctr = list()) {
   
-  ctr.optim = list(trace = 0, maxit = 50000)
-  ctr.deoptim = DEoptim::DEoptim.control(NP = 50 * length(spec$theta0), itermax = 500, 
-    trace = FALSE, initialpop = matrix(spec$theta0, nrow = 50 * length(spec$theta0), 
+  ctr = f.process.ctr(ctr)
+  ctr.optim = list(trace = 0, maxit = ctr$maxit)
+  ctr.deoptim = DEoptim::DEoptim.control(NP = ctr$NP, itermax = ctr$itermax, 
+    trace = FALSE, initialpop = matrix(spec$theta0, nrow = ctr$NP, 
       ncol = length(spec$theta0)))
   ctr.slsqp = list(maxeval = 10000, xtol_rel = 1e-08)
   
-  ctr = f.process.ctr(ctr)
+  
   
   f.kernel = function(x, log = TRUE) {
     return(MSGARCH::kernel(spec, x, y = y, log = log))
@@ -78,15 +88,15 @@ fit.mle.MSGARCH_SPEC = function(spec, y, ctr = list()) {
   
   theta = f.find.theta0(f.kernel, theta0 = theta0.init, lower = lower, 
     upper = upper, f.ineq = spec$f.ineq, ineqlb = spec$ineqlb, inequb = spec$inequb)
-  l_likelihood = f.kernel(theta)
+  ll_likelihood = f.kernel(theta)
   
-  if (l_likelihood == -1e+10) {
+  if (ll_likelihood == -1e+10) {
     tmp = DEoptim::DEoptim(fn = f.nll, lower = lower, upper = upper, control = ctr.deoptim)
     theta = tmp$optim$bestmem
-    l_likelihood = f.kernel(theta)
+    ll_likelihood = f.kernel(theta)
   }
   
-  out = list(theta = theta, l_likelihood = l_likelihood, spec = spec, is.init = any(ctr$do.init || spec$do.init), y = y)
+  out = list(theta = theta, ll_likelihood = ll_likelihood, spec = spec, is.init = any(ctr$do.init || spec$do.init), y = y)
   class(out) = "MSGARCH_MLE_FIT"
   return(out)
 }

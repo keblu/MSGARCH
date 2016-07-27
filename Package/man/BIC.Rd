@@ -19,13 +19,19 @@ Compute Bayesian information criterion (BIC).
 If a matrix of MCMC posterior draws estimates is given, the BIC on the posterior mean is calculated.
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
-                             
+
+set.seed(123)
+
+# fit the model by MLE                                                             
 fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 
+# compute BIC
 BIC = MSGARCH::BIC(fit = fit)
 }
 \references{

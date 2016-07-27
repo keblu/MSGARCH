@@ -2,9 +2,9 @@
 % Please edit documentation in R/rnd.R
 \name{rnd}
 \alias{rnd}
-\title{Simulation function at T + 1.}
+\title{Random draws simulation method at T + 1.}
 \usage{
-rnd(spec, n, theta, y = vector("double", 0), do.state = FALSE)
+rnd(spec, n, theta, y, do.state = TRUE)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
@@ -15,15 +15,16 @@ rnd(spec, n, theta, y = vector("double", 0), do.state = FALSE)
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{do.state}{Boolean indicating if the simulated state are also output. (default: \code{do.state = FALSE})}
+\item{do.state}{Boolean indicating if the simulated state are also output. (Default: \code{do.state = TRUE})}
 }
 \value{
-A list containing one or two components:
+A list of class \code{MSGARCH_RND} containing one or two components:
 \itemize{
 \item \code{draws}: vector (of size n) or matrix (of size M x n) of simulated draws at T + 1.
 \item \code{state}: vector (of size n) or matrix (of size M x n) of simulated states at T + 1.
  The \code{state} value appear only if \code{do.state = TRUE}.
 }
+The \code{MSGARCH_RND} class contains the \code{summary} and \code{plot} method.
 }
 \description{
 Method returning random draws at T + 1.
@@ -32,11 +33,20 @@ Method returning random draws at T + 1.
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
+set.seed(123)
+
+# generate random draws
 rnd = MSGARCH::rnd(spec = spec, n = 1000, theta = spec$theta0, y = sp500ret, do.state = TRUE)
+
+plot(rnd)
+
+summary(rnd)
 }
 

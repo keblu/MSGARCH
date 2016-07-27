@@ -1,8 +1,8 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH models
-Version: 0.09
-Date: 2016-06-11
+Version: 0.10
+Date: 2016-07-27
 Authors@R: c(person("Keven", "Bluteau", role = c("aut", "cre"),
              email = "Keven.Bluteau@unine.ch"),
              person("David", "Ardia", role = c("aut"),
@@ -25,12 +25,15 @@ Imports:
     DEoptim,
     nloptr,
     methods,
-    stringr
+    stringr,
+    ggplot2,
+    reshape2
 LinkingTo: Rcpp, RcppArmadillo
 Depends:
     RcppArmadillo
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+	testthat
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1

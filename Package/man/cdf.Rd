@@ -15,28 +15,32 @@ cdf(spec, x, theta, y, log = TRUE)
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{log}{Boolean indicating if the log cumulative is returned. (default: \code{log = TRUE})}
+\item{log}{Boolean indicating if the log cumulative is returned. (Default: \code{log = TRUE})}
 }
 \value{
-Cumulative density or log-density of the points \code{x} (vector of size N or matrix of size M x N).
+(Log-)Cumulative density at T + 1 of the points \code{x} (vector of size N or matrix of size M x N).
 }
 \description{
-Method returning the cumulative density of a vector of points.
+Method returning the cumulative density at T + 1 of a vector of points.
 }
 \details{
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 The \code{\link{cdf}} method uses the last variance estimate by filtering.
 }
 \examples{
+# load data 
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                            do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
                              
 set.seed(123)
 
+# generate random draws
 x = rnorm(100)
 
+# run cdf method on random draws
 cdf = MSGARCH::cdf(spec = spec, x = x, theta = spec$theta0, y = sp500ret, log = FALSE)
 }
 

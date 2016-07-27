@@ -110,6 +110,8 @@ f.spec = function(models, do.mix = FALSE, do.shape.ind = FALSE) {
     mod$label = func$f.do.shape.ind.reverse(mod$label)
     mod$label = mod$label[1:newParamsLength]
   }
+  mod$theta0 = matrix(mod$theta0, ncol= length(mod$theta0))
+  colnames(mod$theta0) = mod$label
   
   out = list(theta0 = mod$theta0, is.mix = do.mix, is.shape.ind = do.shape.ind, K = K, sigma0 = diag(mod$Sigma0),
              lower = mod$lower, upper = mod$upper, ineqlb = mod$ineq_lb, inequb = mod$ineq_ub, 

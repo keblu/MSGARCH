@@ -6,11 +6,14 @@
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 #' @return State probabilities at T + 1 (matrix of size M x K).
 #' @examples 
+#' # load data
 #'data("sp500ret")
 #'
+#'# create model specification
 #'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #'
+#'# calculate state probabilities at T + 1
 #'Plast = MSGARCH::Plast(spec = spec, theta = spec$theta0, y = sp500ret) 
 #' @export
 Plast <- function(spec, theta, y)

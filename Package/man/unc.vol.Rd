@@ -2,7 +2,7 @@
 % Please edit documentation in R/unc.vol.R
 \name{unc.vol}
 \alias{unc.vol}
-\title{Unconditional variance of each regime.}
+\title{Unconditional volatility of each regime.}
 \usage{
 unc.vol(spec, theta)
 }
@@ -12,18 +12,20 @@ unc.vol(spec, theta)
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
 }
 \value{
-Unconditional variance (vector of size K or matrix of size M x K) of each regime.
+Unconditional volatility (vector of size K or matrix of size M x K) of each regime.
 }
 \description{
-Method returning the unconditional variance of the process in each state.
+Method returning the unconditional volatility of the process in each state.
 }
 \details{
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
 \examples{
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
+# compute the unconditional volatility in each regime
 unc.vol = MSGARCH::unc.vol(spec = spec, theta = spec$theta0)
 }
 

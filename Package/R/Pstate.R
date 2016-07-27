@@ -5,13 +5,19 @@
 #' @param y  Vector (of size T) of observations.
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 #' @examples 
+#' # load data
 #'data("sp500ret")
 #'
+#'# create model specification
 #'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #'
+#'# compute the filtered state probabilities
 #'Pstate  = MSGARCH::Pstate(spec = spec, theta = spec$theta0, y = sp500ret)
-#'@return Filtered state probabilities (array of size T x M x K).
+#'
+#'plot(Pstate)
+#'@return Filtered state probabilities of class \code{MSGARCH_RND} (array of size T x M x K).
+#'The class \code{MSGARCH_RND} contains the \code{plot} method.
 #' @export
 Pstate <- function(spec, theta, y )
 {
@@ -41,6 +47,6 @@ Pstate.MSGARCH_SPEC = function(spec, theta, y) {
       out[,i,j] = tmp[,j]
     }
   }
-  
+  class(out) = "MSGARCH_PSTATE"
   return(out)
 }

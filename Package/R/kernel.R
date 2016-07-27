@@ -1,9 +1,9 @@
 #' Kernel function.
-#' @description Method returning the kernel value of a vector of observations.
+#' @description Method returning the kernel value of a vector of observations given a model specification.
 #' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
-#' @param log  Boolean indicating if the log kernel is returned. (default: \code{log = TRUE})
+#' @param log  Boolean indicating if the log kernel is returned. (Default: \code{log = TRUE})
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 #'  The kernel is a combination of the prior and the likelihood function. 
 #'  The kernel is equal to prior(\eqn{\theta}) + L(y|\eqn{\theta}) where L is the likelihood
@@ -15,14 +15,17 @@
 #'        will know that \eqn{\theta} is not a good candidate.
 #'   }
 #' @examples 
+#'# load data
 #'data("sp500ret")
 #'
+#'# create model specification
 #'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #'
+#'# compute the kernel
 #'kernel = MSGARCH::kernel(spec = spec, theta = spec$theta0, y = sp500ret, log = TRUE)
 #' @references Hamilton, J. D. (1989) A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle. \emph{Econometrica}, 57, pp.357-38
-#' @return Kernel or log-kernel value (scalar or vector of size M) of the vector of observations. 
+#' @return (Log-)Kernel value (scalar or vector of size M) of the vector of observations. 
 #' @export
 kernel <- function(spec, theta, y, log = TRUE)
 {

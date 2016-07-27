@@ -14,7 +14,8 @@ Pstate(spec, theta, y)
 \item{y}{Vector (of size T) of observations.}
 }
 \value{
-Filtered state probabilities (array of size T x M x K).
+Filtered state probabilities of class \code{MSGARCH_RND} (array of size T x M x K).
+The class \code{MSGARCH_RND} contains the \code{plot} method.
 }
 \description{
 Method returning the filtered state probabilities.
@@ -23,11 +24,16 @@ Method returning the filtered state probabilities.
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
 \examples{
+# load data
 data("sp500ret")
 
+# create model specification
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
+# compute the filtered state probabilities
 Pstate  = MSGARCH::Pstate(spec = spec, theta = spec$theta0, y = sp500ret)
+
+plot(Pstate)
 }
 
