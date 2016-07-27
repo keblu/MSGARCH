@@ -7,7 +7,7 @@
 AIC(fit)
 }
 \arguments{
-\item{fit}{Fit object of type \code{\link{MSGARCH_MLE_FIT}} created with \code{\link{fit.mle}} or \code{\link{MSGARCH_BAY_FIT}} created with \code{\link{fit.bayes}}.}
+\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 AIC value.

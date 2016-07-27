@@ -1,3 +1,5 @@
+#' @importFrom methods new
+#' @import stringr
 f.spec = function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   
   ################################################### create the relevant model C++ objects

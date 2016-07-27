@@ -4,10 +4,10 @@
 \alias{unc.vol}
 \title{Unconditional variance of each regime.}
 \usage{
-unc.vol(spec, theta, y = 0)
+unc.vol(spec, theta)
 }
 \arguments{
-\item{spec}{Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.}
+\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
 }
@@ -24,6 +24,6 @@ If a matrix of parameter estimates is given, each parameter estimates is evaluat
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
-unc.vol = MSGARCH::unc.vol(spec = spec, theta = theta)
+unc.vol = MSGARCH::unc.vol(spec = spec, theta = spec$theta0)
 }
 

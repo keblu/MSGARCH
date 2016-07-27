@@ -19,7 +19,7 @@ The control parameters have two components to it:
 }}
 }
 \value{
-A list of class \code{\link{MSGARCH_MLE_FIT}} containing five variables:
+A list of class \code{MSGARCH_MLE_FIT} containing five variables:
        \itemize{
        \item \code{theta} : Optimal parameters (vector of size d).
        \item \code{l_likelihood} : log-likelihood of y given the optimal parameters.
@@ -27,14 +27,14 @@ A list of class \code{\link{MSGARCH_MLE_FIT}} containing five variables:
        \item \code{is.init} : Indicating if estimation was made with do.init option.
        \item \code{y} : Initial vector (of size T) of observations..
        }
-The \code{\link{MSGARCH_MLE_FIT}} possess these methods:
+The \code{MSGARCH_MLE_FIT} possess these methods:
 \itemize{
 \item \code{\link{AIC}} : Compute Akaike information criterion (AIC).
 \item \code{\link{BIC}} : Compute Bayesian information criterion (BIC).
 }
 }
 \description{
-Method that performs Maximum Likelihood estimation of a \code{\link{MSGARCH_SPEC}} object on a set of observations.
+Method that performs Maximum Likelihood estimation of a \code{MSGARCH_SPEC} object on a set of observations.
 }
 \details{
 The Maximum likelihood estimation uses the \R package \code{nloptr} (Johnson, 2014) for main optimizer 

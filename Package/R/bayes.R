@@ -1,6 +1,6 @@
 #' Bayesian estimation.
-#' @description Method that performs Bayesian estimation of a \code{\link{MSGARCH_SPEC}} object on a set of observations.
-#' @param spec Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.
+#' @description Method that performs Bayesian estimation of a \code{MSGARCH_SPEC} object on a set of observations.
+#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param y  Vector (of size T) of observations.
 #' @param ctr  A list of control parameters. \cr
 #'        The control parameters have three components:
@@ -9,14 +9,14 @@
 #'        \item \code{N.mcmc} (integer > 0) : Number of draws. (default: \code{N.mcmc = 5000})
 #'        \item \code{N.thin} (integer > 0) : Thinning factor (every \code{N.thin} draws are kept). (default: \code{N.thin = 10})
 #'        }
-#' @return  A list of class \code{\link{MSGARCH_BAY_FIT}} containing four variables:
+#' @return  A list of class \code{MSGARCH_BAY_FIT} containing four variables:
 #' \itemize{
 #' \item \code{theta} : The Bayesian chain (matrix from the \R package \code{coda} (Plummer et al., 2006) of size \code{N.mcmc / N.thin}).
 #' \item \code{accept} : Acceptation rate of the sampler.
 #' \item \code{y} : Initial vector (of size T) of observations.
 #' \item \code{spec} : Initial specification.
 #' }
-#' The \code{\link{MSGARCH_BAY_FIT}} possess this method:
+#' The \code{MSGARCH_BAY_FIT} possess this method:
 #' \itemize{
 #' \item \code{\link{AIC}} : Compute Akaike information criterion (AIC).
 #' \item \code{\link{BIC}} : Compute Bayesian information criterion (BIC).
@@ -32,7 +32,7 @@
 #'                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #' 
 #' fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret, 
-#'                          l.ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
+#'                          ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
 #'                          
 #' @references Andreas, S. (2012). \code{adaptMCMC}: Implementation of a Generic Adaptive Monte Carlo Markov Chain Sampler. \url{https://cran.r-project.org/web/packages/adaptMCMC/}.
 #' @references Metropolis, N.; Rosenbluth, A. W.; Rosenbluth, M. N.; Teller, A. H. & Teller, E. (1953). Equation of State Calculations by Fast Computing Machines. \emph{Journal of Chemical Physics}, 21, pp. 1087-1092.
@@ -40,14 +40,14 @@
 #' @references Vihola, M. (2012). Robust Adaptive Metropolis Algorithm with Coerced Acceptance Rate. \emph{Statistics and Computing}, 22, pp. 997-1008.
 #' @import adaptMCMC
 #' @export
-fit.bayes <- function(spec, y, l.ctr)
+fit.bayes <- function(spec, y, ctr = list())
 {
   UseMethod("fit.bayes", spec)
 }
 
 #' @method fit.bayes MSGARCH_SPEC
 #' @export
-fit.bayes.MSGARCH_SPEC = function(spec, y, ctr) {
+fit.bayes.MSGARCH_SPEC = function(spec, y, ctr = list()) {
   
   l.ctr = f.process.ctr(ctr)
   # For Identification problem we make sure that the first

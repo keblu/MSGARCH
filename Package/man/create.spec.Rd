@@ -25,7 +25,7 @@ the same and the distribution parameters does not dependent on the regime in whi
 If the argument is \code{TRUE}, all distributions in the distribution argument and all skew argument must be the same. (default: \code{do.shape.ind = FALSE})}
 }
 \value{
-A list  of class \code{\link{MSGARCH_SPEC}} containing variables related to the created specification. \cr
+A list  of class \code{MSGARCH_SPEC} containing variables related to the created specification. \cr
 The list contains:\cr
 
  Variables:
@@ -47,7 +47,7 @@ The list contains:\cr
 \item \code{func} : List of \R functions internaly used.
 \item \code{rcpp.func} : List of \code{Rcpp} functions internaly used.
 }
-The \code{\link{MSGARCH_SPEC}} class possesses these methods:
+The \code{MSGARCH_SPEC} class possesses these methods:
 \itemize{
 \item \code{\link{sim}} : Simulation method.
 \item \code{\link{ht}}  : Conditional variance in each regime.
@@ -77,7 +77,7 @@ The Markov-Switching specification created is based on the Haas et al. (2004a) M
 }
 \examples{
 
-spec = MSGARCH::f.create.spec(model = c("sGARCH","gjrGARCH"), distribution = c("norm","std"),
+spec = MSGARCH::create.spec(model = c("sGARCH","gjrGARCH"), distribution = c("norm","std"),
                              do.skew = c(TRUE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 }
 \references{
@@ -85,7 +85,7 @@ Bollerslev, T. (1986). Generalized Autoregressive Conditional Heteroskedasticity
 
 Creal, D. Koopman, S. J. & Lucas, A. (2013). Generalized Autoregressive Score Models with Applications. \emph{Journal of Applied Econometrics}, 28, pp. 777-795.
 
-Fernández, C. & Steel, M. F. (1998). On Bayesian Modeling of Fat Tails and Skewness. \emph{Journal of the American Statistical Association}, 93, pp. 359-371.
+Fernandez, C. & Steel, M. F. (1998). On Bayesian Modeling of Fat Tails and Skewness. \emph{Journal of the American Statistical Association}, 93, pp. 359-371.
 
 Glosten, L. R. Jagannathan, R. & Runkle, D. E. (1993). On the Relation Between the Expected Value and the Volatility of the Nominal Excess Return on Stocks. \emph{Journal of Finance}, 48, pp. 1779-1801.
 

@@ -4,10 +4,10 @@
 \alias{fit.bayes}
 \title{Bayesian estimation.}
 \usage{
-fit.bayes(spec, y, l.ctr)
+fit.bayes(spec, y, ctr = list())
 }
 \arguments{
-\item{spec}{Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.}
+\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
 \item{y}{Vector (of size T) of observations.}
 
@@ -20,14 +20,14 @@ The control parameters have three components:
 }}
 }
 \value{
-A list of class \code{\link{MSGARCH_BAY_FIT}} containing four variables:
+A list of class \code{MSGARCH_BAY_FIT} containing four variables:
 \itemize{
 \item \code{theta} : The Bayesian chain (matrix from the \R package \code{coda} (Plummer et al., 2006) of size \code{N.mcmc / N.thin}).
 \item \code{accept} : Acceptation rate of the sampler.
 \item \code{y} : Initial vector (of size T) of observations.
 \item \code{spec} : Initial specification.
 }
-The \code{\link{MSGARCH_BAY_FIT}} possess this method:
+The \code{MSGARCH_BAY_FIT} possess this method:
 \itemize{
 \item \code{\link{AIC}} : Compute Akaike information criterion (AIC).
 \item \code{\link{BIC}} : Compute Bayesian information criterion (BIC).
@@ -35,7 +35,7 @@ The \code{\link{MSGARCH_BAY_FIT}} possess this method:
 }
 }
 \description{
-Method that performs Bayesian estimation of a \code{\link{MSGARCH_SPEC}} object on a set of observations.
+Method that performs Bayesian estimation of a \code{MSGARCH_SPEC} object on a set of observations.
 }
 \details{
 The total number of draws is equal to \code{N.burn + N.mcmc}.
@@ -49,7 +49,7 @@ spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm
                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
 fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret, 
-                         l.ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
+                         ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
                          
 }
 \references{

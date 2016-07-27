@@ -1,6 +1,6 @@
 #'Probability Integral Transform at T + 1.
 #' @description Method returning the predictive Probability integral transform (PIT).
-#' @param spec Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.
+#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param x Vector (of size N) of point to be evaluated
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
@@ -17,8 +17,9 @@
 #'
 #'x = rnorm(100)
 #'
-#'pit = MSGARCH::pit(spec = spec, x = x theta = spec$theta0, y = sp500ret, do.norm = FALSE)
+#'pit = MSGARCH::pit(spec = spec, x = x, theta = spec$theta0, y = sp500ret, do.norm = FALSE)
 #' @return Probability integral transform of the points \code{x} or Normal variate derived from the Probability integral transform of \code{x} (vector of size N).
+#' @importFrom stats qnorm
 #' @export
 pit <- function(spec, x, theta, y,  do.norm = FALSE)
 {

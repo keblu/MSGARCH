@@ -1,6 +1,6 @@
 #' Value-at-Risk And Expected-shortfall functions.
 #' @description Method returning the Value-at-Risk and Expected-shortfall.
-#' @param spec Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.
+#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
 #' @param level Vector (of size A) of Value-at-risk and Expected-shortfall levels. (default: \code{level = c(0.95,0.99)})
@@ -17,7 +17,9 @@
 #'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #'
-#'risk = MSGARCH::risk(spec = spec, theta = spec$theta0, y = sp500ret,level = c(0.95,0.99), ES = TRUE)
+#'risk = MSGARCH::risk(spec = spec, theta = spec$theta0, y = sp500ret,
+#'                     level = c(0.95,0.99), ES = TRUE)
+#' @importFrom stats integrate sd uniroot                    
 #' @export
 risk <- function(spec, theta, y, level = c(0.95,0.99), ES = TRUE)
 {

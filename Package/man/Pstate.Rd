@@ -7,7 +7,7 @@
 Pstate(spec, theta, y)
 }
 \arguments{
-\item{spec}{Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.}
+\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
 

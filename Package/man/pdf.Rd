@@ -7,7 +7,7 @@
 pdf(spec, x, theta, y, log = TRUE)
 }
 \arguments{
-\item{spec}{Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.}
+\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
 \item{x}{Vector (of size N) of point to be evaluated}
 
@@ -37,6 +37,6 @@ set.seed(123)
 
 x = rnorm(100)
 
-pdf = MSGARCH::pdf(spec = spec, x = x, theta = theta, y = sp500ret, log = FALSE)
+pdf = MSGARCH::pdf(spec = spec, x = x, theta = spec$theta, y = sp500ret, log = FALSE)
 }
 

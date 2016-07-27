@@ -1,6 +1,6 @@
 #' Probability density function at T + 1.
 #' @description Method returning the probability density of a vector of points.
-#' @param spec Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.
+#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param x Vector (of size N) of point to be evaluated
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
@@ -17,7 +17,7 @@
 #'
 #'x = rnorm(100)
 #'
-#'pdf = MSGARCH::pdf(spec = spec, x = x, theta = theta, y = sp500ret, log = FALSE)
+#'pdf = MSGARCH::pdf(spec = spec, x = x, theta = spec$theta, y = sp500ret, log = FALSE)
 #' @return Probability density or log-density of the points \code{x} (vector of size N or matrix of size M x N).
 #' @export
 pdf <- function(spec, x, theta, y, log = TRUE)

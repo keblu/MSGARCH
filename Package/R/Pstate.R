@@ -1,6 +1,6 @@
 #' State probabilities filtering function.
 #' @description Method returning the filtered state probabilities.
-#' @param spec Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.
+#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.

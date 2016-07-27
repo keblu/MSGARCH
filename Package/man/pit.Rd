@@ -7,7 +7,7 @@
 pit(spec, x, theta, y, do.norm = FALSE)
 }
 \arguments{
-\item{spec}{Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.}
+\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
 \item{x}{Vector (of size N) of point to be evaluated}
 
@@ -37,6 +37,6 @@ set.seed(123)
 
 x = rnorm(100)
 
-pit = MSGARCH::pit(spec = spec, x = x theta = spec$theta0, y = sp500ret, do.norm = FALSE)
+pit = MSGARCH::pit(spec = spec, x = x, theta = spec$theta0, y = sp500ret, do.norm = FALSE)
 }
 

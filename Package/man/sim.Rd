@@ -7,7 +7,7 @@
 sim(spec, n, theta, burnin = 500, do.state = FALSE)
 }
 \arguments{
-\item{spec}{Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.}
+\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
 \item{n}{Simulation length.}
 
@@ -18,7 +18,7 @@ sim(spec, n, theta, burnin = 500, do.state = FALSE)
 \item{do.state}{Boolean  indicating if the simulated state are also output. (default: \code{log = TRUE})}
 }
 \value{
-A list of class \code{\link{MSGARCH_SIM}} containing one or two components.
+A list of class \code{MSGARCH_SIM} containing one or two components.
 \itemize{
 \item \code{draws}: vector (of size n) or matrix (of size M x n) of simulated draws.
 \item \code{state}: vector (of size n) or matrix (of size M x n) of simulated states.
@@ -35,7 +35,7 @@ If a matrix of parameter estimates is given, each parameter estimates is evaluat
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                             do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
-y = MSGARCH::sim(spec = spec, n = 1000, theta = theta, burnin = 500, do.state = TRUE)
+y = MSGARCH::sim(spec = spec, n = 1000, theta = spec$theta0, burnin = 500, do.state = TRUE)
 
 }
 

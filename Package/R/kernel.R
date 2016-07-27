@@ -1,6 +1,6 @@
 #' Kernel function.
 #' @description Method returning the kernel value of a vector of observations.
-#' @param spec Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.
+#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
 #' @param log  Boolean indicating if the log kernel is returned. (default: \code{log = TRUE})
@@ -20,7 +20,7 @@
 #'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #'
-#'kernel = MSGARCH::kernel(spec = spec, theta = theta, y = sp500ret, log = TRUE)
+#'kernel = MSGARCH::kernel(spec = spec, theta = spec$theta0, y = sp500ret, log = TRUE)
 #' @references Hamilton, J. D. (1989) A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle. \emph{Econometrica}, 57, pp.357-38
 #' @return Kernel or log-kernel value (scalar or vector of size M) of the vector of observations. 
 #' @export

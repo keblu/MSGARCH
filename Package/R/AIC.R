@@ -1,7 +1,7 @@
 
 
 #' Compute Akaike information criterion (AIC).
-#' @param fit Fit object of type \code{\link{MSGARCH_MLE_FIT}} created with \code{\link{fit.mle}} or \code{\link{MSGARCH_BAY_FIT}} created with \code{\link{fit.bayes}}.
+#' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
 #' @return AIC value.
 #' @examples 
 #'data("sp500ret")
@@ -37,7 +37,7 @@ AIC.MSGARCH_BAY_FIT <- function(fit){
 f.AIC = function(spec, theta, y) {
   
   if (is.vector(theta)) {
-    theta = matrix(theta, nr = 1)
+    theta = matrix(theta, nrow = 1)
   }
   theta = matrix(colMeans(theta), nrow = 1)
   LL = MSGARCH::kernel(spec, theta, y = y, log = TRUE)

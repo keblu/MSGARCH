@@ -21,10 +21,11 @@ Description: The MSGARCH package offer functionalities to fit (by Maximum Likeli
 License: GPL (>= 2)
 Imports:
     Rcpp,
-    RcppArmadillo,
     adaptMCMC,
     DEoptim,
-    nloptr
+    nloptr,
+    methods,
+    stringr
 LinkingTo: Rcpp, RcppArmadillo
 Depends:
     RcppArmadillo

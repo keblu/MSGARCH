@@ -7,7 +7,7 @@
 DIC(fit)
 }
 \arguments{
-\item{fit}{Fit object of type \code{\link{MSGARCH_BAY_FIT}} created with \code{\link{fit.bayes}}.}
+\item{fit}{Fit object of type \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 A list containing six variables:
@@ -29,7 +29,7 @@ data("sp500ret")
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
                              
-fit = MSGARCH::fit.bay(spec = spec, y = sp500ret)
+fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret)
 
 DIC = MSGARCH::DIC(fit = fit)
 }

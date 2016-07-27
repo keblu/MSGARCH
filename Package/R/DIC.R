@@ -1,5 +1,5 @@
 #' Compute Deviance Information Criterion (DIC).
-#' @param fit Fit object of type \code{\link{MSGARCH_BAY_FIT}} created with \code{\link{fit.bayes}}.
+#' @param fit Fit object of type \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
 #' @references Gelman, A. Carlin, J. B. Stern, H. S. & Rubin, D. B. (2003). Bayesian Data Analysis. \emph{Chapman and Hall/CRC}
 #' @examples 
 #'data("sp500ret")
@@ -7,7 +7,7 @@
 #'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
 #'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #'                              
-#'fit = MSGARCH::fit.bay(spec = spec, y = sp500ret)
+#'fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret)
 #'
 #'DIC = MSGARCH::DIC(fit = fit)
 #' @return A list containing six variables:
@@ -19,6 +19,7 @@
 #'        \item \code{D.bar}: Expected value of the deviance over the posterior
 #'        \item \code{D.hat}: Deviance at the mean posterior estimate
 #'        }
+#' @importFrom stats var
 #' @export
 DIC <- function(fit)
 {
@@ -35,7 +36,7 @@ DIC.MSGARCH_BAY_FIT <- function(fit){
 f.DIC = function(spec, theta, y) {
   
   if (is.vector(theta)) {
-    theta = matrix(theta, nr = 1)
+    theta = matrix(theta, nrow = 1)
   }
   
   LL = MSGARCH::kernel(spec, theta, y = y, log = TRUE)

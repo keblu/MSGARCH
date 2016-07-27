@@ -7,7 +7,7 @@
 rnd(spec, n, theta, y = vector("double", 0), do.state = FALSE)
 }
 \arguments{
-\item{spec}{Model specification of class \code{\link{MSGARCH_SPEC}} created with \code{\link{create.spec}}.}
+\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
 \item{n}{Number of random draws to be generated.}
 
@@ -32,9 +32,11 @@ Method returning random draws at T + 1.
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
 \examples{
+data("sp500ret")
+
 spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 
-rnd = MSGARCH::rnd(spec = spec, n = 1000, theta = theta, y = sp500ret, do.state = TRUE)
+rnd = MSGARCH::rnd(spec = spec, n = 1000, theta = spec$theta0, y = sp500ret, do.state = TRUE)
 }
 

@@ -1,5 +1,5 @@
 #' ML estimation.
-#' @description Method that performs Maximum Likelihood estimation of a \code{\link{MSGARCH_SPEC}} object on a set of observations.
+#' @description Method that performs Maximum Likelihood estimation of a \code{MSGARCH_SPEC} object on a set of observations.
 #' @param y Vector (of size T) of observations.
 #' @param spec Model specification created with \code{\link{create.spec}}.
 #' @param ctr List of control parameters.
@@ -8,7 +8,7 @@
 #'        \item \code{theta0} : Starting parameters (vector of size d). If no starting parameters is provided, the default starting parameters of the specification are used.
 #'        \item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (default: \code{do.init = FALSE})
 #'        }
-#' @return A list of class \code{\link{MSGARCH_MLE_FIT}} containing five variables:
+#' @return A list of class \code{MSGARCH_MLE_FIT} containing five variables:
 #'        \itemize{
 #'        \item \code{theta} : Optimal parameters (vector of size d).
 #'        \item \code{l_likelihood} : log-likelihood of y given the optimal parameters.
@@ -16,7 +16,7 @@
 #'        \item \code{is.init} : Indicating if estimation was made with do.init option.
 #'        \item \code{y} : Initial vector (of size T) of observations..
 #'        }
-#' The \code{\link{MSGARCH_MLE_FIT}} possess these methods:
+#' The \code{MSGARCH_MLE_FIT} possess these methods:
 #' \itemize{
 #' \item \code{\link{AIC}} : Compute Akaike information criterion (AIC).
 #' \item \code{\link{BIC}} : Compute Bayesian information criterion (BIC).
@@ -33,7 +33,7 @@
 #'                               do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #' 
 #' fit = MSGARCH::fit.mle(spec = spec, y = sp500ret, ctr = list(do.init = TRUE))
-#' @import DEoptim nloptr Rsolnp
+#' @import DEoptim nloptr
 #' @export
 fit.mle <- function(spec, y, ctr = list())
 {
@@ -43,7 +43,6 @@ fit.mle <- function(spec, y, ctr = list())
 #' @export
 fit.mle.MSGARCH_SPEC = function(spec, y, ctr = list()) {
   
-  require("DEoptim")
   ctr.optim = list(trace = 0, maxit = 50000)
   ctr.deoptim = DEoptim::DEoptim.control(NP = 50 * length(spec$theta0), itermax = 500, 
     trace = FALSE, initialpop = matrix(spec$theta0, nrow = 50 * length(spec$theta0), 
