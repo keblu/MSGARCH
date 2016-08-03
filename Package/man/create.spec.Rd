@@ -2,7 +2,7 @@
 % Please edit documentation in R/create.spec.R
 \name{create.spec}
 \alias{create.spec}
-\title{Specification creation}
+\title{Model specification}
 \usage{
 create.spec(model = c("sGARCH", "sGARCH"), distribution = c("norm", "norm"),
   do.skew = c(FALSE, FALSE), do.mix = FALSE, do.shape.ind = FALSE)
@@ -52,28 +52,28 @@ The \code{MSGARCH_SPEC} class possesses these methods:
 \item \code{\link{ht}}  : Conditional volatility in each regime.
 \item \code{\link{kernel}} : Kernel method.
 \item \code{\link{unc.vol}} : Unconditional volatility in each regime.
-\item \code{\link{pred}} : Predictive density method at T + 1.
-\item \code{\link{pit}} : Probability Integral Transform at T + 1.
-\item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods at T + 1.
+\item \code{\link{pred}} : Predictive method.
+\item \code{\link{pit}} : Probability Integral Transform.
+\item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods.
 \item \code{\link{rnd}} : Simulation method at T + 1.
-\item \code{\link{pdf}} : Probability density function at T + 1.
-\item \code{\link{cdf}} : Cumulative density function at T + 1.
+\item \code{\link{pdf}} : Probability density function.
+\item \code{\link{cdf}} : Cumulative function.
 \item \code{\link{Pstate}} : State probabilities filtering method.
-\item \code{\link{Plast}} : State probabilities at T + 1.
 \item \code{\link{fit.mle}} : Maximum Likelihood estimation.
 \item \code{\link{fit.bayes}} : Bayesian estimation.
 \item \code{print} and \code{summary} : Summary of the created specification.
 }
 }
 \description{
-Function for creating a variance specification before fitting and using the \R package \code{MSGARCH} functionalities.
+Function for creating a model specification before fitting and using the \R package \code{MSGARCH} functionalities.
 }
 \details{
 The Markov-Switching specification created is based on the Haas et al. (2004a) MSGARCH specification.
   It is a MSGARCH model that is separated in K single-regimes specifications  which are updated in parallel.
   Under this specification, the conditional variance is a function of the past data and the current state.
   The Mixture of GARCH option is based on the Haas et al. (2004b). A Mixture of GARCH is a mixture of distribution 
-  where the variance process of each distribution is a single-regime process.
+  where the variance process of each distribution is a single-regime process. Every single-regime specification is a one-lag process (e.g., GARCH(1,1))
+  since it has proved to be sufficient in financial econometrics and it reduces models complexity which can become a problem during the optimization procedure
 }
 \examples{
 # create model specification

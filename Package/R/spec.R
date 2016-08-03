@@ -46,6 +46,8 @@ f.spec = function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   rcpp.func$pdf_Rcpp = mod$f_pdf
   rcpp.func$cdf_Rcpp = mod$f_cdf
   rcpp.func$rnd_Rcpp = mod$f_rnd
+  rcpp.func$pdf_Rcpp_its = mod$f_pdf_its
+  rcpp.func$cdf_Rcpp_its = mod$f_cdf_its
   rcpp.func$unc_vol_Rcpp = mod$f_unc_vol
   if (K > 1) {
     rcpp.func$get_Pstate_Rcpp = mod$f_get_Pstate

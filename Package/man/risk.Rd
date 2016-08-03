@@ -2,9 +2,10 @@
 % Please edit documentation in R/risk.R
 \name{risk}
 \alias{risk}
-\title{Value-at-Risk And Expected-shortfall functions at T + 1.}
+\title{Value-at-Risk And Expected-shortfall.}
 \usage{
-risk(spec, theta, y, level = c(0.95, 0.99), ES = TRUE)
+risk(spec, theta, y, level = c(0.95,0.99), ES = TRUE, is.its = TRUE)
+risk(fit, level = c(0.95,0.99), ES = TRUE, is.its = TRUE)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
@@ -17,31 +18,47 @@ risk(spec, theta, y, level = c(0.95, 0.99), ES = TRUE)
 (Default: \code{level = c(0.95,0.99)})}
 
 \item{ES}{Boolean indicating if Expected-shortfall is also calculated. (Default: \code{ES = TRUE})}
+
+\item{is.its}{Boolean indicating if the in-sample risk estimator are returned. (Default: \code{is.its = FALSE})}
+
+\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
-A list containing one or two components:
+A list containing of class \code{MSGARCH_RISK} containing two or three components:
 \itemize{
-\item \code{VaR} : Value-at-Risk at T + 1 at the choosen levels (vector of size R).
-\item \code{ES}  : Expected-shortfall at T + 1 at the choosen levels (vector of size R).
+\item \code{VaR} : \cr If \code{is.its = FALSE}: Value-at-Risk at \code{t = T + 1} at the choosen levels (vector of size R).\cr
+                   If \code{is.its = TRUE}: In-sample Value-at-Risk at the choosen levels (Matrix of size T x R).
+\item \code{ES}  :\cr If \code{is.its = FALSE}: Expected-shortfall at \code{t = T + 1} at the choosen levels (vector of size R).\cr
+                   If \code{is.its = TRUE}: In-sample Expected-shortfall at the choosen levels (Matrix of size T x R).
+\item \code{y}  :\cr Vector (of size T) of observations.
 }
 }
 \description{
-Method returning the Value-at-Risk and Expected-shortfall at T + 1.
+Method returning the Value-at-Risk and Expected-shortfall in-sample or at \code{t = T + 1} based on the predictive density.
 }
 \details{
 If a matrix of MCMC posterior draws estimates is given, the Bayesian Value-at-Risk and Expected-shortfall are calculated.
+If \code{is.its = FALSE}, \code{x} the risk estimator at \code{t = T + 1}, the method uses the variance estimated at \code{t = T + 1}.
+If \code{is.its = TRUE}, The in-sample risk estimator are calculated.
 }
 \examples{
+\dontrun{
 # load data
 data("sp500ret")
 
 # create model specification
-spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-                             do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+spec = MSGARCH::create.spec() 
+
+# fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-                             
+fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+
 # compute the Value-at-Risk and Expected-shortfall 
-risk = MSGARCH::risk(spec = spec, theta = spec$theta0, y = sp500ret,
-                    level = c(0.95,0.99), ES = TRUE)
+# Risk estimation in-sample 
+risk.its = MSGARCH::risk(fit, level = c(0.95,0.99), ES = TRUE, is.its = TRUE)
+                    
+# Risk estimation at T + 1                     
+risk = MSGARCH::risk(fit, level = c(0.95,0.99), ES = TRUE, is.its = FALSE)
+}
 }
 

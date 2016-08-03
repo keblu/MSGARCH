@@ -15,8 +15,8 @@ In the \R package \code{MSGARCH} there is no equation for the mean as in the \R 
 This means that we assume that before modeling, the user has filter the mean from their time series.
 \cr We provide a variety of 
 single-regime GARCH process and regime-switching process as well as many conditional distributions. 
-This allows for a rich modeling environment for Markov-switching GARCH models. Each single-regime process in a one-lag process (e.g, GARCH(1,1)).
-Allowing for only one-lag is sufficient in Finance and reduce models complexity which can become a problem during the optimization process. 
+This allows for a rich modeling environment for Markov-switching GARCH models. Each single-regime process in a one-lag process (e.g., GARCH(1,1)).
+Allowing for only one-lag has proved to be sufficient in financial econometrics and it reduces models complexity which can become a problem during the optimization procedure. 
  
 The authors acknowledge Google for financial support via the Google Summer of Code 2016
 project "MSGARCH"; see \url{https://summerofcode.withgoogle.com/projects/#6497774455488512}

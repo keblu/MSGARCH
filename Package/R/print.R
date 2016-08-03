@@ -78,6 +78,7 @@ summary.MSGARCH_SPEC = function(spec){
 #'@import ggplot2 reshape2
 #'@export
 plot.MSGARCH_RND = function(rnd){
+  value = variable = NULL
   if(nrow(rnd$draws == 1)){
   df.m = data.frame(t(rnd$draws))
   }else{
@@ -85,7 +86,7 @@ plot.MSGARCH_RND = function(rnd){
   }
   df.m$label = 1:nrow(df.m)
   df.m <- reshape2::melt(df.m, id.vars = "label")
-  ggplot(df.m,aes(x=value, group=variable)) + geom_density(alpha = 0.05, fill="gray10") + theme(legend.position="none") + ggtitle("Density of the simulated draws")
+  ggplot(df.m, aes(x=value, group=variable)) + geom_density(alpha = 0.05, fill="gray10") + theme(legend.position="none") + ggtitle("Density of the simulated draws")
 }
 
 #'@export
@@ -123,6 +124,7 @@ summary.MSGARCH_RND= function(rnd){
 }
 
 #'@import zoo
+#'@importFrom graphics plot
 #'@export
 plot.MSGARCH_SIM = function(sim){
   sim$draws = zoo::zoo(t(sim$draws))
@@ -134,6 +136,7 @@ plot.MSGARCH_SIM = function(sim){
 }
 
 #'@import zoo
+#'@importFrom graphics plot
 #'@export
 plot.MSGARCH_HT = function(ht){
   for(i in 1:dim(ht)[3]){
@@ -142,9 +145,81 @@ plot.MSGARCH_HT = function(ht){
   }
 }
 
+#'@import zoo
+#'@importFrom graphics plot
+#'@export
 plot.MSGARCH_PSTATE = function(Pstate){
   for(i in 1:dim(Pstate)[3]){
     tmp = zoo::zoo(Pstate[,,i])
     plot(tmp, plot.type = "single",ylab = "Probability",main = paste0("Probability to be in State ",i))
+  }
+}
+
+#'@import ggplot2 reshape2
+#'@export
+plot.MSGARCH_CDF = function(cdf){
+  variable = x = value = Var2 = NULL
+  if(isTRUE(cdf$is.its)){
+    stop("no plot method for is.its option")
+  }
+  ind = sort(cdf$x, index.return = TRUE)
+  if(nrow(cdf$cdf)> 1){
+    df.m = data.frame((cdf$cdf[,ind$ix]))
+    df.m = t(df.m)
+    df.m <- reshape2::melt(df.m, id.vars = variable)
+    df.m$x = rep(ind$x,nrow(cdf$cdf))
+    ggplot(df.m, aes(x=x, y = value, group=Var2)) +  geom_line(size=1.5) +theme(legend.position="none") + ggtitle("Cummulative of x") + ylab("Cummulative")
+  }else{
+    df.m = data.frame(cdf$cdf[,ind$ix])
+    df.m$x = rep(ind$x,nrow(cdf$cdf))
+    ggplot(df.m, aes(x=x, y = cdf$cdf[,ind$ix])) +  geom_line(size=1.5) +theme(legend.position="none") + ggtitle("Cummulative of x") + ylab("Cummulative")
+  }
+}
+
+#'@import ggplot2 reshape2
+#'@export
+plot.MSGARCH_PDF = function(pdf){
+  variable = x = value = Var2 = NULL
+  ind = sort(pdf$x, index.return = TRUE)
+  if(nrow(pdf$pdf) > 1){
+    df.m = data.frame((pdf$pdf[,ind$ix]))
+    df.m = t(df.m)
+    df.m <- reshape2::melt(df.m, id.vars = variable)
+    df.m$x = rep(ind$x,nrow(pdf$pdf))
+    ggplot(df.m, aes(x=x, y = value, group=Var2)) +  geom_line(size=1.5) + theme(legend.position="none")  + ggtitle("Density of x") + ylab("Density")
+  }else{
+    df.m = data.frame(pdf$pdf[,ind$ix])
+    df.m$x = rep(ind$x,nrow(pdf$pdf))
+    ggplot(df.m, aes(x=x, y = pdf$pdf[,ind$ix])) +  geom_line(size=1.5) + theme(legend.position="none")  + ggtitle("Density of x") + ylab("Density")
+  }
+}
+
+#'@import ggplot2
+#'@export
+plot.MSGARCH_PIT = function(pit){
+  df.m = data.frame(pit$pit)
+    ggplot(data = df.m, aes(x = pit$pit)) + geom_histogram(bins = 100, binwidth = 0.01) + theme(legend.position="none")  + ggtitle("Probability integral transform") + xlab("PIT")
+}
+
+#'@import ggplot2
+#'@export
+plot.MSGARCH_PRED = function(pred){
+    ind = sort(pred$x, index.return = TRUE)
+    df.m = data.frame(pred$pred[ind$ix])
+    df.m$x = ind$x
+    ggplot(df.m, aes(x=x, y = pred$pred[ind$ix])) +  geom_line(size=1.5) + theme(legend.position="none") + ggtitle("Predictive of x") + ylab("Density")
+}
+
+#'@import ggplot2
+#'@importFrom graphics legend plot
+#'@importFrom grDevices rainbow
+#'@export
+plot.MSGARCH_RISK = function(risk){
+  tsRainbow <- rainbow(ncol(risk$VaR))
+  plot(zoo::zoo(risk$VaR), plot.type = "single", col = tsRainbow, ylab = "Return", xlab = "T", main = paste0("Value-At-Risk"))
+  legend("bottomright",legend =  colnames(risk$VaR), col = tsRainbow, lty = 1)
+  if(!is.null(risk$ES)){
+    plot(zoo::zoo(risk$ES), plot.type = "single", ylab = "Return",xlab = "T",main = paste0("Value-At-Risk"))
+    legend("bottomright",legend =  colnames(risk$ES), lty = 1, col = tsRainbow)
   }
 }

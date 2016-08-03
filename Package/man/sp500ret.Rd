@@ -1,9 +1,9 @@
 \name{sp500ret}
 \docType{data}
 \alias{sp500ret}
-\title{Standard and poors 500 closing Value log return}
+\title{Log return of the S&P 500 index closing Value}
 \description{
-The S&P500 index closing value log return from 1987-03-10 to 2009-01-30 from
+The S&P 500 index closing value log return from 1987-03-10 to 2009-01-30 from
 Yahoo Finance \url{https://ca.finance.yahoo.com/}.
 }
 \usage{data("sp500ret")}

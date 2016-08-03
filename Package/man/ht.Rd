@@ -5,6 +5,7 @@
 \title{Conditional volatility in each regime.}
 \usage{
 ht(spec, theta, y)
+ht(fit)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
@@ -12,6 +13,8 @@ ht(spec, theta, y)
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
 
 \item{y}{Vector (of size T) of observations.}
+
+\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 Condititional volatility time serie (array of size (T + 1) x M x K) in each regime.
@@ -23,16 +26,21 @@ Method returning the conditional volatility in each regime.
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
 \examples{
+\dontrun{
 # load data
 data("sp500ret")
 
 # create model specification
-spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-                             do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+spec = MSGARCH::create.spec() 
+
+# fit the model on the data with ML estimation using DEoptim intialization
+set.seed(123)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 
 # Compute the conditional volatility
-ht = MSGARCH::ht(spec = spec,theta = spec$theta0, y = sp500ret)
+ht = MSGARCH::ht(fit)
 
 plot(ht)
+}
 }
 

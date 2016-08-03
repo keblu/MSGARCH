@@ -2,45 +2,72 @@
 % Please edit documentation in R/PIT.R
 \name{pit}
 \alias{pit}
-\title{Probability Integral Transform at T + 1.}
+\title{Probability Integral Transform.}
 \usage{
-pit(spec, x, theta, y, do.norm = FALSE)
+pit(spec, theta, y, do.norm = FALSE, is.its = TRUE)
+pit(fit, do.norm = FALSE, is.its = TRUE)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
-\item{x}{Vector (of size N) of point to be evaluated}
+\item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).}
 
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{do.norm}{Boolean indicating if the PIT value are transforms into standard Normal variate. (Default: \code{do.norm = FALSE})}
+\item{do.norm}{Boolean indicating if the PIT value are transforms into standard Normal variate. (Default: \code{do.norm = FALSE}).}
+
+\item{is.its}{Boolean indicating if the in-sample pit is returned. (Default: \code{is.its = FALSE})}
+
+\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
-Probability integral transform at T + 1 of the points \code{x} or Normal variate derived from the Probability integral transform of \code{x} (vector of size N).
+A list of class \code{MSGARCH_PIT} containing two components:
+\itemize{
+\item \code{pit}:\cr If \code{is.its = FALSE}: Probability integral transform of the points \code{x} at \code{t = T + 1} or Normal variate derived from the Probability integral transform of \code{x} (vector of size N).\cr
+                  If \code{is.its = TRUE}: In-sample  Probability integral transform or Normal variate derived from the Probability integral transform of \code{y} (vector of size T or matrix of size M x T). 
+\item \code{x}:\cr If \code{is.its = FALSE}: Vector (of size N) of at point \code{t = T + 1} evaluated.\cr
+                If \code{is.its = TRUE}: Vector (of size T) of observations.  
+}
+The class \code{MSGARCH_PIT} contains the \code{plot} method.
 }
 \description{
-Method returning the predictive Probability integral transform (PIT) at T + 1.
+Method returning the predictive Probability integral transform (PIT) in-sample or of a vector of points at \code{t = T + 1}.
 }
 \details{
 If a matrix of MCMC posterior draws estimates is given, the Bayesian Probability integral transform is calculated.
-         The \code{do.norm} argument transforms the PIT value into Normal variate so that normality test can be done.
+If \code{is.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
+If \code{is.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
+The \code{do.norm} argument transforms the PIT value into Normal variate so that normality test can be done.
 }
 \examples{
+\dontrun{
 # load data
 data("sp500ret")
 
 # create model specification
-spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-                           do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
-                             
+spec = MSGARCH::create.spec() 
+
+# fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 
-# generate random draws
-x = rnorm(100)
+# run pit method in-sample              
+pit.its = MSGARCH::pit(fit, do.norm = FALSE, is.its = TRUE)                              
 
-# run pit method on random draws
-pit = MSGARCH::pit(spec = spec, x = x, theta = spec$theta0, y = sp500ret, do.norm = FALSE)
+plot(pit.its)  
+                                                                         
+# generate random draws at T + 1 from model
+set.seed(123)
+rnd = MSGARCH::rnd(fit, n = 100000)
+
+x = rnd$draws
+
+# run pit method on random draws at T + 1 from model
+pit = MSGARCH::pit(fit, x = x, do.norm = FALSE)
+
+plot(pit)
+}
 }
 

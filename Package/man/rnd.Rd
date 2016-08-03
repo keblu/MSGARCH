@@ -2,9 +2,10 @@
 % Please edit documentation in R/rnd.R
 \name{rnd}
 \alias{rnd}
-\title{Random draws simulation method at T + 1.}
+\title{Random draws at \code{t = T + 1} simulation method.}
 \usage{
-rnd(spec, n, theta, y, do.state = TRUE)
+rnd(spec, n, theta, y)
+rnd(fit, n)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
@@ -15,38 +16,38 @@ rnd(spec, n, theta, y, do.state = TRUE)
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{do.state}{Boolean indicating if the simulated state are also output. (Default: \code{do.state = TRUE})}
+\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
-A list of class \code{MSGARCH_RND} containing one or two components:
+A list of class \code{MSGARCH_RND} containing  two components:
 \itemize{
-\item \code{draws}: vector (of size n) or matrix (of size M x n) of simulated draws at T + 1.
-\item \code{state}: vector (of size n) or matrix (of size M x n) of simulated states at T + 1.
- The \code{state} value appear only if \code{do.state = TRUE}.
+\item \code{draws}: vector (of size n) or matrix (of size M x n) of simulated draws at \code{t = T + 1}.
+\item \code{state}: vector (of size n) or matrix (of size M x n) of simulated states at \code{t = T + 1}.
 }
 The \code{MSGARCH_RND} class contains the \code{summary} and \code{plot} method.
 }
 \description{
-Method returning random draws at T + 1.
-}
-\details{
-If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
+Method returning random draws at \code{t = T + 1}.
 }
 \examples{
+\dontrun{
 # load data
 data("sp500ret")
 
 # create model specification
-spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-                             do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+spec = MSGARCH::create.spec() 
 
+# fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-
+fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+ 
 # generate random draws
-rnd = MSGARCH::rnd(spec = spec, n = 1000, theta = spec$theta0, y = sp500ret, do.state = TRUE)
+set.seed(123)
+rnd = MSGARCH::rnd(fit, n = 1000)
 
 plot(rnd)
 
 summary(rnd)
+}
 }
 

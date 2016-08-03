@@ -226,8 +226,12 @@ public:
   NumericVector f_pdf(const NumericVector&, const NumericVector& ,
                       const NumericVector&, const bool& );
 					  
+	NumericMatrix f_pdf_its(const NumericVector&, const NumericVector&,  const bool& );
+  
   NumericVector f_cdf(const NumericVector&, const NumericVector& ,
                       const NumericVector&, const bool&);
+  
+  NumericMatrix f_cdf_its(const NumericVector&, const NumericVector&,  const bool& );
   
   // model simulation
   Rcpp::List f_sim(const int&, const NumericVector&, const int&);
@@ -342,16 +346,21 @@ inline arma::cube MSgarch::calc_ht(NumericMatrix& all_thetas, const NumericVecto
 
 inline arma::mat MSgarch::f_get_Pstate(const NumericVector& theta , const NumericVector& y, const bool& returnPLast){
   int ny = y.size();
+
   loadparam(theta);                  // load parameters  
   prep_ineq_vol();                   // prepare functions related to volatility
   volatilityVector vol  = set_vol(y[0]);   // initialize volatility
+  arma::vec tmp = Rcpp::as<arma::vec>(P0);
   arma::mat Pstate;
+  arma::mat Pstart = tmp.t();
+  arma::mat out;
   
-  for (int t = 1; t <= ny; t++) {
-    increment_vol(vol, y[t-1]);
-	}
+  if(ny == 1){
+    return(Pstart);
+  }
+  
   Pstate = HamiltonFilter_2(calc_lndMat(y));
-  
+  out = join_cols(Pstart, Pstate);
   if (returnPLast) {
     arma::mat out(1,2);
     for (int i = 0; i < K; i++){
@@ -359,8 +368,9 @@ inline arma::mat MSgarch::f_get_Pstate(const NumericVector& theta , const Numeri
     }
     return(out);
   }
-  return(Pstate);
+  return(out);
 }
+
 inline NumericVector MSgarch::f_pdf(const NumericVector& x, const NumericVector& theta,
                                     const NumericVector& y, const bool& is_log) {
   // computes volatility
@@ -374,8 +384,8 @@ inline NumericVector MSgarch::f_pdf(const NumericVector& x, const NumericVector&
   prep_ineq_vol();                   // prepare functions related to volatility
   volatilityVector vol  = set_vol(y[0]);   // initialize volatility
   
-  for (int t = 1; t <= ny; t++) 
-    increment_vol(vol, y[t-1]);
+  for (int t = 0; t < ny; t++) 
+    increment_vol(vol, y[t]);
   
   HamiltonFilter(calc_lndMat(y));
   
@@ -398,6 +408,30 @@ inline NumericVector MSgarch::f_pdf(const NumericVector& x, const NumericVector&
   return out;
 }
 
+inline NumericMatrix MSgarch::f_pdf_its(const NumericVector& theta, const NumericVector& y, const bool& is_log) {
+  // computes volatility
+  int s = 0;
+  int ny = y.size();
+  double sig;
+  NumericMatrix tmp(ny - 1,K);
+  loadparam(theta);                  // load parameters  
+  prep_ineq_vol();                   // prepare functions related to volatility
+  volatilityVector vol  = set_vol(y[0]);   // initialize volatility
+  
+
+  for (int i = 1; i < ny; i++) { 
+    s = 0;
+    increment_vol(vol, y[i-1]);
+    for(many::iterator it = specs.begin(); it != specs.end(); ++it) { 
+      sig = sqrt(vol[s].h);
+      tmp(i-1,s) = (*it)->spec_calc_pdf(y[i]/sig) / sig; //
+      s++;
+    }
+  }
+  
+  return tmp;
+}
+
 inline NumericVector MSgarch::f_cdf(const NumericVector& x, const NumericVector& theta,
                                     const NumericVector& y, const bool& is_log) {
   // computes volatility
@@ -411,8 +445,8 @@ inline NumericVector MSgarch::f_cdf(const NumericVector& x, const NumericVector&
   prep_ineq_vol();                   // prepare functions related to volatility
   volatilityVector vol  = set_vol(y[0]);   // initialize volatility
   
-  for (int t = 1; t <= ny; t++) 
-    increment_vol(vol, y[t-1]);
+  for (int t = 0; t < ny; t++) 
+    increment_vol(vol, y[t]);
   
   HamiltonFilter(calc_lndMat(y));
   
@@ -433,6 +467,29 @@ inline NumericVector MSgarch::f_cdf(const NumericVector& x, const NumericVector&
   }
   
   return out;
+}
+
+inline NumericMatrix MSgarch::f_cdf_its(const NumericVector& theta, const NumericVector& y,  const bool& is_log) {
+  // computes volatility
+  int s = 0;
+  int ny = y.size();
+  double sig;
+  NumericMatrix tmp(ny-1,K);
+  loadparam(theta);                  // load parameters  
+  prep_ineq_vol();                   // prepare functions related to volatility
+  volatilityVector vol  = set_vol(y[0]);   // initialize volatility
+  
+  for (int i = 1; i < ny; i++) { 
+    s = 0;
+    increment_vol(vol, y[i-1]);
+    for(many::iterator it = specs.begin(); it != specs.end(); ++it) { 
+      sig = sqrt(vol[s].h);
+      tmp(i-1,s) = (*it)->spec_calc_cdf(y[i]/sig); //
+      s++;
+    }
+  }
+  
+  return tmp;
 }
 
 //------------------------------ Model simulation  ------------------------------//
@@ -547,14 +604,15 @@ inline arma::mat MSgarch::HamiltonFilter_2(const NumericMatrix& lndMat){
   double lnd = 0, min_lnd, delta, sum_tmp;
   NumericVector Pspot, Ppred, lndCol, tmp;
   arma::mat Ptmp(n_step+1, K);  
-
+  arma::mat Ptmppred(n_step+1, K);
   // first step
   Pspot   = clone(P0);                 // Prob(St | I(t))
+  Ppred   = matrixProd(Pspot, P);      // one-step-ahead Prob(St | I(t-1))
   for (int i = 0; i < K; i++){
-     Ptmp(0,i) = Pspot(i);
+    Ptmp(0,i) = Pspot(i);
   }
   
-  Ppred   = matrixProd(Pspot, P);      // one-step-ahead Prob(St | I(t-1))
+     
   lndCol  = lndMat(_, 0);
   min_lnd = min(lndCol),   delta = ((min_lnd < LND_MIN)? LND_MIN - min_lnd : 0); // handle over/under-flows
   tmp     = Ppred * exp(lndCol + delta);            // unormalized one-step-ahead Prob(St | I(t))
@@ -564,12 +622,11 @@ inline arma::mat MSgarch::HamiltonFilter_2(const NumericMatrix& lndMat){
     sum_tmp = sum(tmp);
     lnd    += -delta + log(sum_tmp);               // increment loglikelihood
     Pspot   = tmp / sum_tmp;
-    
+    Ppred   = matrixProd(Pspot, P);
     for (int i = 0; i < K; i++){
       Ptmp(t,i) = Pspot(i);
     }
     
-    Ppred   = matrixProd(Pspot, P);
     lndCol  = lndMat(_, t);
     min_lnd = min(lndCol),   delta = ((min_lnd < LND_MIN)? LND_MIN - min_lnd : 0); // handle over/under-flows
     tmp     = Ppred * exp(lndCol + delta);
@@ -577,11 +634,11 @@ inline arma::mat MSgarch::HamiltonFilter_2(const NumericMatrix& lndMat){
   sum_tmp = sum(tmp);
   lnd    += -delta + log(sum_tmp);               // increment loglikelihood
   Pspot   = tmp / sum_tmp;
+  PLast   = matrixProd(Pspot, P);
   
   for (int i = 0; i < K; i++){
-    Ptmp(n_step,i) = Pspot(i);
+    Ptmp(n_step,i) = PLast(i);
   }
-  PLast   = matrixProd(Pspot, P);
   
   return Ptmp;
 }

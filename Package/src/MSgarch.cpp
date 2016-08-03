@@ -25,7 +25,9 @@ RCPP_MODULE(MSgarch){
   .method( "eval_model", &MSgarch ::eval_model )
   .method( "ineq_func",  &MSgarch ::ineq_func )
   .method( "f_pdf",      &MSgarch ::f_pdf )
+  .method( "f_pdf_its",  &MSgarch ::f_pdf_its)
   .method( "f_cdf",      &MSgarch ::f_cdf )
+  .method( "f_cdf_its",  &MSgarch ::f_cdf_its)
   .method( "f_rnd",      &MSgarch ::f_rnd )
   .method( "f_unc_vol",  &MSgarch ::f_unc_vol)
   

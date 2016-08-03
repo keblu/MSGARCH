@@ -5,6 +5,7 @@
 \title{Kernel function.}
 \usage{
 kernel(spec, theta, y, log = TRUE)
+kernel(fit, log = TRUE)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
@@ -14,6 +15,8 @@ kernel(spec, theta, y, log = TRUE)
 \item{y}{Vector (of size T) of observations.}
 
 \item{log}{Boolean indicating if the log kernel is returned. (Default: \code{log = TRUE})}
+
+\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 (Log-)Kernel value (scalar or vector of size M) of the vector of observations.
@@ -34,15 +37,20 @@ If a matrix of parameter estimates is given, each parameter estimates is evaluat
   }
 }
 \examples{
+\dontrun{
 # load data
 data("sp500ret")
 
 # create model specification
-spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-                             do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+spec = MSGARCH::create.spec() 
+
+# fit the model on the data with ML estimation using DEoptim intialization
+set.seed(123)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 
 # compute the kernel
-kernel = MSGARCH::kernel(spec = spec, theta = spec$theta0, y = sp500ret, log = TRUE)
+kernel = MSGARCH::kernel(fit, log = TRUE)
+}
 }
 \references{
 Hamilton, J. D. (1989) A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle. \emph{Econometrica}, 57, pp.357-38

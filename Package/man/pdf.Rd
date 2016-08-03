@@ -2,45 +2,68 @@
 % Please edit documentation in R/pdf.R
 \name{pdf}
 \alias{pdf}
-\title{Probability density function at T + 1.}
+\title{Probability density function.}
 \usage{
-pdf(spec, x, theta, y, log = TRUE)
+pdf(spec, theta, y, log = TRUE, is.its = TRUE)
+pdf(fit, log = FALSE, is.its = TRUE)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
-\item{x}{Vector (of size N) of point to be evaluated}
+\item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).}
 
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
 
 \item{y}{Vector (of size T) of observations.}
 
-\item{log}{Boolean indicating if the log-density is returned. (Default: \code{log = TRUE})}
+\item{log}{Boolean indicating if the log-density is returned. (Default: \code{log = FALSE})}
+
+\item{is.its}{Boolean indicating if the in-sample pdf is returned. (Default: \code{is.its = FALSE})}
+
+\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
-(Log-)Probability density at T + 1 of the points \code{x} (vector of size N or matrix of size M x N).
+A list of class \code{MSGARCH_PDF} containing two components:
+\itemize{
+\item \code{pdf}:\cr If \code{is.its = FALSE}: (Log-)Probability density of the points \code{x} at \code{t = T + 1} (vector of size N or matrix of size M x N) \cr
+                  If \code{is.its = TRUE}: In-sample (Log-)Probability density of \code{y} (vector of size T or matrix of size M x T). 
+\item \code{x}:\cr If \code{is.its = FALSE}: Vector (of size N) of point at \code{t = T + 1} evaluated.\cr
+                If \code{is.its = TRUE}: Vector (of size T) of observations.
+}
+The class \code{MSGARCH_PDF} contains the \code{plot} method.
 }
 \description{
-Method returning the probability density at T + 1 of a vector of points.
+Method returning the probability density in-sample or of a vector of points at \code{t = T + 1}.
 }
 \details{
-If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
- The \code{\link{pdf}} method uses the last variance estimate by filtering.
+If a matrix of parameter estimates is given, each parameter estimates is evaluated individually. 
+If \code{is.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
+If \code{is.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 }
 \examples{
+\dontrun{
 # load data
 data("sp500ret")
 
 # create model specification
-spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-                           do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
-                             
+spec = MSGARCH::create.spec() 
+
+# fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 
-# generate random draws
-x = rnorm(100)
+# run pdf method in-sample
+pdf.its = MSGARCH::pdf(fit, log = FALSE, is.its = TRUE)
+   
+plot(pdf.its)          
+                                                                                                                                                                                                                             
+# create mesh
+x = seq(-3,3,0.01)
 
-# run pdf method on random draws
-pdf = MSGARCH::pdf(spec = spec, x = x, theta = spec$theta, y = sp500ret, log = FALSE)
+# run pdf method on mesh at T + 1
+pdf = MSGARCH::pdf(fit, x = x, log = FALSE, is.its = FALSE)
+
+plot(pdf)
+}
 }
 

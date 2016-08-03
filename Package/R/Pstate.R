@@ -1,25 +1,33 @@
-#' State probabilities filtering function.
+#' Filtered state probabilities.
 #' @description Method returning the filtered state probabilities.
 #' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
+#' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 #' @examples 
-#' # load data
+#'\dontrun{
+#'# load data
 #'data("sp500ret")
 #'
 #'# create model specification
-#'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-#'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+#'spec = MSGARCH::create.spec() 
 #'
+#'# fit the model on the data with ML estimation using DEoptim intialization
+#' set.seed(123)
+#'fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+#'  
 #'# compute the filtered state probabilities
-#'Pstate  = MSGARCH::Pstate(spec = spec, theta = spec$theta0, y = sp500ret)
+#'Pstate  = MSGARCH::Pstate(fit)
 #'
 #'plot(Pstate)
-#'@return Filtered state probabilities of class \code{MSGARCH_RND} (array of size T x M x K).
+#'}
+#'@return Filtered state probabilities of class \code{MSGARCH_RND} (array of size (T + 1) x M x K).
 #'The class \code{MSGARCH_RND} contains the \code{plot} method.
+#'@usage Pstate(spec, theta, y)
+#'Pstate(fit)
 #' @export
-Pstate <- function(spec, theta, y )
+Pstate <- function(spec, theta, y)
 {
   UseMethod("Pstate", spec)
 }
@@ -28,19 +36,10 @@ Pstate <- function(spec, theta, y )
 Pstate.MSGARCH_SPEC = function(spec, theta, y) {
   
   y = as.matrix(y)
-  if (isTRUE(spec$is.shape.ind)) {
-    theta = spec$func$f.do.shape.ind(theta)
-  }
   
-  if (isTRUE(spec$is.mix)) {
-    theta = spec$func$f.do.mix(theta)
-  }
+  theta = f.check.theta(spec, theta)
   
-  if (is.vector(theta)) {
-    theta = matrix(theta, nrow = 1)
-  }
-  
-  out = array(dim = c(nrow(y), nrow(theta), spec$K))
+  out = array(dim = c(nrow(y) + 1, nrow(theta), spec$K))
   for(i in 1:nrow(theta)){
     tmp = spec$rcpp.func$get_Pstate_Rcpp(theta[i,], y, FALSE)
     for(j in 1:spec$K){
@@ -49,4 +48,18 @@ Pstate.MSGARCH_SPEC = function(spec, theta, y) {
   }
   class(out) = "MSGARCH_PSTATE"
   return(out)
+}
+
+#' @export
+rnd.MSGARCH_MLE_FIT = function(fit) {
+  
+  return(MSGARCH::Pstate(spec = fit$spec,  theta = fit$theta, y = fit$y))
+  
+}
+
+#' @export
+rnd.MSGARCH_BAY_FIT = function(fit) {
+  
+  return(MSGARCH::Pstate(spec = fit$spec,  theta = fit$theta, y = fit$y))
+  
 }

@@ -2,14 +2,23 @@
 % Please edit documentation in R/unc.vol.R
 \name{unc.vol}
 \alias{unc.vol}
+\alias{unc.vol.MSGARCH_BAY_FIT}
+\alias{unc.vol.MSGARCH_MLE_FIT}
 \title{Unconditional volatility of each regime.}
 \usage{
 unc.vol(spec, theta)
+unc.vol(fit)
+
+\method{unc.vol}{MSGARCH_MLE_FIT}(fit)
+
+\method{unc.vol}{MSGARCH_BAY_FIT}(fit)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
+
+\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 Unconditional volatility (vector of size K or matrix of size M x K) of each regime.
@@ -20,10 +29,15 @@ Method returning the unconditional volatility of the process in each state.
 \details{
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{MSGARCH_MLE_FIT}: 
+
+\item \code{MSGARCH_BAY_FIT}: 
+}}
 \examples{
 # create model specification
-spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-                             do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+spec = MSGARCH::create.spec() 
 
 # compute the unconditional volatility in each regime
 unc.vol = MSGARCH::unc.vol(spec = spec, theta = spec$theta0)

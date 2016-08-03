@@ -3,22 +3,30 @@
 #' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
+#' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 #' @examples 
+#'\dontrun{
 #'# load data
 #'data("sp500ret")
 #'
 #'# create model specification
-#'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-#'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+#'spec = MSGARCH::create.spec() 
+#'
+#'# fit the model on the data with ML estimation using DEoptim intialization
+#' set.seed(123)
+#' fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 #'
 #'# Compute the conditional volatility
-#'ht = MSGARCH::ht(spec = spec,theta = spec$theta0, y = sp500ret)
+#'ht = MSGARCH::ht(fit)
 #'
 #'plot(ht)
+#'}
 #' @return Condititional volatility time serie (array of size (T + 1) x M x K) in each regime.
+#' @usage ht(spec, theta, y)
+#' ht(fit)
 #' @export
-ht <- function(spec, theta, y )
+ht <- function(spec, theta, y)
 {
   UseMethod("ht", spec)
 }
@@ -26,20 +34,25 @@ ht <- function(spec, theta, y )
 
 #' @export
 ht.MSGARCH_SPEC = function(spec, theta, y) {
-  y = as.matrix(y)
-  if (isTRUE(spec$is.shape.ind)) {
-    theta = spec$func$f.do.shape.ind(theta)
-  }
+  y = f.check.y(y)
   
-  if (isTRUE(spec$is.mix)) {
-    theta = spec$func$f.do.mix(theta)
-  }
-  
-  if (is.vector(theta)) {
-    theta = matrix(theta, nrow = 1)
-  }
+  theta = f.check.theta(spec, theta)
   
   out = spec$rcpp.func$calc_ht(theta, y)
   out = sqrt(out)
   return(out)
+}
+
+#' @export
+ht.MSGARCH_MLE_FIT = function(fit) {
+  
+  return(MSGARCH::ht(spec = fit$spec, theta = fit$theta, y = fit$y))
+  
+}
+
+#' @export
+ht.MSGARCH_BAY_FIT = function(fit) {
+  
+  return(MSGARCH::ht(spec = fit$spec, theta = fit$theta, y = fit$y))
+  
 }

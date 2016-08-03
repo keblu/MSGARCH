@@ -2,20 +2,20 @@
 #' @param fit Fit object of type \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
 #' @references Gelman, A. Carlin, J. B. Stern, H. S. & Rubin, D. B. (2003). Bayesian Data Analysis. \emph{Chapman and Hall/CRC}
 #' @examples 
+#'\dontrun{
 #'# load data
 #'data("sp500ret")
 #'
 #'# create model specification
-#'spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-#'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+#'spec = MSGARCH::create.spec()
 #'
-#'set.seed(123)
-#'
-#'# fit the model by Bayesian estimation                                                            
+#'# fit the model by Bayesian estimation 
+#'set.seed(123)                                                           
 #'fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret)
 #'
 #'# compute DIC
-#'DIC = MSGARCH::DIC(fit = fit)
+#'DIC = MSGARCH::DIC(fit)
+#'}
 #' @return A list containing six variables:
 #'        \itemize{
 #'        \item \code{DIC} : Deviance Information Criterion.

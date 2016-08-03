@@ -1,55 +1,50 @@
-#' Random draws simulation method at T + 1.
-#' @description Method returning random draws at T + 1.
+#' Random draws at \code{t = T + 1} simulation method.
+#' @description Method returning random draws at \code{t = T + 1}.
 #' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param n  Number of random draws to be generated.
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param y  Vector (of size T) of observations.
-#' @param do.state  Boolean indicating if the simulated state are also output. (Default: \code{do.state = TRUE})
-#' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
-#' @return A list of class \code{MSGARCH_RND} containing one or two components:
+#' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
+#' @return A list of class \code{MSGARCH_RND} containing  two components:
 #' \itemize{
-#' \item \code{draws}: vector (of size n) or matrix (of size M x n) of simulated draws at T + 1.
-#' \item \code{state}: vector (of size n) or matrix (of size M x n) of simulated states at T + 1.
-#'  The \code{state} value appear only if \code{do.state = TRUE}.
+#' \item \code{draws}: vector (of size n) or matrix (of size M x n) of simulated draws at \code{t = T + 1}.
+#' \item \code{state}: vector (of size n) or matrix (of size M x n) of simulated states at \code{t = T + 1}.
 #' }
 #' The \code{MSGARCH_RND} class contains the \code{summary} and \code{plot} method.
+#' @usage rnd(spec, n, theta, y)
+#' rnd(fit, n)
 #' @examples 
+#'\dontrun{
 #' # load data
 #'data("sp500ret")
 #'
 #'# create model specification
-#' spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-#'                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+#' spec = MSGARCH::create.spec() 
 #'
-#'set.seed(123)
-#'
+#'# fit the model on the data with ML estimation using DEoptim intialization
+#' set.seed(123)
+#'fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+#'  
 #'# generate random draws
-#' rnd = MSGARCH::rnd(spec = spec, n = 1000, theta = spec$theta0, y = sp500ret, do.state = TRUE)
+#'set.seed(123)
+#' rnd = MSGARCH::rnd(fit, n = 1000)
 #' 
 #' plot(rnd)
 #' 
 #' summary(rnd)
+#' }
 #' @export
-rnd <- function(spec, n, theta, y, do.state = TRUE)
+rnd <- function(spec, n, theta, y)
 {
   UseMethod("rnd", spec)
 }
 
 #' @export
-rnd.MSGARCH_SPEC = function(spec, n, theta, y, do.state = TRUE) {
+rnd.MSGARCH_SPEC = function(spec, n, theta, y) {
   
-  y = as.matrix(y)
-  if (isTRUE(spec$is.shape.ind)) {
-    theta = spec$func$f.do.shape.ind(theta)
-  }
-  
-  if (isTRUE(spec$is.mix)) {
-    theta = spec$func$f.do.mix(theta)
-  }
-  
-  if (is.vector(theta)) {
-    theta = matrix(theta, nrow = 1)
-  }
+  y = f.check.y(y)
+
+  theta = f.check.theta(spec, theta)
   
   draws = matrix(data = NA, nrow = nrow(theta), ncol = n)
   state = matrix(data = NA, nrow = nrow(theta), ncol = n)
@@ -66,9 +61,22 @@ rnd.MSGARCH_SPEC = function(spec, n, theta, y, do.state = TRUE) {
   }
   out = list()
   out$draws = draws
-  if (isTRUE(do.state)) {
-    out$state = state
-  }
+  out$state = state
+  
   class(out) = "MSGARCH_RND"
   return(out)
+}
+
+#' @export
+rnd.MSGARCH_MLE_FIT = function(fit,  n) {
+  
+  return(MSGARCH::rnd(spec = fit$spec, n = n, theta = fit$theta, y = fit$y))
+  
+}
+
+#' @export
+rnd.MSGARCH_BAY_FIT = function(fit,  n) {
+  
+  return(MSGARCH::rnd(spec = fit$spec, n = n, theta = fit$theta, y = fit$y))
+  
 }

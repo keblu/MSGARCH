@@ -1,48 +1,39 @@
 #' Process simulation method.
-#' @description  Method returning a simulated process.
+#' @description  Method returning a \code{MSGARCH} specification process.
 #' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #' @param n   Simulation length.
+#' @param m   Number of simulation.
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
 #' @param burnin (integer >= 0) Burnin period discarded (first simulation draws). (Default: \code{burnin = 500})
-#' @param do.state  Boolean  indicating if the simulated state are also output. (Default: \code{do.state = TRUE})
-#' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
+#' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually and \code{m = nrow(theta)}.
 #' @examples 
 #'# create model specification
-#' spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-#'                             do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
-#'
-#'set.seed(123)
+#' spec = MSGARCH::create.spec() 
 #'
 #'# generate process
-#' sim = MSGARCH::sim(spec = spec, n = 1000, theta = spec$theta0, burnin = 500, do.state = TRUE)
+#' set.seed(123)
+#' sim = MSGARCH::sim(spec = spec, n = 1000, m = 1, theta = spec$theta0, burnin = 500)
 #' 
 #' plot(sim)
-#' @return A list of class \code{MSGARCH_SIM} containing one or two components.
+#' @return A list of class \code{MSGARCH_SIM} containing two components.
 #' \itemize{
-#' \item \code{draws}: vector (of size n) or matrix (of size M x n) of simulated draws.
-#' \item \code{state}: vector (of size n) or matrix (of size M x n) of simulated states.
-#'  The \code{state} value appear only if \code{do.state = TRUE}.
+#' \item \code{draws}: Matrix (of size M x n) of simulated draws.
+#' \item \code{state}: Matrix (of size M x n) of simulated states.
 #' }
 #'  The \code{MSGARCH_SIM} class contains the \code{plot} method.
 #' @export
-sim <- function(spec, n, theta, burnin = 500, do.state = TRUE)
+sim <- function(spec, n, m, theta, burnin = 500)
 {
   UseMethod("sim", spec)
 }
 
 #' @export
-sim.MSGARCH_SPEC = function(spec, n, theta, burnin = 500, do.state = TRUE) {
+sim.MSGARCH_SPEC = function(spec, n, m = 1, theta, burnin = 500) {
   
-  if (isTRUE(spec$is.shape.ind)) {
-    theta = spec$func$f.do.shape.ind(theta)
-  }
+  theta = f.check.theta(spec, theta)
   
-  if (isTRUE(spec$is.mix)) {
-    theta = spec$func$f.do.mix(theta)
-  }
-  
-  if (is.vector(theta)) {
-    theta = matrix(theta, nrow = 1)
+  if(nrow(theta) == 1){
+    theta = matrix(theta[rep(1,m),], nrow = nrow(theta))
   }
   
   draws = matrix(data = NA, nrow = nrow(theta), ncol = n)
@@ -59,9 +50,8 @@ sim.MSGARCH_SPEC = function(spec, n, theta, burnin = 500, do.state = TRUE) {
   }
   out = list()
   out$draws = draws
-  if (isTRUE(do.state)) {
-    out$state = state
-  }
+  out$state = state
+
   class(out) = "MSGARCH_SIM"
   return(out)
 }

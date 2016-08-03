@@ -15,9 +15,9 @@ fit.mle(spec, y, ctr = list())
 The control parameters have two components to it:
 \itemize{
 \item \code{theta0} : Starting parameters (vector of size d). If no starting parameters is provided, the default starting parameters of the specification are used.
-\item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (Default: \code{do.init = FALSE})
-\item \code{NP} : Number of parameter vectors in the population in \code{DEoptim} optimization. (Default: \code{NP = 500})
-\item \code{itermax} : Maximum iteration (population generation) allowed in \code{DEoptim} optimization. (Default: \code{maxit = 500})
+\item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (Default: \code{do.init = TRUE})
+\item \code{NP} : Number of parameter vectors in the population in \code{DEoptim} optimization. (Default: \code{NP = 200})
+\item \code{itermax} : Maximum iteration (population generation) allowed in \code{DEoptim} optimization. (Default: \code{maxit = 200})
 }}
 }
 \value{
@@ -25,14 +25,24 @@ A list of class \code{MSGARCH_MLE_FIT} containing five components:
        \itemize{
        \item \code{theta} : Optimal parameters (vector of size d).
        \item \code{ll_likelihood} : log-likelihood of \code{y} given the optimal parameters.
-       \item \code{spec} : Specification.
+       \item \code{spec} : Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
        \item \code{is.init} : Indicating if estimation was made with do.init option.
-       \item \code{y} :  Vector (of size T) of observations..
+       \item \code{y} :  Vector (of size T) of observations.
        }
 The \code{MSGARCH_MLE_FIT} contains these methods:
 \itemize{
 \item \code{\link{AIC}} : Compute Akaike information criterion (AIC).
 \item \code{\link{BIC}} : Compute Bayesian information criterion (BIC).
+\item \code{\link{ht}}  : Conditional volatility in each regime.
+\item \code{\link{kernel}} : Kernel method.
+\item \code{\link{unc.vol}} : Unconditional volatility in each regime.
+\item \code{\link{pred}} : Predictive method.
+\item \code{\link{pit}} : Probability Integral Transform.
+\item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods.
+\item \code{\link{rnd}} : Simulation method at T + 1.
+\item \code{\link{pdf}} : Probability density function.
+\item \code{\link{cdf}} : Cumulative function.
+\item \code{\link{Pstate}} : State probabilities filtering method.
 }
 }
 \description{
@@ -40,25 +50,28 @@ Method that performs Maximum Likelihood estimation of a \code{MSGARCH_SPEC} obje
 }
 \details{
 The Maximum likelihood estimation uses the \R package \code{nloptr} (Johnson, 2014) for main optimizer 
-while it uses the \R package \code{DEoptim} when \code{do.init = TRUE}.
+while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an initialization for nloptr.
 }
 \examples{
+\dontrun{
 # load data
 data("sp500ret")
 
-
 # create model specification
-spec = MSGARCH::create.spec(model = c("sGARCH","sGARCH"), distribution = c("norm","norm"),
-                              do.skew = c(FALSE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
+spec = MSGARCH::create.spec() 
 
+# fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-
-# fit the model on the data with ML estimation
 fit = MSGARCH::fit.mle(spec = spec, y = sp500ret, 
                        ctr = list(do.init = TRUE, NP = 100, itermax = 100))
+  }                     
 }
 \references{
-Ardia, D.; Mullen, K. M.; Peterson, B. G. & Ulrich, J. (2015). \code{DEoptim}: Differential Evolution in \R. \url{https://cran.r-project.org/web/packages/DEoptim/}.
+Ardia, D. Boudt, K. Carl, P. Mullen, K. M. & Peterson, B. G. (2011). Differential Evolution with \code{DEoptim}. \emph{R Journal}, 3, pp. 27-34
+
+Ardia, D. Mullen, K. M. Peterson, B. G. & Ulrich, J. (2015). \code{DEoptim}: Differential Evolution in \R. \url{https://cran.r-project.org/web/packages/DEoptim/}
+
+Mullen, K. M. Ardia, D. Gil, D. L. Windover, D. Cline, J.(2011) \code{DEoptim}: An \R Package for Global Optimization by Differential Evolution. \emph{Journal of Statistical Software}, 40, pp. 1-26
 
 Johnson, S. G. (2014). The NLopt Nonlinear-Optimization. \url{https://cran.r-project.org/web/packages/NLopt/}.
 }

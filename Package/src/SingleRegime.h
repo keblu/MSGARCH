@@ -79,7 +79,9 @@ public:
     prior calc_prior(const NumericVector&);
     NumericVector f_sim(const int&, const NumericVector&, const int&);
     NumericVector f_pdf(const NumericVector&, const NumericVector&, const NumericVector&, const bool&);
+    NumericVector f_pdf_its( const NumericVector&, const NumericVector&, const bool&);
     NumericVector f_cdf(const NumericVector&, const NumericVector&, const NumericVector&, const bool&);
+    NumericVector f_cdf_its( const NumericVector&, const NumericVector&, const bool&);
     NumericVector f_rnd(const int&, const NumericVector&, const NumericVector&);
     NumericVector f_unc_vol(NumericMatrix&, const NumericVector&);
     NumericMatrix calc_ht(NumericMatrix&, const NumericVector&);
@@ -201,8 +203,8 @@ NumericVector SingleRegime<Model>::f_pdf(const NumericVector& x, const NumericVe
     spec.prep_ineq_vol();                   // prepare functions related to volatility
     volatility vol  = spec.set_vol(y[0]);   // initialize volatility
     int ny = y.size();
-    for (int t = 1; t <= ny; t++)
-        spec.increment_vol(vol, y[t-1]);
+    for (int t = 0; t < ny; t++)
+        spec.increment_vol(vol, y[t]);
     double sig = sqrt(vol.h);
 
     // computes PDF
@@ -216,6 +218,30 @@ NumericVector SingleRegime<Model>::f_pdf(const NumericVector& x, const NumericVe
     return out;
 }
 
+template <typename Model>
+NumericVector SingleRegime<Model>::f_pdf_its(const NumericVector& theta,
+                                         const NumericVector& y, const bool& is_log) {
+  // computes volatility
+  double sig;
+  spec.loadparam(theta);                  // load parameters
+  spec.prep_ineq_vol();                   // prepare functions related to volatility
+  int ny = y.size();
+  
+  volatility vol  = spec.set_vol(y[0]);   // initialize volatility
+  NumericVector out(ny);
+  sig = sqrt(vol.h);
+  out[0] = spec.calc_pdf(y[0]/sig) / sig;
+  out[0] = ((is_log)?  log(out[0]) : out[0]);
+  for (int i = 1; i < ny; i++) { 
+    spec.increment_vol(vol, y[i-1]);
+      sig = sqrt(vol.h);
+      out[i] = spec.calc_pdf(y[i]/sig) / sig; //
+      out[i] = ((is_log)?  log(out[i]) : out[i]);
+    }
+  
+  return out;
+}
+
 //---------------------- Calculates CDF ----------------------//
 template <typename Model>
 NumericVector SingleRegime<Model>::f_cdf(const NumericVector& x, const NumericVector& theta,
@@ -225,8 +251,8 @@ NumericVector SingleRegime<Model>::f_cdf(const NumericVector& x, const NumericVe
     spec.prep_ineq_vol();                   // prepare functions related to volatility
     volatility vol  = spec.set_vol(y[0]);   // initialize volatility
     int ny = y.size();
-    for (int t = 1; t <= ny; t++)
-        spec.increment_vol(vol, y[t-1]);
+    for (int t = 0; t < ny; t++)
+        spec.increment_vol(vol, y[t]);
     double sig = sqrt(vol.h);
 
     // computes CDF
@@ -238,6 +264,31 @@ NumericVector SingleRegime<Model>::f_cdf(const NumericVector& x, const NumericVe
         out[i] = ((is_log)?  log(tmp) : tmp);
     }
     return out;
+}
+
+template <typename Model>
+NumericVector SingleRegime<Model>::f_cdf_its(const NumericVector& theta,
+                                             const NumericVector& y, const bool& is_log) {
+  // computes volatility
+  double sig;
+  spec.loadparam(theta);                  // load parameters
+  spec.prep_ineq_vol();                   // prepare functions related to volatility
+  int ny = y.size();
+  
+  volatility vol  = spec.set_vol(y[0]);   // initialize volatility
+  NumericVector out(ny);
+  sig = sqrt(vol.h);
+  out[0] = spec.calc_cdf(y[0]/sig);
+  out[0] = ((is_log)?  log(out[0]) : out[0]);
+  
+  for (int i = 1; i < ny; i++) { 
+    spec.increment_vol(vol, y[i-1]);
+    sig = sqrt(vol.h);
+    out[i] = spec.calc_cdf(y[i]/sig); //
+    out[i] = ((is_log)?  log(out[i]) : out[i]);
+  }
+  
+  return out;
 }
 
 //---------------------- Generates 1-day-ahead simulations ----------------------//
