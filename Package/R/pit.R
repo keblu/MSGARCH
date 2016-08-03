@@ -1,18 +1,17 @@
 #'Probability Integral Transform.
 #' @description Method returning the predictive Probability integral transform (PIT) in-sample or of a vector of points at \code{t = T + 1}.
-#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
+#' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+#' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+#' created with \code{\link{fit.bayes}}.
 #' @param x Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).
-#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
-#' @param y  Vector (of size T) of observations.
+#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).
+#' @param y  Vector (of size T) of observations (not require when using a fit object).
 #' @param do.norm  Boolean indicating if the PIT value are transforms into standard Normal variate. (Default: \code{do.norm = FALSE}).
 #' @param is.its  Boolean indicating if the in-sample pit is returned. (Default: \code{is.its = FALSE})
-#' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
 #' @details If a matrix of MCMC posterior draws estimates is given, the Bayesian Probability integral transform is calculated.
 #' If \code{is.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
 #' If \code{is.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 #' The \code{do.norm} argument transforms the PIT value into Normal variate so that normality test can be done.
-#' @usage pit(spec, theta, y, do.norm = FALSE, is.its = TRUE)
-#' pit(fit, do.norm = FALSE, is.its = TRUE) 
 #' @examples
 #'\dontrun{
 #' # load data
@@ -26,18 +25,18 @@
 #'fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 #'
 #'# run pit method in-sample              
-#'pit.its = MSGARCH::pit(fit, do.norm = FALSE, is.its = TRUE)                              
+#'pit.its = MSGARCH::pit(object = fit, do.norm = FALSE, is.its = TRUE)                              
 #' 
 #'plot(pit.its)  
 #'                                                                          
 #'# generate random draws at T + 1 from model
 #'set.seed(123)
-#'rnd = MSGARCH::rnd(fit, n = 100000)
+#'rnd = MSGARCH::rnd(object = fit, n = 100000)
 #'
 #'x = rnd$draws
 #'
 #'# run pit method on random draws at T + 1 from model
-#'pit = MSGARCH::pit(fit, x = x, do.norm = FALSE)
+#'pit = MSGARCH::pit(object = fit, x = x, do.norm = FALSE)
 #'
 #'plot(pit)
 #'}
@@ -49,21 +48,19 @@
 #'                 If \code{is.its = TRUE}: Vector (of size T) of observations.  
 #' }
 #'The class \code{MSGARCH_PIT} contains the \code{plot} method.
-#' @usage pit(spec, theta, y, do.norm = TRUE, is.its = TRUE)
-#' pit(fit, do.norm = TRUE, is.its = TRUE) 
 #' @importFrom stats qnorm
 #' @export
-pit <- function(spec, x, theta, y,  do.norm = FALSE, is.its = FALSE)
+pit <- function(object, x, theta, y,  do.norm = FALSE, is.its = FALSE)
 {
-  UseMethod("pit", spec)
+  UseMethod("pit", object)
 }
 
 #' @export
-pit.MSGARCH_SPEC = function(spec, x = NULL, theta, y, do.norm = FALSE, is.its = FALSE) {
+pit.MSGARCH_SPEC = function(object, x = NULL, theta, y, do.norm = FALSE, is.its = FALSE) {
   
   y = f.check.y(y)
   
-  theta = f.check.theta(spec, theta)
+  theta = f.check.theta(object, theta)
   
   N = nrow(theta)
   
@@ -75,7 +72,7 @@ pit.MSGARCH_SPEC = function(spec, x = NULL, theta, y, do.norm = FALSE, is.its = 
   }
   tmp = matrix(data = NA, nrow = N, ncol = nx)
   for (i in 1:N) {
-    tmp = MSGARCH::cdf(spec = spec, x, theta = theta[i, ], y = y, log = FALSE, is.its = is.its)$cdf
+    tmp = MSGARCH::cdf(object = object, x, theta = theta[i, ], y = y, log = FALSE, is.its = is.its)$cdf
   }
   tmp = colMeans(tmp)
   if (do.norm) {
@@ -93,15 +90,15 @@ pit.MSGARCH_SPEC = function(spec, x = NULL, theta, y, do.norm = FALSE, is.its = 
 }
 
 #' @export
-pit.MSGARCH_MLE_FIT = function(fit, x = NULL, do.norm = TRUE, is.its = FALSE) {
+pit.MSGARCH_MLE_FIT = function(object, x = NULL,theta = NULL, y = NULL, do.norm = TRUE, is.its = FALSE) {
   
-  return(MSGARCH::pit(spec = fit$spec, x =  x, theta = fit$theta, y = fit$y, do.norm = do.norm, is.its = is.its))
+  return(MSGARCH::pit(object = object$spec, x =  x, theta = object$theta, y = object$y, do.norm = do.norm, is.its = is.its))
   
 }
 
 #' @export
-pit.MSGARCH_BAY_FIT = function(fit, x = NULL, do.norm = TRUE, is.its = FALSE) {
+pit.MSGARCH_BAY_FIT = function(object, x = NULL, theta = NULL, y = NULL, do.norm = TRUE, is.its = FALSE) {
   
-  return(MSGARCH::pit(spec = fit$spec, x =  x, theta = fit$theta, y = fit$y, do.norm = do.norm, is.its = is.its))
+  return(MSGARCH::pit(object = object$spec, x =  x, theta = object$theta, y = object$y, do.norm = do.norm, is.its = is.its))
   
 }

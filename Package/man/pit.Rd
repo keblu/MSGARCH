@@ -4,23 +4,22 @@
 \alias{pit}
 \title{Probability Integral Transform.}
 \usage{
-pit(spec, theta, y, do.norm = FALSE, is.its = TRUE)
-pit(fit, do.norm = FALSE, is.its = TRUE)
+pit(object, x, theta, y, do.norm = FALSE, is.its = FALSE)
 }
 \arguments{
-\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
+\item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+created with \code{\link{fit.bayes}}.}
 
 \item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
 
-\item{y}{Vector (of size T) of observations.}
+\item{y}{Vector (of size T) of observations (not require when using a fit object).}
 
 \item{do.norm}{Boolean indicating if the PIT value are transforms into standard Normal variate. (Default: \code{do.norm = FALSE}).}
 
 \item{is.its}{Boolean indicating if the in-sample pit is returned. (Default: \code{is.its = FALSE})}
-
-\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 A list of class \code{MSGARCH_PIT} containing two components:
@@ -54,18 +53,18 @@ set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 
 # run pit method in-sample              
-pit.its = MSGARCH::pit(fit, do.norm = FALSE, is.its = TRUE)                              
+pit.its = MSGARCH::pit(object = fit, do.norm = FALSE, is.its = TRUE)                              
 
 plot(pit.its)  
                                                                          
 # generate random draws at T + 1 from model
 set.seed(123)
-rnd = MSGARCH::rnd(fit, n = 100000)
+rnd = MSGARCH::rnd(object = fit, n = 100000)
 
 x = rnd$draws
 
 # run pit method on random draws at T + 1 from model
-pit = MSGARCH::pit(fit, x = x, do.norm = FALSE)
+pit = MSGARCH::pit(object = fit, x = x, do.norm = FALSE)
 
 plot(pit)
 }

@@ -1,10 +1,11 @@
 #' Kernel function.
 #' @description Method returning the kernel value of a vector of observations given a model specification.
-#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
-#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
-#' @param y  Vector (of size T) of observations.
+#' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+#' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+#' created with \code{\link{fit.bayes}}.
+#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).
+#' @param y  Vector (of size T) of observations (not require when using a fit object).
 #' @param log  Boolean indicating if the log kernel is returned. (Default: \code{log = TRUE})
-#' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}. 
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 #'  The kernel is a combination of the prior and the likelihood function. 
 #'  The kernel is equal to prior(\eqn{\theta}) + L(y|\eqn{\theta}) where L is the likelihood
@@ -32,22 +33,20 @@
 #'}
 #' @references Hamilton, J. D. (1989) A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle. \emph{Econometrica}, 57, pp.357-38
 #' @return (Log-)Kernel value (scalar or vector of size M) of the vector of observations.
-#' @usage  kernel(spec, theta, y, log = TRUE)
-#' kernel(fit, log = TRUE)
 #' @export
-kernel <- function(spec, theta, y, log = TRUE)
+kernel <- function(object, theta, y, log = TRUE)
 {
-  UseMethod("kernel", spec)
+  UseMethod("kernel", object)
 }
 
 #' @export
-kernel.MSGARCH_SPEC = function(spec, theta, y, log = TRUE) {
+kernel.MSGARCH_SPEC = function(object, theta, y, log = TRUE) {
   
   y = f.check.y(y)
 
-  theta = f.check.theta(spec, theta)
+  theta = f.check.theta(object, theta)
   
-  lnd = spec$rcpp.func$eval_model(theta, y)
+  lnd = object$rcpp.func$eval_model(theta, y)
   lnd[is.na(lnd) | is.nan(lnd) | is.infinite(lnd)] = -1e+10
   if (!log) 
     lnd = exp(lnd)
@@ -55,15 +54,15 @@ kernel.MSGARCH_SPEC = function(spec, theta, y, log = TRUE) {
 }
 
 #' @export
-kernel.MSGARCH_MLE_FIT = function(fit, log = TRUE) {
+kernel.MSGARCH_MLE_FIT = function(object, theta = NULL, y = NULL, log = TRUE) {
   
-  return(MSGARCH::kernel(spec = fit$spec, theta = fit$theta, y = fit$y, log = log))
+  return(MSGARCH::kernel(object = object$spec, theta = object$theta, y = object$y, log = log))
   
 }
 
 #' @export
-kernel.MSGARCH_BAY_FIT = function(fit, log = TRUE) {
+kernel.MSGARCH_BAY_FIT = function(object, theta = NULL, y = NULL, log = TRUE) {
   
-  return(MSGARCH::kernel(spec = fit$spec, theta = fit$theta, y = fit$y, log = log))
+  return(MSGARCH::kernel(object = object$spec, theta = object$theta, y = object$y, log = log))
   
 }

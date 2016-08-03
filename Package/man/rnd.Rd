@@ -4,19 +4,18 @@
 \alias{rnd}
 \title{Random draws at \code{t = T + 1} simulation method.}
 \usage{
-rnd(spec, n, theta, y)
-rnd(fit, n)
+rnd(object, n, theta, y)
 }
 \arguments{
-\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
+\item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+created with \code{\link{fit.bayes}}.}
 
 \item{n}{Number of random draws to be generated.}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
 
-\item{y}{Vector (of size T) of observations.}
-
-\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
+\item{y}{Vector (of size T) of observations (not require when using a fit object).}
 }
 \value{
 A list of class \code{MSGARCH_RND} containing  two components:
@@ -43,7 +42,7 @@ fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
  
 # generate random draws
 set.seed(123)
-rnd = MSGARCH::rnd(fit, n = 1000)
+rnd = MSGARCH::rnd(object = fit, n = 1000)
 
 plot(rnd)
 

@@ -4,23 +4,22 @@
 \alias{pred}
 \title{Predictive function.}
 \usage{
-pred(spec, theta, y, log = TRUE, is.its = TRUE)
-pred(fit, log = TRUE, is.its = TRUE)
+pred(object, x, theta, y, log = TRUE, is.its = FALSE)
 }
 \arguments{
-\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
+\item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+created with \code{\link{fit.bayes}}.}
 
 \item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
 
-\item{y}{Vector (of size T) of observations.}
+\item{y}{Vector (of size T) of observations (not require when using a fit object).}
 
 \item{log}{Boolean indicating if the log-density is returned. (Default: \code{log = TRUE})}
 
 \item{is.its}{Boolean indicating if the in-sample predictive is returned. (Default: \code{is.its = FALSE})}
-
-\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 A list of class \code{MSGARCH_PRED} containing two components:
@@ -50,10 +49,10 @@ spec = MSGARCH::create.spec()
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+fit = MSGARCH::fit.mle(object = spec, y = sp500ret)
                            
 # run pred method in-sample     
-pred.its = MSGARCH::pred(fit, log = TRUE, is.its = TRUE)  
+pred.its = MSGARCH::pred(object = fit, log = TRUE, is.its = TRUE)  
 
 plot(pred.its)  
                                              
@@ -61,7 +60,7 @@ plot(pred.its)
 x = seq(-3,3,0.01)
 
 # run pred method on mesh at T + 1
-pred = MSGARCH::pred(fit, x = x, log = TRUE, is.its = FALSE)
+pred = MSGARCH::pred(object = fit, x = x, log = TRUE, is.its = FALSE)
 
 plot(pred)
 }

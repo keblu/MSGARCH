@@ -16,5 +16,5 @@ citEntry(entry = "manual",
 	 vers = vers,
 	 textVersion =
          paste("Keven Bluteau, David Ardia, Denis-Alexandre Trottier, Kris Boudt, Brian Peterson (", year,"). ",
-               "Markov-Switching GARCH Models in R: The Package MSGARCH." ", vers, ".", sep = "")
+               "Markov-Switching GARCH Models in R: The Package MSGARCH.", ", vers, ".", sep = "")
 )

@@ -1,13 +1,14 @@
 #' Value-at-Risk And Expected-shortfall.
 #' @description Method returning the Value-at-Risk and Expected-shortfall in-sample or at \code{t = T + 1} based on the predictive density.
-#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
-#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
-#' @param y  Vector (of size T) of observations.
+#'@param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+#' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+#' created with \code{\link{fit.bayes}}.
+#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).
+#' @param y  Vector (of size T) of observations (not require when using a fit object).
 #' @param level Vector (of size R) of Value-at-risk and Expected-shortfall levels.\cr
 #'  (Default: \code{level = c(0.95,0.99)})
 #' @param ES  Boolean indicating if Expected-shortfall is also calculated. (Default: \code{ES = TRUE})
 #' @param is.its  Boolean indicating if the in-sample risk estimator are returned. (Default: \code{is.its = FALSE})
-#' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
 #' @details If a matrix of MCMC posterior draws estimates is given, the Bayesian Value-at-Risk and Expected-shortfall are calculated.
 #' If \code{is.its = FALSE}, \code{x} the risk estimator at \code{t = T + 1}, the method uses the variance estimated at \code{t = T + 1}.
 #' If \code{is.its = TRUE}, The in-sample risk estimator are calculated.
@@ -33,27 +34,25 @@
 #' 
 #'# compute the Value-at-Risk and Expected-shortfall 
 #'# Risk estimation in-sample 
-#'risk.its = MSGARCH::risk(fit, level = c(0.95,0.99), ES = TRUE, is.its = TRUE)
+#'risk.its = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, is.its = TRUE)
 #'                     
 #'# Risk estimation at T + 1                     
-#'risk = MSGARCH::risk(fit, level = c(0.95,0.99), ES = TRUE, is.its = FALSE)
+#'risk = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, is.its = FALSE)
 #'}
-#' @usage risk(spec, theta, y, level = c(0.95,0.99), ES = TRUE, is.its = TRUE)
-#' risk(fit, level = c(0.95,0.99), ES = TRUE, is.its = TRUE) 
 #' @importFrom stats integrate sd uniroot                    
 #' @export
-risk <- function(spec, theta, y, level = c(0.95,0.99), ES = TRUE, is.its = FALSE)
+risk <- function(object, theta, y, level = c(0.95,0.99), ES = TRUE, is.its = FALSE)
 {
-  UseMethod("risk", spec)
+  UseMethod("risk", object)
 }
 
 #' @export
-risk.MSGARCH_SPEC = function(spec, theta, y, level = c(0.95,0.99), ES = TRUE, is.its = FALSE) {
+risk.MSGARCH_SPEC = function(object, theta, y, level = c(0.95,0.99), ES = TRUE, is.its = FALSE) {
   y = c(0,y)
   y = f.check.y(y)
   out = list()
   
-  theta = f.check.theta(spec, theta)
+  theta = f.check.theta(object, theta)
   
   ny =  nrow(y)
   if(!isTRUE(is.its)){
@@ -83,7 +82,7 @@ risk.MSGARCH_SPEC = function(spec, theta, y, level = c(0.95,0.99), ES = TRUE, is
   for(v in start:end){
       
     f.pdf = function(x) {
-      out = MSGARCH::pred(spec, x, theta, y[1:v], log = FALSE)$pred
+      out = MSGARCH::pred(object, x, theta, y[1:v], log = FALSE)$pred
       return(out)
     }
     
@@ -104,8 +103,8 @@ risk.MSGARCH_SPEC = function(spec, theta, y, level = c(0.95,0.99), ES = TRUE, is
       p_i = p[i]
       level_i = level[i]
       calc.step = function(V) {
-        PDF = MSGARCH::pred(spec, x = V, theta = theta, y = y[1:v], log = F)$pred
-        CDF = MSGARCH::pit(spec, x = V, theta = theta, y = y[1:v])$pit
+        PDF = MSGARCH::pred(object, x = V, theta = theta, y = y[1:v], log = F)$pred
+        CDF = MSGARCH::pit(object, x = V, theta = theta, y = y[1:v])$pit
         lPDF = log(PDF)
         err = p_i - CDF
         step = err * exp(-lPDF)
@@ -135,7 +134,7 @@ risk.MSGARCH_SPEC = function(spec, theta, y, level = c(0.95,0.99), ES = TRUE, is
       for (i in 1:np) {
         
         f.condMean = function(x) {
-          out = x * MSGARCH::pred(spec, x, theta, y[1:v], log = FALSE)$pred
+          out = x * MSGARCH::pred(object, x, theta, y[1:v], log = FALSE)$pred
           return(out)
         }
         out$ES[v+step,i] = integrate(f.condMean, lower = -Inf, upper = out$VaR[v+step,i], stop.on.error = FALSE)$value/p[i]
@@ -152,15 +151,15 @@ risk.MSGARCH_SPEC = function(spec, theta, y, level = c(0.95,0.99), ES = TRUE, is
 }
 
 #' @export
-risk.MSGARCH_MLE_FIT = function(fit, level = c(0.95,0.99), ES = TRUE, is.its = FALSE) {
+risk.MSGARCH_MLE_FIT = function(object, theta = NULL, y = NULL, level = c(0.95,0.99), ES = TRUE, is.its = FALSE) {
   
-  return(MSGARCH::risk(spec = fit$spec,  theta = fit$theta, y = fit$y, level = level, ES = ES, is.its = is.its))
+  return(MSGARCH::risk(object = object$spec,  theta = object$theta, y = object$y, level = level, ES = ES, is.its = is.its))
   
 }
 
 #' @export
-risk.MSGARCH_BAY_FIT = function(fit, level = c(0.95,0.99), ES = TRUE, is.its = FALSE) {
+risk.MSGARCH_BAY_FIT = function(object, theta = NULL, y = NULL, level = c(0.95,0.99), ES = TRUE, is.its = FALSE) {
   
-  return(MSGARCH::risk(spec = fit$spec,  theta = fit$theta, y = fit$y, level = level, ES = ES, is.its = is.its))
+  return(MSGARCH::risk(object = object$spec,  theta = object$theta, y = object$y, level = level, ES = ES, is.its = is.its))
   
 }

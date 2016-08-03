@@ -1,39 +1,38 @@
 #' Unconditional volatility of each regime.
 #' @description Method returning the unconditional volatility of the process in each state.
-#' @param spec Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
-#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates.
-#' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
+#' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+#' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+#' created with \code{\link{fit.bayes}}.
+#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 #' @examples 
 #' # create model specification
 #'spec = MSGARCH::create.spec() 
 #'
 #'# compute the unconditional volatility in each regime
-#'unc.vol = MSGARCH::unc.vol(spec = spec, theta = spec$theta0)
-#' @return Unconditional volatility (vector of size K or matrix of size M x K) of each regime. 
-#' @usage unc.vol(spec, theta)
-#' unc.vol(fit)
+#'unc.vol = MSGARCH::unc.vol(object = spec, theta = spec$theta0)
+#' @return Unconditional volatility (vector of size K or matrix of size M x K) of each regime.
 #' @export
-unc.vol <- function(spec, theta)
+unc.vol <- function(object, theta)
 {
-  UseMethod("unc.vol", spec)
+  UseMethod("unc.vol", object)
 }
 
 #' @export
-unc.vol.MSGARCH_SPEC = function(spec, theta) {
+unc.vol.MSGARCH_SPEC = function(object, theta) {
   
-  if (isTRUE(spec$is.shape.ind)) {
-    theta = spec$func$f.do.shape.ind(theta)
+  if (isTRUE(object$is.shape.ind)) {
+    theta = object$func$f.do.shape.ind(theta)
   }
   
-  if (isTRUE(spec$is.mix)) {
-    theta = spec$func$f.do.mix(theta)
+  if (isTRUE(object$is.mix)) {
+    theta = object$func$f.do.mix(theta)
   }
   
-  theta = f.check.theta(spec, theta)
+  theta = f.check.theta(object, theta)
   
   for(i in 1:nrow(theta)){
-    out =  spec$rcpp.func$unc_vol_Rcpp(theta, 0)
+    out =  object$rcpp.func$unc_vol_Rcpp(theta, 0)
   }
   
   out = sqrt(out)
@@ -41,15 +40,15 @@ unc.vol.MSGARCH_SPEC = function(spec, theta) {
 }
 
 #' @export
-unc.vol.MSGARCH_MLE_FIT = function(fit) {
+unc.vol.MSGARCH_MLE_FIT = function(object, theta = NULL) {
   
-  return(MSGARCH::unc.vol(spec = fit$spec, theta = fit$theta))
+  return(MSGARCH::unc.vol(spec = object$spec, theta = object$theta))
   
 }
 
 #' @export
-unc.vol.MSGARCH_BAY_FIT = function(fit) {
+unc.vol.MSGARCH_BAY_FIT = function(object, theta = NULL) {
   
-  return(MSGARCH::unc.vol(spec = fit$spec, theta = fit$theta))
+  return(MSGARCH::unc.vol(spec = object$spec, theta = object$theta))
   
 }

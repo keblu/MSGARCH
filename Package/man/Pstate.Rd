@@ -4,17 +4,16 @@
 \alias{Pstate}
 \title{Filtered state probabilities.}
 \usage{
-Pstate(spec, theta, y)
-Pstate(fit)
+Pstate(object, theta, y)
 }
 \arguments{
-\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
+\item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+created with \code{\link{fit.bayes}}.}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
 
-\item{y}{Vector (of size T) of observations.}
-
-\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
+\item{y}{Vector (of size T) of observations (not require when using a fit object).}
 }
 \value{
 Filtered state probabilities of class \code{MSGARCH_RND} (array of size (T + 1) x M x K).
@@ -39,7 +38,7 @@ set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
  
 # compute the filtered state probabilities
-Pstate  = MSGARCH::Pstate(fit)
+Pstate  = MSGARCH::Pstate(object = fit)
 
 plot(Pstate)
 }

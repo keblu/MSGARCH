@@ -4,23 +4,22 @@
 \alias{cdf}
 \title{Cumulative  function.}
 \usage{
-cdf(spec, theta, y, log = FALSE, is.its = TRUE)
-cdf(fit, log = FALSE, is.its = TRUE)
+cdf(object, x, theta, y, log = FALSE, is.its = FALSE)
 }
 \arguments{
-\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
+\item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+created with \code{\link{fit.bayes}}.}
 
 \item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
 
-\item{y}{Vector (of size T) of observations.}
+\item{y}{Vector (of size T) of observations (not require when using a fit object).}
 
 \item{log}{Boolean indicating if the log cumulative is returned. (Default: \code{log = FALSE})}
 
 \item{is.its}{Boolean indicating if the in-sample cdf is returned. (Default: \code{is.its = FALSE})}
-
-\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 A list of class \code{MSGARCH_CDF} containing two components:
@@ -53,7 +52,7 @@ set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 
 # run pdf method in-sample
-cdf.its = MSGARCH::cdf(fit, log = FALSE, is.its = TRUE)
+cdf.its = MSGARCH::cdf(object = fit, log = FALSE, is.its = TRUE)
 
 plot(cdf.its)  
                                                                                                                                                                                                                                             
@@ -61,7 +60,7 @@ plot(cdf.its)
 x = seq(-3,3,0.01)
 
 # run cdf method on mesh at T + 1
-cdf = MSGARCH::cdf(fit, x = x, log = FALSE, is.its = FALSE)
+cdf = MSGARCH::cdf(object = fit, x = x, log = FALSE, is.its = FALSE)
 
 plot(cdf)
 }

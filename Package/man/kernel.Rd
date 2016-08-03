@@ -4,19 +4,18 @@
 \alias{kernel}
 \title{Kernel function.}
 \usage{
-kernel(spec, theta, y, log = TRUE)
-kernel(fit, log = TRUE)
+kernel(object, theta, y, log = TRUE)
 }
 \arguments{
-\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
+\item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+created with \code{\link{fit.bayes}}.}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
 
-\item{y}{Vector (of size T) of observations.}
+\item{y}{Vector (of size T) of observations (not require when using a fit object).}
 
 \item{log}{Boolean indicating if the log kernel is returned. (Default: \code{log = TRUE})}
-
-\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 (Log-)Kernel value (scalar or vector of size M) of the vector of observations.

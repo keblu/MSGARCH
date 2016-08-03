@@ -4,23 +4,22 @@
 \alias{pdf}
 \title{Probability density function.}
 \usage{
-pdf(spec, theta, y, log = TRUE, is.its = TRUE)
-pdf(fit, log = FALSE, is.its = TRUE)
+pdf(object, x, theta, y, log = FALSE, is.its = FALSE)
 }
 \arguments{
-\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
+\item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
+or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
+created with \code{\link{fit.bayes}}.}
 
 \item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
 
-\item{y}{Vector (of size T) of observations.}
+\item{y}{Vector (of size T) of observations (not require when using a fit object).}
 
 \item{log}{Boolean indicating if the log-density is returned. (Default: \code{log = FALSE})}
 
 \item{is.its}{Boolean indicating if the in-sample pdf is returned. (Default: \code{is.its = FALSE})}
-
-\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
 A list of class \code{MSGARCH_PDF} containing two components:
@@ -53,7 +52,7 @@ set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
 
 # run pdf method in-sample
-pdf.its = MSGARCH::pdf(fit, log = FALSE, is.its = TRUE)
+pdf.its = MSGARCH::pdf(object = fit, log = FALSE, is.its = TRUE)
    
 plot(pdf.its)          
                                                                                                                                                                                                                              
@@ -61,7 +60,7 @@ plot(pdf.its)
 x = seq(-3,3,0.01)
 
 # run pdf method on mesh at T + 1
-pdf = MSGARCH::pdf(fit, x = x, log = FALSE, is.its = FALSE)
+pdf = MSGARCH::pdf(object = fit, x = x, log = FALSE, is.its = FALSE)
 
 plot(pdf)
 }
