@@ -1,12 +1,12 @@
-\name{sp500ret}
+\name{sp500}
 \docType{data}
-\alias{sp500ret}
+\alias{sp500}
 \title{Log return of the S&P 500 index closing Value}
 \description{
-The S&P 500 index closing value log return from 1987-03-10 to 2009-01-30 from
+The S&P 500 index closing value log return from 1998-01-01 to 2015-12-31 from
 Yahoo Finance \url{https://ca.finance.yahoo.com/}.
 }
-\usage{data("sp500ret")}
-\format{Vector containing 5,523 observations.}
+\usage{data("sp500")}
+\format{Matrix containing 4529 observations.}
 \source{Yahoo Finance \url{https://ca.finance.yahoo.com/}}
 \keyword{datasets}

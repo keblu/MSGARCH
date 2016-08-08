@@ -35,13 +35,13 @@
 #' The \code{MSGARCH_SPEC} class possesses these methods:
 #' \itemize{
 #' \item \code{\link{sim}} : Simulation method.
+#' \item \code{\link{simahead}} : Step ahead simulation method.
 #' \item \code{\link{ht}}  : Conditional volatility in each regime.
 #' \item \code{\link{kernel}} : Kernel method.
 #' \item \code{\link{unc.vol}} : Unconditional volatility in each regime.
 #' \item \code{\link{pred}} : Predictive method.
 #' \item \code{\link{pit}} : Probability Integral Transform.
 #' \item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods.
-#' \item \code{\link{rnd}} : Simulation method at T + 1.
 #' \item \code{\link{pdf}} : Probability density function.
 #' \item \code{\link{cdf}} : Cumulative function.
 #' \item \code{\link{Pstate}} : State probabilities filtering method.

@@ -38,14 +38,14 @@ If a matrix of parameter estimates is given, each parameter estimates is evaluat
 \examples{
 \dontrun{
 # load data
-data("sp500ret")
+data("sp500")
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 
 # compute the kernel
 kernel = MSGARCH::kernel(fit, log = TRUE)

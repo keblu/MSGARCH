@@ -21,14 +21,6 @@ unc.vol <- function(object, theta)
 #' @export
 unc.vol.MSGARCH_SPEC = function(object, theta) {
   
-  if (isTRUE(object$is.shape.ind)) {
-    theta = object$func$f.do.shape.ind(theta)
-  }
-  
-  if (isTRUE(object$is.mix)) {
-    theta = object$func$f.do.mix(theta)
-  }
-  
   theta = f.check.theta(object, theta)
   
   for(i in 1:nrow(theta)){
@@ -42,13 +34,13 @@ unc.vol.MSGARCH_SPEC = function(object, theta) {
 #' @export
 unc.vol.MSGARCH_MLE_FIT = function(object, theta = NULL) {
   
-  return(MSGARCH::unc.vol(spec = object$spec, theta = object$theta))
+  return(MSGARCH::unc.vol(object = object$spec, theta = object$theta))
   
 }
 
 #' @export
 unc.vol.MSGARCH_BAY_FIT = function(object, theta = NULL) {
   
-  return(MSGARCH::unc.vol(spec = object$spec, theta = object$theta))
+  return(MSGARCH::unc.vol(object = object$spec, theta = object$theta))
   
 }

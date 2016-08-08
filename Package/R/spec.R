@@ -41,7 +41,7 @@ f.spec = function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   rcpp.func = list()
   rcpp.func$calc_ht = mod$calc_ht
   rcpp.func$eval_model = mod$eval_model
-  rcpp.func$ineq_func.base = mod$ineq_func
+  ineq_func.base = mod$ineq_func
   rcpp.func$sim = mod$f_sim
   rcpp.func$pdf_Rcpp = mod$f_pdf
   rcpp.func$cdf_Rcpp = mod$f_cdf
@@ -79,6 +79,10 @@ f.spec = function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   func$f.do.shape.ind.reverse = function(theta) {
     return(f.theta.RegIndDist.reverse(K, n.params, n.params.vol, theta))
   }
+  loc = c(0,cumsum(n.params))
+  for( i in 1:K){
+    mod$label[(loc[i]+1):loc[i+1]] = paste0(mod$label[(loc[i]+1):loc[i+1]],"_",i)
+  }
   
   if (isTRUE(do.mix) && !isTRUE(do.shape.ind)) {
     
@@ -88,6 +92,11 @@ f.spec = function(models, do.mix = FALSE, do.shape.ind = FALSE) {
     mod$theta0 = as.vector(func$f.do.mix.reverse(mod$theta0))
     mod$Sigma0 = mod$Sigma0[1:newParamsLength]
     mod$label = mod$label[1:newParamsLength]
+    
+    rcpp.func$ineq_func = function(theta) {
+      theta = as.vector(f.theta.mixture(K, NbtotalParams, theta))
+      return(ineq_func.base(theta))
+    }
     
   }  else if (isTRUE(do.mix) && isTRUE(do.shape.ind)) {
     
@@ -102,6 +111,12 @@ f.spec = function(models, do.mix = FALSE, do.shape.ind = FALSE) {
     mod$label = func$f.do.shape.ind.reverse(mod$label)
     mod$label = mod$label[1:newParamsLength]
     
+    rcpp.func$ineq_func = function(theta) {
+      theta = as.vector(f.theta.mixture(K, NbtotalParams, theta))
+      theta = as.vector(f.theta.RegIndDist(K, n.params, n.params.vol, theta))
+      return(ineq_func.base(theta))
+    }
+    
   } else if (!isTRUE(do.mix) && isTRUE(do.shape.ind)) {
     
     mod$lower = as.vector(func$f.do.shape.ind.reverse(mod$lower))
@@ -111,6 +126,12 @@ f.spec = function(models, do.mix = FALSE, do.shape.ind = FALSE) {
     mod$Sigma0 = mod$Sigma0[1:newParamsLength]
     mod$label = func$f.do.shape.ind.reverse(mod$label)
     mod$label = mod$label[1:newParamsLength]
+    
+    rcpp.func$ineq_func = function(theta) {
+      theta = as.vector(f.theta.RegIndDist(K, n.params, n.params.vol, theta))
+      return(ineq_func.base(theta))
+    }
+    
   }
   mod$theta0 = matrix(mod$theta0, ncol= length(mod$theta0))
   colnames(mod$theta0) = mod$label

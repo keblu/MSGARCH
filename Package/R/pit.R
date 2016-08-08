@@ -15,14 +15,14 @@
 #' @examples
 #'\dontrun{
 #' # load data
-#'data("sp500ret")
+#'data("sp500")
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
 #'
 #'# fit the model on the data with ML estimation using DEoptim intialization
 #' set.seed(123)
-#'fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+#'fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #'
 #'# run pit method in-sample              
 #'pit.its = MSGARCH::pit(object = fit, do.norm = FALSE, is.its = TRUE)                              
@@ -31,9 +31,9 @@
 #'                                                                          
 #'# generate random draws at T + 1 from model
 #'set.seed(123)
-#'rnd = MSGARCH::rnd(object = fit, n = 100000)
+#'sim.ahead = MSGARCH::simahead(object = fit, n = 1, m = 10000)
 #'
-#'x = rnd$draws
+#'x = sim.ahead$draws
 #'
 #'# run pit method on random draws at T + 1 from model
 #'pit = MSGARCH::pit(object = fit, x = x, do.norm = FALSE)

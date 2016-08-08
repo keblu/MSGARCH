@@ -77,57 +77,6 @@ summary.MSGARCH_SPEC = function(object, ...){
   }
 }
 
-#'@import ggplot2 reshape2
-#'@export
-plot.MSGARCH_RND = function(x, ...){
-  rnd = x
-  value = variable = NULL
-  if(nrow(rnd$draws == 1)){
-  df.m = data.frame(t(rnd$draws))
-  }else{
-  df.m = data.frame(rnd$draws)
-  }
-  df.m$label = 1:nrow(df.m)
-  df.m <- reshape2::melt(df.m, id.vars = "label")
-  ggplot(df.m, aes(x=value, group=variable)) + geom_density(alpha = 0.05, fill="gray10") + theme(legend.position="none") + ggtitle("Density of the simulated draws")
-}
-
-#'@export
-#'
-summary.MSGARCH_RND= function(object, ...){
-  rnd = object
-  if(length(rnd$state) == 0){
-    print(paste0("Total number of draws for each parameter estimate :", ncol(rnd$draws)))
-    print(paste0("For more information set do.state to TRUE"))
-  } else {
-  print(paste0("Total number of draws for each parameter estimate :", ncol(rnd$state)))
-  if(nrow(rnd$state) == 1){
-    n.state = table(rnd$state)
-    print("Percentage of draws made in state:")
-    print(n.state)
-  } else {
-    n.state = list()
-    for(i in 1:nrow(rnd$state)) {
-      n.state[[i]] = table(rnd$state[i,])
-    }
-    n.state.2 = matrix(NA,nrow = length(n.state),ncol = length(n.state[[1]]))
-    for(i in 1:length(n.state[[1]])){
-      n.state.2[,i] = sapply(n.state, function (x) x[i])
-    }
-    n.state.mean = matrix(colMeans(n.state.2))
-    rownames(n.state.mean) <- 1:nrow(n.state.mean)
-    colnames(n.state.mean) = "State"
-    n.state.sd = matrix(sqrt(diag(var(n.state.2/nrow(rnd$state)))))
-    rownames(n.state.sd) <- 1:nrow(n.state.sd)
-    colnames(n.state.sd) = "State"
-    print("Average percentage of draws from state:")
-    print(n.state.mean/ncol(rnd$state))
-    print("Standard deviation of the percentage of draws from state:")
-    print(n.state.sd)
-  }
-  }
-}
-
 #'@import zoo
 #'@importFrom graphics plot
 #'@export
@@ -135,10 +84,9 @@ plot.MSGARCH_SIM = function(x, ...){
   sim = x
   sim$draws = zoo::zoo(t(sim$draws))
   plot(cumsum(sim$draws), plot.type = "single",ylab = "Cummulative draws",main = "Simulated draws")
-  if(length(sim$state != 0)){
-  sim$state = zoo::zoo(t(sim$state))
-  plot(sim$state, plot.type = "single",ylab = "State",main = "Simulated state")
-  }
+  sim$state = zoo::zoo(rowMeans(t(sim$state)))
+  plot(sim$state, plot.type = "single", ylab = "State",main = "Average simulated state")
+  
 }
 
 #'@import zoo
@@ -160,6 +108,21 @@ plot.MSGARCH_PSTATE = function(x, ...){
   for(i in 1:dim(Pstate)[3]){
     tmp = zoo::zoo(Pstate[,,i])
     plot(tmp, plot.type = "single",ylab = "Probability",main = paste0("Probability to be in State ",i))
+  }
+}
+
+#'@import zoo
+#'@importFrom graphics plot
+#'@export
+plot.MSGARCH_HT = function(x, ...){
+  ht = x
+  if(is.matrix(ht)){
+    tmp = zoo::zoo(t(ht))
+    plot(tmp, plot.type = "single", ylab = "Volatility",main = paste0("Conditional volatility"))
+  }
+  for(i in 1:dim(ht)[3]){
+    tmp = zoo::zoo(ht[,,i])
+    plot(tmp, plot.type = "single", ylab = "Volatility",main = paste0("Conditional volatility of state ",i))
   }
 }
 
@@ -233,7 +196,7 @@ plot.MSGARCH_RISK = function(x, ...){
   plot(zoo::zoo(risk$VaR), plot.type = "single", col = tsRainbow, ylab = "Return", xlab = "T", main = paste0("Value-At-Risk"))
   legend("bottomright",legend =  colnames(risk$VaR), col = tsRainbow, lty = 1)
   if(!is.null(risk$ES)){
-    plot(zoo::zoo(risk$ES), plot.type = "single", ylab = "Return",xlab = "T",main = paste0("Value-At-Risk"))
+    plot(zoo::zoo(risk$ES), plot.type = "single", col = tsRainbow, ylab = "Return", xlab = "T",main = paste0("Expected-shortfall"))
     legend("bottomright",legend =  colnames(risk$ES), lty = 1, col = tsRainbow)
   }
 }

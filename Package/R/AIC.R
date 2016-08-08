@@ -43,8 +43,9 @@ f.AIC = function(spec, theta, y) {
     theta = matrix(theta, nrow = 1)
   }
   theta = matrix(colMeans(theta), nrow = 1)
-  LL = MSGARCH::kernel(spec, theta, y = y, log = TRUE)
+ 
+  LL =  sum(pred(object = spec, theta = theta, y = y, log = TRUE, is.its = TRUE)$pred, na.rm = TRUE)
   k = dim(theta)[2]
-  aic = 2 * LL - 2 * k
+  aic = 2 * k - 2 * LL 
   return(aic)
 }

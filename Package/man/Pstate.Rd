@@ -16,8 +16,8 @@ created with \code{\link{fit.bayes}}.}
 \item{y}{Vector (of size T) of observations (not require when using a fit object).}
 }
 \value{
-Filtered state probabilities of class \code{MSGARCH_RND} (array of size (T + 1) x M x K).
-The class \code{MSGARCH_RND} contains the \code{plot} method.
+Filtered state probabilities of class \code{MSGARCH_PSTATE} (array of size (T + 1) x M x K).
+The class \code{MSGARCH_PSTATE} contains the \code{plot} method.
 }
 \description{
 Method returning the filtered state probabilities.
@@ -28,14 +28,14 @@ If a matrix of parameter estimates is given, each parameter estimates is evaluat
 \examples{
 \dontrun{
 # load data
-data("sp500ret")
+data("sp500")
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500)
  
 # compute the filtered state probabilities
 Pstate  = MSGARCH::Pstate(object = fit)

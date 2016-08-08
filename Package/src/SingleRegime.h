@@ -228,15 +228,12 @@ NumericVector SingleRegime<Model>::f_pdf_its(const NumericVector& theta,
   int ny = y.size();
   
   volatility vol  = spec.set_vol(y[0]);   // initialize volatility
-  NumericVector out(ny);
-  sig = sqrt(vol.h);
-  out[0] = spec.calc_pdf(y[0]/sig) / sig;
-  out[0] = ((is_log)?  log(out[0]) : out[0]);
+  NumericVector out(ny - 1);
   for (int i = 1; i < ny; i++) { 
     spec.increment_vol(vol, y[i-1]);
       sig = sqrt(vol.h);
-      out[i] = spec.calc_pdf(y[i]/sig) / sig; //
-      out[i] = ((is_log)?  log(out[i]) : out[i]);
+      out[i-1] = spec.calc_pdf(y[i]/sig) / sig; //
+      out[i-1] = ((is_log)?  log(out[i-1]) : out[i-1]);
     }
   
   return out;
@@ -276,16 +273,13 @@ NumericVector SingleRegime<Model>::f_cdf_its(const NumericVector& theta,
   int ny = y.size();
   
   volatility vol  = spec.set_vol(y[0]);   // initialize volatility
-  NumericVector out(ny);
-  sig = sqrt(vol.h);
-  out[0] = spec.calc_cdf(y[0]/sig);
-  out[0] = ((is_log)?  log(out[0]) : out[0]);
+  NumericVector out(ny-1);
   
   for (int i = 1; i < ny; i++) { 
     spec.increment_vol(vol, y[i-1]);
     sig = sqrt(vol.h);
-    out[i] = spec.calc_cdf(y[i]/sig); //
-    out[i] = ((is_log)?  log(out[i]) : out[i]);
+    out[i-1] = spec.calc_cdf(y[i]/sig); //
+    out[i-1] = ((is_log)?  log(out[i-1]) : out[i-1]);
   }
   
   return out;

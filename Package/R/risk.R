@@ -8,7 +8,8 @@
 #' @param level Vector (of size R) of Value-at-risk and Expected-shortfall levels.\cr
 #'  (Default: \code{level = c(0.95,0.99)})
 #' @param ES  Boolean indicating if Expected-shortfall is also calculated. (Default: \code{ES = TRUE})
-#' @param is.its  Boolean indicating if the in-sample risk estimator are returned. (Default: \code{is.its = FALSE})
+#' @param is.its  Boolean indicating if the in-sample risk estimator are returned.
+#'  (Default: \code{is.its = FALSE})
 #' @details If a matrix of MCMC posterior draws estimates is given, the Bayesian Value-at-Risk and Expected-shortfall are calculated.
 #' If \code{is.its = FALSE}, \code{x} the risk estimator at \code{t = T + 1}, the method uses the variance estimated at \code{t = T + 1}.
 #' If \code{is.its = TRUE}, The in-sample risk estimator are calculated.
@@ -18,24 +19,28 @@
 #'                    If \code{is.its = TRUE}: In-sample Value-at-Risk at the choosen levels (Matrix of size T x R).
 #' \item \code{ES}  :\cr If \code{is.its = FALSE}: Expected-shortfall at \code{t = T + 1} at the choosen levels (vector of size R).\cr
 #'                    If \code{is.its = TRUE}: In-sample Expected-shortfall at the choosen levels (Matrix of size T x R).
-#' \item \code{y}  :\cr Vector (of size T) of observations.
+#' \item \code{y}  : Vector (of size T) of observations.
 #' }
+#' The \code{MSGARCH_RISK} contains the \code{plot} method. 
+#' The Bayesian risk estimator can take long time to calculate depending on the size of the chain.
 #' @examples 
 #'\dontrun{
 #'# load data
-#'data("sp500ret")
+#'data("sp500")
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
 #'
 #'# fit the model on the data with ML estimation using DEoptim intialization
 #' set.seed(123)
-#'fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+#'fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #' 
 #'# compute the Value-at-Risk and Expected-shortfall 
 #'# Risk estimation in-sample 
 #'risk.its = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, is.its = TRUE)
-#'                     
+#'
+#'plot(risk.its)                     
+#'
 #'# Risk estimation at T + 1                     
 #'risk = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, is.its = FALSE)
 #'}
@@ -80,21 +85,22 @@ risk.MSGARCH_SPEC = function(object, theta, y, level = c(0.95,0.99), ES = TRUE, 
     out$ES = matrix(data = NA, nrow = end - start + 1, ncol = np)
   }
   for(v in start:end){
-      
+    if(is.its == TRUE){
+      if((v + step)%%100 == 0){
+        cat(v + step)
+      }
+    }
+     
     f.pdf = function(x) {
       out = MSGARCH::pred(object, x, theta, y[1:v], log = FALSE)$pred
       return(out)
     }
     
-    f.fun = function(x, pi) {
-      out = integrate(f.pdf, lower = xmin, upper = x)$value - pi
-      return(out)
-    }
-    
     # gross approximation for VaR
-  
+    x = seq(from = xmin, to=xmax, length.out = 1000)
+    cumul =  cumsum(f.pdf(x)*(x[2]-x[1]))
     for (i in 1:np) {
-      tmp.VaR[i] = uniroot(f.fun, lower = xmin, upper = xmax, pi = p[i])$root
+      tmp.VaR[i] = x[which.min(abs(cumul - p[i]))]
     }
     
     # add precision by Newton-Raphson
@@ -139,13 +145,15 @@ risk.MSGARCH_SPEC = function(object, theta, y, level = c(0.95,0.99), ES = TRUE, 
         }
         out$ES[v+step,i] = integrate(f.condMean, lower = -Inf, upper = out$VaR[v+step,i], stop.on.error = FALSE)$value/p[i]
       }
+      colnames(out$ES) = level
+      out$ES = rbind(NA, out$ES)
     }
   }
   out$y = y[2:length(y)]
   colnames(out$VaR) = level
-  colnames(out$ES) = level
+  
   out$VaR = rbind(NA, out$VaR) 
-  out$ES = rbind(NA, out$ES)
+  
   class(out) = "MSGARCH_RISK"
   return(out)
 }

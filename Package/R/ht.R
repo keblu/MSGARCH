@@ -9,14 +9,14 @@
 #' @examples 
 #'\dontrun{
 #'# load data
-#'data("sp500ret")
+#'data("sp500")
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
 #'
 #'# fit the model on the data with ML estimation using DEoptim intialization
 #' set.seed(123)
-#' fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+#' fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #'
 #'# Compute the conditional volatility
 #'ht = MSGARCH::ht(object = fit)
@@ -38,6 +38,7 @@ ht.MSGARCH_SPEC = function(object, theta, y) {
   theta = f.check.theta(object, theta)
   
   out = object$rcpp.func$calc_ht(theta, y)
+  class(out) = "MSGARCH_HT"
   out = sqrt(out)
   return(out)
 }

@@ -14,9 +14,11 @@ fit.bayes(spec, y, ctr = list())
 \item{ctr}{A list of control parameters. \cr
 The control parameters have three components:
 \itemize{
-\item \code{N.burn} (integer >= 0): Number of discarded draws. (Default: \code{N.burn = 1000})
-\item \code{N.mcmc} (integer > 0) : Number of draws. (Default: \code{N.mcmc = 5000})
+\item \code{N.burn} (integer >= 0): Number of discarded draws. (Default: \code{N.burn = 5000})
+\item \code{N.mcmc} (integer > 0) : Number of draws. (Default: \code{N.mcmc = 10000})
 \item \code{N.thin} (integer > 0) : Thinning factor (every \code{N.thin} draws are kept). (Default: \code{N.thin = 10})
+\item \code{theta0} : Starting value for the chain (if empty the specification default value are used).
+\item \code{enhance.theta0} : Boolean indicating if the default parameters value are enhance using \code{y} variance. (Default: \code{enhance.theta0 = FALSE})
 }}
 }
 \value{
@@ -38,7 +40,7 @@ The \code{MSGARCH_BAY_FIT} contains these methods:
 \item \code{\link{pred}} : Predictive method.
 \item \code{\link{pit}} : Probability Integral Transform.
 \item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods.
-\item \code{\link{rnd}} : Simulation method at T + 1.
+\item \code{\link{simahead}} : Step ahead simulation method.
 \item \code{\link{pdf}} : Probability density function.
 \item \code{\link{cdf}} : Cumulative function.
 \item \code{\link{Pstate}} : State probabilities filtering method.
@@ -50,19 +52,22 @@ Method that performs Bayesian estimation of a \code{MSGARCH_SPEC} object on a se
 \details{
 The total number of draws is equal to \code{N.mcmc / N.thin}.
 The Bayesian estimation uses the \R package \code{adaptMCMC} (Andreas, 2012) which  
-implements the adaptive sampler of Vihola (2012).
+implements the adaptive sampler of Vihola (2012). The argument \code{enhance.theta0}
+ uses the volatilities of rolling windows of \code{y} and adjust the default parameter of
+ the specification so that the unconditional volatility of each regime
+ is set to different quantiles of the volatilities of the rolling windows of \code{y}.
 }
 \examples{
 \dontrun{
 # load data
-data("sp500ret")
+data("sp500")
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with Bayesian estimation
 set.seed(123)
-fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret, 
+fit = MSGARCH::fit.bayes(spec = spec, y = sp500, 
                          ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
 }                          
 }

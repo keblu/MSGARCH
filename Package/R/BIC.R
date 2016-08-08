@@ -1,5 +1,3 @@
-
-
 #' Compute Bayesian information criterion (BIC).
 #' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}
 #' @references Schwarz, G. (1978). Estimating the dimension of a model. \emph{Annals of Statistics}, 6, pp. 461-464. 
@@ -45,10 +43,10 @@ f.BIC = function(spec, theta, y) {
     theta = matrix(theta, nrow = 1)
   }
   theta = matrix(colMeans(theta), nrow = 1)
-  LL = MSGARCH::kernel(spec, theta, y = y, log = TRUE)
+  LL = sum(pred(object = spec, theta = theta, y = y, log = TRUE, is.its = TRUE)$pred, na.rm = TRUE)
   k = dim(theta)[2]
   n = length(y)
-  bic = 2 * LL - k * log(n)
+  bic = k * log(n) - 2 * LL 
   return(bic)
   
 }

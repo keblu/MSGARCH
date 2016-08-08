@@ -14,14 +14,14 @@
 #' @examples 
 #'\dontrun{
 #'# load data
-#'data("sp500ret")
+#'data("sp500")
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
 #'
 #'# fit the model on the data with ML estimation using DEoptim intialization
 #' set.seed(123)
-#'fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+#'fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #'
 #'# run pdf method in-sample
 #'pdf.its = MSGARCH::pdf(object = fit, log = FALSE, is.its = TRUE)
@@ -62,7 +62,7 @@ pdf.MSGARCH_SPEC = function(object, x = NULL, theta, y, log = FALSE, is.its = FA
     for(i in 1:nrow(theta)){
      tmp2 = matrix(data = NA, nrow = length(y)-1 , ncol = object$K)
       if(object$K == 1){
-        tmp2 = object$rcpp.func$pdf_Rcpp_its(theta[i,] ,y, log)
+        tmp2 = object$rcpp.func$pdf_Rcpp_its(theta[i,], y, log)
         tmp[i,] = tmp2
       } else{
         Pstate = MSGARCH::Pstate(object = object, theta = theta[i,], y = y)
@@ -99,6 +99,6 @@ pdf.MSGARCH_MLE_FIT = function(object, x = NULL, theta = NULL, y = NULL, log = T
 #' @export
 pdf.MSGARCH_BAY_FIT = function(object, x = NULL, theta = NULL, y = NULL, log = TRUE, is.its = FALSE) {
   
-  return(MSGARCH::pdf(spec = object$spec, x =  x, theta = object$theta, y = object$y, log = log, is.its = is.its))
+  return(MSGARCH::pdf(object = object$spec, x =  x, theta = object$theta, y = object$y, log = log, is.its = is.its))
   
 }

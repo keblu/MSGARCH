@@ -14,10 +14,10 @@ fit.mle(spec, y, ctr = list())
 \item{ctr}{List of control parameters.
 The control parameters have two components to it:
 \itemize{
-\item \code{theta0} : Starting parameters (vector of size d). If no starting parameters is provided, the default starting parameters of the specification are used.
 \item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (Default: \code{do.init = TRUE})
 \item \code{NP} : Number of parameter vectors in the population in \code{DEoptim} optimization. (Default: \code{NP = 200})
 \item \code{itermax} : Maximum iteration (population generation) allowed in \code{DEoptim} optimization. (Default: \code{maxit = 200})
+\item \code{enhance.theta0} : Boolean indicating if the default parameters value are enhance using \code{y} variance. (Default: \code{enhance.theta0 = TRUE})
 }}
 }
 \value{
@@ -39,7 +39,7 @@ The \code{MSGARCH_MLE_FIT} contains these methods:
 \item \code{\link{pred}} : Predictive method.
 \item \code{\link{pit}} : Probability Integral Transform.
 \item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods.
-\item \code{\link{rnd}} : Simulation method at T + 1.
+\item \code{\link{simahead}} : Step ahead simulation method.
 \item \code{\link{pdf}} : Probability density function.
 \item \code{\link{cdf}} : Cumulative function.
 \item \code{\link{Pstate}} : State probabilities filtering method.
@@ -50,20 +50,24 @@ Method that performs Maximum Likelihood estimation of a \code{MSGARCH_SPEC} obje
 }
 \details{
 The Maximum likelihood estimation uses the \R package \code{nloptr} (Johnson, 2014) for main optimizer 
-while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an initialization for nloptr.
+while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an initialization for nloptr. 
+ The argument \code{enhance.theta0}
+ uses the volatilities of rolling windows of \code{y} and adjust the default parameter of
+ the specification so that the unconditional volatility of each regime
+ is set to different quantiles of the volatilities of the rolling windows of \code{y}.
 }
 \examples{
 \dontrun{
 # load data
-data("sp500ret")
+data("sp500")
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500ret, 
-                       ctr = list(do.init = TRUE, NP = 100, itermax = 100))
+fit = MSGARCH::fit.mle(spec = spec, y = sp500, 
+                       ctr = list(do.init = TRUE, NP = 500, itermax = 500))
   }                     
 }
 \references{

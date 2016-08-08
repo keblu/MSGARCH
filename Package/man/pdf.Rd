@@ -42,14 +42,14 @@ If \code{is.its = TRUE}, \code{y} is evaluated using their respective variance e
 \examples{
 \dontrun{
 # load data
-data("sp500ret")
+data("sp500")
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 
 # run pdf method in-sample
 pdf.its = MSGARCH::pdf(object = fit, log = FALSE, is.its = TRUE)

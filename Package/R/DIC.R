@@ -45,7 +45,7 @@ f.DIC = function(spec, theta, y) {
     theta = matrix(theta, nrow = 1)
   }
   
-  LL = MSGARCH::kernel(spec, theta, y = y, log = TRUE)
+  LL = sum(pred(object = spec, theta = theta, y = y, log = TRUE, is.its = TRUE)$pred, na.rm = TRUE)
   D.bar = -2*mean(LL)
   theta.bar <- colMeans(theta)
   D.hat = -2*MSGARCH::kernel(spec, theta.bar, y = y, log = TRUE)

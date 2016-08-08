@@ -20,7 +20,8 @@ created with \code{\link{fit.bayes}}.}
 
 \item{ES}{Boolean indicating if Expected-shortfall is also calculated. (Default: \code{ES = TRUE})}
 
-\item{is.its}{Boolean indicating if the in-sample risk estimator are returned. (Default: \code{is.its = FALSE})}
+\item{is.its}{Boolean indicating if the in-sample risk estimator are returned.
+(Default: \code{is.its = FALSE})}
 }
 \value{
 A list containing of class \code{MSGARCH_RISK} containing two or three components:
@@ -29,8 +30,10 @@ A list containing of class \code{MSGARCH_RISK} containing two or three component
                    If \code{is.its = TRUE}: In-sample Value-at-Risk at the choosen levels (Matrix of size T x R).
 \item \code{ES}  :\cr If \code{is.its = FALSE}: Expected-shortfall at \code{t = T + 1} at the choosen levels (vector of size R).\cr
                    If \code{is.its = TRUE}: In-sample Expected-shortfall at the choosen levels (Matrix of size T x R).
-\item \code{y}  :\cr Vector (of size T) of observations.
+\item \code{y}  : Vector (of size T) of observations.
 }
+The \code{MSGARCH_RISK} contains the \code{plot} method. 
+The Bayesian risk estimator can take long time to calculate depending on the size of the chain.
 }
 \description{
 Method returning the Value-at-Risk and Expected-shortfall in-sample or at \code{t = T + 1} based on the predictive density.
@@ -43,19 +46,21 @@ If \code{is.its = TRUE}, The in-sample risk estimator are calculated.
 \examples{
 \dontrun{
 # load data
-data("sp500ret")
+data("sp500")
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 
 # compute the Value-at-Risk and Expected-shortfall 
 # Risk estimation in-sample 
 risk.its = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, is.its = TRUE)
-                    
+
+plot(risk.its)                     
+
 # Risk estimation at T + 1                     
 risk = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, is.its = FALSE)
 }
