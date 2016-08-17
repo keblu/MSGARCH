@@ -52,7 +52,9 @@ transmat.MSGARCH_SPEC <- function(object, theta, n = 1) {
     }
     p[n_model] <- 1 - sum(p)
   }
-  p = p %^% n
+  if(!object$is.mix){
+      p = p %^% n
+  }
   col_label = paste0("t = ", 1:object$K)
   row_label = paste0("t + ",n," = ", 1:object$K)
   rownames(p) = row_label
