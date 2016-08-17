@@ -1,16 +1,16 @@
 #'Probability Integral Transform.
-#' @description Method returning the predictive Probability integral transform (PIT) in-sample or of a vector of points at \code{t = T + 1}.
+#' @description Method returning the predictive probability integral transform (PIT) in-sample or of a vector of points at \code{t = T + 1}.
 #' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 #' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 #' created with \code{\link{fit.bayes}}.
-#' @param x Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).
+#' @param x Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{do.its = FALSE}).
 #' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).
 #' @param y  Vector (of size T) of observations (not require when using a fit object).
 #' @param do.norm  Boolean indicating if the PIT value are transforms into standard Normal variate. (Default: \code{do.norm = FALSE}).
-#' @param is.its  Boolean indicating if the in-sample pit is returned. (Default: \code{is.its = FALSE})
-#' @details If a matrix of MCMC posterior draws estimates is given, the Bayesian Probability integral transform is calculated.
-#' If \code{is.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
-#' If \code{is.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
+#' @param do.its  Boolean indicating if the in-sample pit is returned. (Default: \code{do.its = FALSE})
+#' @details If a matrix of MCMC posterior draws estimates is given, the Bayesian probability integral transform is calculated.
+#' If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
+#' If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 #' The \code{do.norm} argument transforms the PIT value into Normal variate so that normality test can be done.
 #' @examples
 #'\dontrun{
@@ -25,7 +25,7 @@
 #'fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #'
 #'# run pit method in-sample              
-#'pit.its = MSGARCH::pit(object = fit, do.norm = FALSE, is.its = TRUE)                              
+#'pit.its = MSGARCH::pit(object = fit, do.norm = FALSE, do.its = TRUE)                              
 #' 
 #'plot(pit.its)  
 #'                                                                          
@@ -42,63 +42,59 @@
 #'}
 #' @return A list of class \code{MSGARCH_PIT} containing two components:
 #' \itemize{
-#' \item \code{pit}:\cr If \code{is.its = FALSE}: Probability integral transform of the points \code{x} at \code{t = T + 1} or Normal variate derived from the Probability integral transform of \code{x} (vector of size N).\cr
-#'                   If \code{is.its = TRUE}: In-sample  Probability integral transform or Normal variate derived from the Probability integral transform of \code{y} (vector of size T or matrix of size M x T). 
-#' \item \code{x}:\cr If \code{is.its = FALSE}: Vector (of size N) of at point \code{t = T + 1} evaluated.\cr
-#'                 If \code{is.its = TRUE}: Vector (of size T) of observations.  
+#' \item \code{pit}:\cr If \code{do.its = FALSE}: probability integral transform of the points \code{x} at \code{t = T + 1} or Normal variate derived from the probability integral transform of \code{x} (vector of size N).\cr
+#'                   If \code{do.its = TRUE}: In-sample  probability integral transform or Normal variate derived from the probability integral transform of \code{y} (vector of size T or matrix of size M x T). 
+#' \item \code{x}:\cr If \code{do.its = FALSE}: Vector (of size N) of at point \code{t = T + 1} evaluated.\cr
+#'                 If \code{do.its = TRUE}: Vector (of size T) of observations.  
 #' }
-#'The class \code{MSGARCH_PIT} contains the \code{plot} method.
+#'The class \code{MSGARCH_PIT} contains the \code{plot} method only if \code{do.its = FALSE}.
 #' @importFrom stats qnorm
 #' @export
-pit <- function(object, x, theta, y,  do.norm = FALSE, is.its = FALSE)
-{
+pit <- function(object, x, theta, y, do.norm = FALSE, do.its = FALSE) {
   UseMethod("pit", object)
 }
 
 #' @export
-pit.MSGARCH_SPEC = function(object, x = NULL, theta, y, do.norm = FALSE, is.its = FALSE) {
-  
-  y = f.check.y(y)
-  
-  theta = f.check.theta(object, theta)
-  
-  N = nrow(theta)
-  
-  if(isTRUE(is.its)){
-    nx = length(y)
-    x = y
+pit.MSGARCH_SPEC <- function(object, x = NULL, theta, y, do.norm = FALSE, do.its = FALSE) {
+  y <- f.check.y(y)
+  theta <- f.check.theta(object, theta)
+  N <- nrow(theta)
+  if (isTRUE(do.its)) {
+    nx <- length(y)
+    x <- y
   } else {
-    nx = length(x)
+    nx <- length(x)
   }
-  tmp = matrix(data = NA, nrow = N, ncol = nx)
+  tmp <- matrix(data = NA, nrow = N, ncol = nx)
   for (i in 1:N) {
-    tmp = MSGARCH::cdf(object = object, x, theta = theta[i, ], y = y, log = FALSE, is.its = is.its)$cdf
+    tmp <- MSGARCH::cdf(object = object, x, theta = theta[i, ], y = y, log = FALSE,
+                       do.its = do.its)$cdf
   }
-  tmp = colMeans(tmp)
+  tmp <- colMeans(tmp)
   if (do.norm) {
-    tmp = qnorm(tmp, mean = 0, sd = 1)
+    tmp <- qnorm(tmp, mean = 0, sd = 1)
   }
   if (any(is.nan(tmp))) {
     stop("NaN value in PIT calculation")
   }
-  out = list()
-  out$pit = tmp
-  out$x = x
-  out$is.its = is.its
-  class(out) = "MSGARCH_PIT"
+  out <- list()
+  out$pit <- tmp
+  out$x <- x
+  out$do.its <- do.its
+  class(out) <- "MSGARCH_PIT"
   return(out)
 }
 
 #' @export
-pit.MSGARCH_MLE_FIT = function(object, x = NULL,theta = NULL, y = NULL, do.norm = TRUE, is.its = FALSE) {
-  
-  return(MSGARCH::pit(object = object$spec, x =  x, theta = object$theta, y = object$y, do.norm = do.norm, is.its = is.its))
-  
+pit.MSGARCH_MLE_FIT <- function(object, x = NULL, theta = NULL, y = NULL, do.norm = TRUE,
+                               do.its = FALSE) {
+  return(MSGARCH::pit(object = object$spec, x = x, theta = object$theta, y = object$y,
+                      do.norm = do.norm, do.its = do.its))
 }
 
 #' @export
-pit.MSGARCH_BAY_FIT = function(object, x = NULL, theta = NULL, y = NULL, do.norm = TRUE, is.its = FALSE) {
-  
-  return(MSGARCH::pit(object = object$spec, x =  x, theta = object$theta, y = object$y, do.norm = do.norm, is.its = is.its))
-  
+pit.MSGARCH_BAY_FIT <- function(object, x = NULL, theta = NULL, y = NULL, do.norm = TRUE,
+                               do.its = FALSE) {
+  return(MSGARCH::pit(object = object$spec, x = x, theta = object$theta, y = object$y, 
+                      do.norm = do.norm, do.its = do.its))
 }

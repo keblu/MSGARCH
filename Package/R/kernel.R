@@ -34,35 +34,29 @@
 #' @references Hamilton, J. D. (1989) A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle. \emph{Econometrica}, 57, pp.357-38
 #' @return (Log-)Kernel value (scalar or vector of size M) of the vector of observations.
 #' @export
-kernel <- function(object, theta, y, log = TRUE)
-{
+kernel <- function(object, theta, y, log = TRUE) {
   UseMethod("kernel", object)
 }
 
 #' @export
-kernel.MSGARCH_SPEC = function(object, theta, y, log = TRUE) {
-  
-  y = f.check.y(y)
-
-  theta = f.check.theta(object, theta)
-  
-  lnd = object$rcpp.func$eval_model(theta, y)
-  lnd[is.na(lnd) | is.nan(lnd) | is.infinite(lnd)] = -1e+10
-  if (!log) 
-    lnd = exp(lnd)
+kernel.MSGARCH_SPEC <- function(object, theta, y, log = TRUE) {
+  y <- f.check.y(y)
+  theta <- f.check.theta(object, theta)
+  lnd <- object$rcpp.func$eval_model(theta, y)
+  lnd[is.na(lnd) | is.nan(lnd) | is.infinite(lnd)] <- -1e+10
+  if (!log)
+    lnd <- exp(lnd)
   return(lnd)
 }
 
 #' @export
-kernel.MSGARCH_MLE_FIT = function(object, theta = NULL, y = NULL, log = TRUE) {
-  
-  return(MSGARCH::kernel(object = object$spec, theta = object$theta, y = object$y, log = log))
-  
+kernel.MSGARCH_MLE_FIT <- function(object, theta = NULL, y = NULL, log = TRUE) {
+  return(MSGARCH::kernel(object = object$spec, theta = object$theta,
+                         y = object$y, log = log))
 }
 
 #' @export
-kernel.MSGARCH_BAY_FIT = function(object, theta = NULL, y = NULL, log = TRUE) {
-  
-  return(MSGARCH::kernel(object = object$spec, theta = object$theta, y = object$y, log = log))
-  
+kernel.MSGARCH_BAY_FIT <- function(object, theta = NULL, y = NULL, log = TRUE) {
+  return(MSGARCH::kernel(object = object$spec, theta = object$theta,
+                         y = object$y, log = log))
 }

@@ -1,5 +1,5 @@
 #' Filtered state probabilities.
-#' @description Method returning the filtered state probabilities.
+#' @description Method returning the filtered probabilities of the states.
 #' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 #' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 #' created with \code{\link{fit.bayes}}.
@@ -26,39 +26,31 @@
 #'@return Filtered state probabilities of class \code{MSGARCH_PSTATE} (array of size (T + 1) x M x K).
 #'The class \code{MSGARCH_PSTATE} contains the \code{plot} method.
 #' @export
-Pstate <- function(object, theta, y)
-{
+Pstate <- function(object, theta, y) {
   UseMethod("Pstate", object)
 }
 
 #' @export
-Pstate.MSGARCH_SPEC = function(object, theta, y) {
-  
-  y = as.matrix(y)
-  
-  theta = f.check.theta(object, theta)
-  
-  out = array(dim = c(nrow(y) + 1, nrow(theta), object$K))
-  for(i in 1:nrow(theta)){
-    tmp = object$rcpp.func$get_Pstate_Rcpp(theta[i,], y, FALSE)
-    for(j in 1:object$K){
-      out[,i,j] = tmp[,j]
+Pstate.MSGARCH_SPEC <- function(object, theta, y) {
+  y <- as.matrix(y)
+  theta <- f.check.theta(object, theta)
+  out <- array(dim = c(nrow(y) + 1, nrow(theta), object$K))
+  for (i in 1:nrow(theta)) {
+    tmp <- object$rcpp.func$get_Pstate_Rcpp(theta[i, ], y, FALSE)
+    for (j in 1:object$K) {
+      out[, i, j] <- tmp[, j]
     }
   }
-  class(out) = "MSGARCH_PSTATE"
+  class(out) <- "MSGARCH_PSTATE"
   return(out)
 }
 
 #' @export
-Pstate.MSGARCH_MLE_FIT = function(object, theta = NULL, y = NULL) {
-  
-  return(MSGARCH::Pstate(object = object$spec,  theta = object$theta, y = object$y))
-  
+Pstate.MSGARCH_MLE_FIT <- function(object, theta = NULL, y = NULL) {
+  return(MSGARCH::Pstate(object = object$spec, theta = object$theta, y = object$y))
 }
 
 #' @export
-Pstate.MSGARCH_BAY_FIT = function(object, theta = NULL, y = NULL) {
-  
-  return(MSGARCH::Pstate(object = object$spec,  theta = object$theta, y = object$y))
-  
+Pstate.MSGARCH_BAY_FIT <- function(object, theta = NULL, y = NULL) {
+  return(MSGARCH::Pstate(object = object$spec, theta = object$theta, y = object$y))
 }

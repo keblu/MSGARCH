@@ -20,7 +20,7 @@ Filtered state probabilities of class \code{MSGARCH_PSTATE} (array of size (T + 
 The class \code{MSGARCH_PSTATE} contains the \code{plot} method.
 }
 \description{
-Method returning the filtered state probabilities.
+Method returning the filtered probabilities of the states.
 }
 \details{
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.

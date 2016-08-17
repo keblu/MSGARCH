@@ -63,7 +63,7 @@
 #' @references Haas, M. Mittnik, S. & Paolella, M. S. (2004a). A New Approach to Markov-Switching GARCH Models. \emph{Journal of Financial Econometrics}, 2, pp. 493-530.
 #' @references Haas, M. Mittnik, S. & Paolella, M. S. (2004b). Mixed Normal Conditional Heteroskedasticity. \emph{Journal of Financial Econometrics}, 2, pp. 211-250.
 #' @references Nelson, D. B. (1991). Conditional Heteroskedasticity in Asset Returns: A New Approach. \emph{Econometrica}, 59, pp. 347-370.
-#' @references Zakoian, J.-M. (1994). Threshold Heteroskedastic Models Journal of Economic. \emph{Dynamics and Control}, 18, pp. 931-955.
+#' @references Zakoian, J.-M. (1994). Threshold Heteroskedastic Models. \emph{Journal of Economic Dynamics and Control}, 18, pp. 931-955.
 #' @examples 
 #' # create model specification
 #' spec = MSGARCH::create.spec(model = c("sGARCH","gjrGARCH"), distribution = c("norm","std"),
@@ -71,84 +71,85 @@
 #' print(spec)
 #' @import Rcpp RcppArmadillo
 #' @export
-create.spec = function(model = c("sGARCH", "sGARCH"), distribution = c("norm", "norm"), 
-  do.skew = c(FALSE, FALSE), do.mix = FALSE, do.shape.ind = FALSE) {
+create.spec <- function(model = c("sGARCH", "sGARCH"),
+                        distribution = c("norm", "norm"),
+                        do.skew = c(FALSE, FALSE),
+                        do.mix = FALSE,
+                        do.shape.ind = FALSE) {
   require(MSGARCH)
-  distribution = distribution[1:length(model)]
-  do.skew = do.skew[1:length(model)]
-  valid.distribution = c("norm", "std", "ged")
-  valid.model = c("sGARCH", "eGARCH", "gjrGARCH", "tGARCH", "GAS")
-  
-  
+  distribution <- distribution[1:length(model)]
+  do.skew <- do.skew[1:length(model)]
+  valid.distribution <- c("norm", "std", "ged")
+  valid.model <- c("sGARCH", "eGARCH", "gjrGARCH", "tGARCH", "GAS")
   if (length(distribution) != length(model)) {
-    stop("\ncreate.spec-->error: model vector and distribution vector must be of the same length")
+    stop("\ncreate.spec-->error: model vector and distribution
+         vector must be of the same length")
   }
   for (i in 1:length(distribution)) {
     if (is.null(distribution[i])) {
-      distribution[i] = "norm"
+      distribution[i] <- "norm"
     }
-    
     if (!is.character(distribution[1])) {
-      stop(paste0("\ncreate.spec-->error: The distribution #",i ,"  argument must be a character"))
+      stop(paste0("\ncreate.spec-->error: The distribution #", i, "
+                  argument must be a character"))
     }
     if (!any(distribution[i] == valid.distribution)) {
-      stop(paste0("\ncreate.spec-->error: The distribution #",i ," does not appear to be a valid choice."))
+      stop(paste0("\ncreate.spec-->error: The distribution #", i, "
+                  does not appear to be a valid choice."))
     }
   }
-  skew_tag = do.skew
+  skew_tag <- do.skew
   for (i in 1:length(do.skew)) {
     if (is.null(do.skew[i]) || !isTRUE(do.skew[i])) {
-      skew_tag[i] = "sym"
+      skew_tag[i] <- "sym"
     } else if (isTRUE(do.skew[i])) {
-      skew_tag[i] = "skew"
+      skew_tag[i] <- "skew"
     } else {
-      stop(paste0("\ncreate.spec-->error: do.skew #", i, " argument must be a boolean"))
+      stop(paste0("\ncreate.spec-->error: do.skew #", i, "
+                  argument must be a boolean"))
     }
   }
-  dist.merge = paste0(distribution, "_", skew_tag)
-  
+  dist.merge <- paste0(distribution, "_", skew_tag)
   for (i in 1:length(model)) {
-    
     if (is.null(model[i])) {
-      model[i] = "sGARCH"
+      model[i] <- "sGARCH"
     } else {
-      
       if (!is.character(model[i])) {
-        stop(paste0("\ncreate.spec-->error: Model #", i, " argument must be a character.\n", 
+        stop(paste0("\ncreate.spec-->error: Model #", i, "
+                    argument must be a character.\n",
           call. = FALSE))
       }
       if (!any(model[i] == valid.model)) {
-        stop(paste0("\ncreate.spec-->error: Model #", i, " does not appear to be a valid choice.\n", 
+        stop(paste0("\ncreate.spec-->error: Model #", i, "
+                    does not appear to be a valid choice.\n",
           call. = FALSE))
       }
     }
   }
   if (is.null(do.mix)) {
-    do.mix = FALSE
+    do.mix <- FALSE
   }
   if (isTRUE(do.mix) || !isTRUE(do.mix)) {
-    
   } else {
-    stop("\ncreate.spec-->error: do.mix must be a TRUE or FALSE\n", call. = FALSE)
+    stop("\ncreate.spec-->error: do.mix must be a TRUE or FALSE\n",
+         call. = FALSE)
   }
-  
   if (is.null(do.shape.ind)) {
-    do.shape.ind = FALSE
+    do.shape.ind <- FALSE
   }
   if (isTRUE(do.shape.ind) || !isTRUE(do.shape.ind)) {
-    
   } else {
-    stop("\ncreate.spec-->error: do.shape.ind must be a TRUE or FALSE\n", call. = FALSE)
+    stop("\ncreate.spec-->error: do.shape.ind must be a TRUE or FALSE\n",
+         call. = FALSE)
   }
-  models.merge = paste0(model, "_", dist.merge)
-  
-  models.list = NULL
+  models.merge <- paste0(model, "_", dist.merge)
+  models.list <- NULL
   for (j in 1:length(models.merge)) {
-    models.list[[j]] = get(models.merge[j])
+    models.list[[j]] <- get(models.merge[j])
   }
-  out = suppressWarnings(expr = f.spec(models = models.list, do.mix = do.mix, 
-                                       do.shape.ind = do.shape.ind))
-  
-  class(out) = "MSGARCH_SPEC"
+  out <- suppressWarnings(expr = f.spec(models = models.list,
+                                        do.mix = do.mix,
+                                        do.shape.ind = do.shape.ind))
+  class(out) <- "MSGARCH_SPEC"
   return(out)
 }

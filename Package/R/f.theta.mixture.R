@@ -1,47 +1,42 @@
-f.theta.mixture = function(K, NbParams, theta) {
-  
-  if (is.vector(theta)) 
-    theta = matrix(theta, nrow = 1)
-  nTotalParams = ncol(theta)
-  nTheta = nrow(theta)
-  Pvector = theta[(NbParams + 1):nTotalParams]
-  tmp = theta[1, ]
-  idx = 1
+f.theta.mixture <- function(K, nb_params, theta) {
+  if (is.vector(theta))
+    theta <- matrix(theta, nrow = 1)
+  n_total_params <- ncol(theta)
+  n_theta <- nrow(theta)
+  p_vector <- theta[(nb_params + 1):n_total_params]
+  tmp <- theta[1, ]
+  idx <- 1
   for (i in 1:(K - 1)) {
-    tmp[(NbParams + idx):(NbParams + idx + K - 1)] = Pvector[i]
-    idx = idx + K
+    tmp[(nb_params + idx):(nb_params + idx + K - 1)] <- p_vector[i]
+    idx <- idx + K
   }
-  
-  newTheta = matrix(nrow = nTheta, ncol = length(tmp))
-  
-  for (i in 1:nTheta) {
-    Pvector = theta[i, (NbParams + 1):nTotalParams]
-    idx = 1
+  new_theta <- matrix(nrow = n_theta, ncol = length(tmp))
+  for (i in 1:n_theta) {
+    p_vector <- theta[i, (nb_params + 1):n_total_params]
+    idx <- 1
     for (j in 1:(K - 1)) {
-      newTheta[i, (NbParams + idx):(NbParams + idx + K - 1)] = Pvector[j]
-      idx = idx + K
+      new_theta[i, (nb_params + idx):(nb_params + idx + K - 1)] <- p_vector[j]
+      idx <- idx + K
     }
   }
-  newTheta[, 1:NbParams] = theta[, 1:NbParams]
-  return(newTheta)
+  new_theta[, 1:nb_params] <- theta[, 1:nb_params]
+  return(new_theta)
 }
 
-f.theta.mixture.reverse = function(K, NbParams, theta) {
-  
-  if (is.vector(theta)) 
-    theta = matrix(theta, nrow = 1)
-  nTotalParams = ncol(theta)
-  nTheta = nrow(theta)
-  newtheta = matrix(nrow = nTheta, ncol = NbParams + K - 1)
-  
-  for (i in 1:nTheta) {
-    Pvector = theta[i, (NbParams + 1):nTotalParams]
-    newtheta[i, 1:NbParams] = theta[i, 1:NbParams]
-    idx = 1
+f.theta.mixture.reverse <- function(K, nb_params, theta) {
+  if (is.vector(theta))
+    theta <- matrix(theta, nrow = 1)
+  n_total_params <- ncol(theta)
+  n_theta <- nrow(theta)
+  new_theta <- matrix(nrow = n_theta, ncol = nb_params + K - 1)
+  for (i in 1:n_theta) {
+    p_vector <- theta[i, (nb_params + 1):n_total_params]
+    new_theta[i, 1:nb_params] <- theta[i, 1:nb_params]
+    idx <- 1
     for (j in 1:(K - 1)) {
-      newtheta[i, (NbParams + j)] = Pvector[idx]
-      idx = idx + K
+      new_theta[i, (nb_params + j)] <- p_vector[idx]
+      idx <- idx + K
     }
   }
-  return(newtheta)
+  return(new_theta)
 }

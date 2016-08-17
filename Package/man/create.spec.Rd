@@ -96,6 +96,6 @@ Haas, M. Mittnik, S. & Paolella, M. S. (2004b). Mixed Normal Conditional Heteros
 
 Nelson, D. B. (1991). Conditional Heteroskedasticity in Asset Returns: A New Approach. \emph{Econometrica}, 59, pp. 347-370.
 
-Zakoian, J.-M. (1994). Threshold Heteroskedastic Models Journal of Economic. \emph{Dynamics and Control}, 18, pp. 931-955.
+Zakoian, J.-M. (1994). Threshold Heteroskedastic Models. \emph{Journal of Economic Dynamics and Control}, 18, pp. 931-955.
 }
 

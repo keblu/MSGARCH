@@ -4,14 +4,14 @@
 \alias{pred}
 \title{Predictive function.}
 \usage{
-pred(object, x, theta, y, log = TRUE, is.its = FALSE)
+pred(object, x, theta, y, log = TRUE, do.its = FALSE)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 created with \code{\link{fit.bayes}}.}
 
-\item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).}
+\item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{do.its = FALSE}).}
 
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
 
@@ -19,25 +19,25 @@ created with \code{\link{fit.bayes}}.}
 
 \item{log}{Boolean indicating if the log-density is returned. (Default: \code{log = TRUE})}
 
-\item{is.its}{Boolean indicating if the in-sample predictive is returned. (Default: \code{is.its = FALSE})}
+\item{do.its}{Boolean indicating if the in-sample predictive is returned. (Default: \code{do.its = FALSE})}
 }
 \value{
 A list of class \code{MSGARCH_PRED} containing two components:
 \itemize{
-\item \code{pred}:\cr If \code{is.its = FALSE}: (Log-)Predictive of of the points \code{x} at \code{t = T + 1} (vector of size N). \cr
-                  If \code{is.its = TRUE}: In-sample Predictive of \code{y} (vector of size T or matrix of size M x T). 
-\item \code{x}:\cr If \code{is.its = FALSE}: Vector (of size N) of point at \code{t = T + 1} evaluated.\cr
-                If \code{is.its = TRUE}: Vector (of size T) of observations.
+\item \code{pred}:\cr If \code{do.its = FALSE}: (Log-)Predictive of of the points \code{x} at \code{t = T + 1} (vector of size N). \cr
+                  If \code{do.its = TRUE}: In-sample Predictive of \code{y} (vector of size T or matrix of size M x T). 
+\item \code{x}:\cr If \code{do.its = FALSE}: Vector (of size N) of point at \code{t = T + 1} evaluated.\cr
+                If \code{do.its = TRUE}: Vector (of size T) of observations.
 }
-The class \code{MSGARCH_PRED} contains the \code{plot} method.
+The class \code{MSGARCH_PRED} contains the \code{plot} method only if \code{do.its = FALSE}.
 }
 \description{
 Method returning the predictive probability density in-sample or of a vector of points at \code{t = T + 1}.
 }
 \details{
 If a matrix of MCMC posterior draws estimates is given, the Bayesian Probability integral transform is calculated.
-If \code{is.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
-If \code{is.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
+If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
+If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 }
 \examples{
 \dontrun{
@@ -49,18 +49,18 @@ spec = MSGARCH::create.spec()
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(object = spec, y = sp500)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500)
                            
 # run pred method in-sample     
-pred.its = MSGARCH::pred(object = fit, log = TRUE, is.its = TRUE)  
+pred.its = MSGARCH::pred(object = fit, log = TRUE, do.its = TRUE)  
 
-plot(pred.its)  
+sum(pred.its$pred, na.rm = TRUE)
                                              
 # create mesh
 x = seq(-3,3,0.01)
 
 # run pred method on mesh at T + 1
-pred = MSGARCH::pred(object = fit, x = x, log = TRUE, is.its = FALSE)
+pred = MSGARCH::pred(object = fit, x = x, log = TRUE, do.its = FALSE)
 
 plot(pred)
 }

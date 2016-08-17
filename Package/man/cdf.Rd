@@ -4,14 +4,14 @@
 \alias{cdf}
 \title{Cumulative  function.}
 \usage{
-cdf(object, x, theta, y, log = FALSE, is.its = FALSE)
+cdf(object, x, theta, y, log = FALSE, do.its = FALSE)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 created with \code{\link{fit.bayes}}.}
 
-\item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{is.its = FALSE}).}
+\item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{do.its = FALSE}).}
 
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
 
@@ -19,25 +19,25 @@ created with \code{\link{fit.bayes}}.}
 
 \item{log}{Boolean indicating if the log cumulative is returned. (Default: \code{log = FALSE})}
 
-\item{is.its}{Boolean indicating if the in-sample cdf is returned. (Default: \code{is.its = FALSE})}
+\item{do.its}{Boolean indicating if the in-sample cdf is returned. (Default: \code{do.its = FALSE})}
 }
 \value{
 A list of class \code{MSGARCH_CDF} containing two components:
 \itemize{
-\item \code{cdf}:\cr  If \code{is.its = FALSE}: (Log-)Cumulative of the points \code{x} at \code{t = T + 1} (vector of size N or matrix of size M x N).\cr
-                  If \code{is.its = TRUE}: In-sample (Log-)Cumulative of \code{y} (vector of size T or matrix of size M x T). 
-\item \code{x}: \cr If \code{is.its = FALSE}: Vector (of size N) of point at \code{t = T + 1} evaluated.\cr
-                If \code{is.its = TRUE}: Vector (of size T) of observations.
+\item \code{cdf}:\cr  If \code{do.its = FALSE}: (Log-)Cumulative of the points \code{x} at \code{t = T + 1} (vector of size N or matrix of size M x N).\cr
+                  If \code{do.its = TRUE}: In-sample (Log-)Cumulative of \code{y} (vector of size T or matrix of size M x T). 
+\item \code{x}: \cr If \code{do.its = FALSE}: Vector (of size N) of point at \code{t = T + 1} evaluated.\cr
+                If \code{do.its = TRUE}: Vector (of size T) of observations.
 }
-The class \code{MSGARCH_CDF} contains the \code{plot} method.
+The class \code{MSGARCH_CDF} contains the \code{plot} method only if \code{do.its = FALSE}.
 }
 \description{
-Method returning the cumulative in-sample or of a vector of points at \code{t = T + 1}.
+Method returning the cumulative function in-sample or of a vector of points at \code{t = T + 1}.
 }
 \details{
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually. 
-If \code{is.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
-If \code{is.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
+If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
+If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 }
 \examples{
 \dontrun{
@@ -52,15 +52,13 @@ set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 
 # run pdf method in-sample
-cdf.its = MSGARCH::cdf(object = fit, log = FALSE, is.its = TRUE)
+cdf.its = MSGARCH::cdf(object = fit, log = FALSE, do.its = TRUE)
 
-plot(cdf.its)  
-                                                                                                                                                                                                                                            
 # create mesh
 x = seq(-3,3,0.01)
 
 # run cdf method on mesh at T + 1
-cdf = MSGARCH::cdf(object = fit, x = x, log = FALSE, is.its = FALSE)
+cdf = MSGARCH::cdf(object = fit, x = x, log = FALSE, do.its = FALSE)
 
 plot(cdf)
 }

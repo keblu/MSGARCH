@@ -4,14 +4,14 @@
 \alias{sim}
 \title{Process simulation method.}
 \usage{
-sim(spec, n, m, theta, burnin = 500)
+sim(object, n, m, theta, burnin = 500)
 }
 \arguments{
-\item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
+\item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}
 
-\item{n}{Simulation length.}
+\item{n}{Simulation length. (Default: \code{n = 1000})}
 
-\item{m}{Number of simulation.}
+\item{m}{Number of simulations. (Default: \code{m = 1})}
 
 \item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
 
@@ -26,10 +26,12 @@ A list of class \code{MSGARCH_SIM} containing two components.
  The \code{MSGARCH_SIM} class contains the \code{plot} method.
 }
 \description{
-Method returning a \code{MSGARCH} specification process.
+Method simulating a \code{MSGARCH} process.
 }
 \details{
-If a matrix of parameter estimates is given, each parameter estimates is evaluated individually and \code{m = nrow(theta)}.
+If a matrix of parameter estimates is given, each parameter estimates is evaluated individually and \code{m = M}.  The difference between \code{\link{sim}} and \code{\link{simahead}} is that
+\code{\link{sim}} starts the simulation a t = 0 creating an entire new process while  \code{\link{simahead}} starts the simulation at t = T + 1
+ taking in consideration all the information available in the original time serie \code{y}.
 }
 \examples{
 # create model specification
@@ -37,7 +39,7 @@ spec = MSGARCH::create.spec()
 
 # generate process
 set.seed(123)
-sim = MSGARCH::sim(spec = spec, n = 1000, m = 1, theta = spec$theta0, burnin = 500)
+sim = MSGARCH::sim(object = spec, n = 1000, m = 1, theta = spec$theta0, burnin = 500)
 
 plot(sim)
 }

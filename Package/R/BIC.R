@@ -4,13 +4,13 @@
 #' @examples 
 #' \dontrun{
 #' # load data
-#'data("sp500ret")
+#'data("sp500")
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
 #'
 #'# fit the model by MLE                                                             
-#'fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+#'fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #'
 #'# compute BIC
 #'BIC = MSGARCH::BIC(fit)
@@ -18,35 +18,31 @@
 #' @details If a matrix of MCMC posterior draws estimates is given, the BIC on the posterior mean is calculated.
 #' @return BIC value.
 #' @export
-BIC <- function(fit)
-{
-  UseMethod("BIC", fit)
+BIC <- function(fit) {
+  UseMethod(generic = "BIC", object = fit)
 }
 
 #' @export
-BIC.MSGARCH_MLE_FIT <- function(fit){
-  
-  bic = f.BIC(fit$spec, fit$theta, fit$y)
+BIC.MSGARCH_MLE_FIT <- function(fit) {
+  bic <- f.BIC(spec = fit$spec, theta = fit$theta, y = fit$y)
   return(bic)
 }
 
 #' @export
-BIC.MSGARCH_BAY_FIT <- function(fit){
-  
-  bic = f.BIC(fit$spec, fit$theta, fit$y)
+BIC.MSGARCH_BAY_FIT <- function(fit) {
+  bic <- f.BIC(spec = fit$spec, theta = fit$theta, y = fit$y)
   return(bic)
 }
 
-f.BIC = function(spec, theta, y) {
-  
-  if (is.vector(theta)) {
-    theta = matrix(theta, nrow = 1)
+f.BIC <- function(spec, theta, y) {
+  if (is.vector(x = theta)) {
+    theta <- matrix(data = theta, nrow = 1)
   }
-  theta = matrix(colMeans(theta), nrow = 1)
-  LL = sum(pred(object = spec, theta = theta, y = y, log = TRUE, is.its = TRUE)$pred, na.rm = TRUE)
-  k = dim(theta)[2]
-  n = length(y)
-  bic = k * log(n) - 2 * LL 
+  theta <- matrix(colMeans(x = theta), nrow = 1)
+  LL <- sum(MSGARCH::pdf(object = spec, theta = theta, y = y, log = TRUE,
+                          do.its = TRUE)$pdf, na.rm = TRUE)
+  k <- dim(x = theta)[2]
+  n <- length(x = y)
+  bic <- k * log(x = n) - 2 * LL
   return(bic)
-  
 }

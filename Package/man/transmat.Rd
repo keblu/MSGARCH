@@ -4,17 +4,20 @@
 \alias{transmat}
 \title{Transition Matrix.}
 \usage{
-transmat(object, theta)
+transmat(object, theta, n)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}}.}
 
 \item{theta}{Vector (of size d) of parameter estimates (not require when using a fit object).}
+
+\item{n}{Number of steps ahead. (Default: \code{n = 1}}
 }
 \value{
 A matrix (of size K x K) in the case of a Markov-Switching model
- or a vector (of size K) in the case of a Mixture model.
+ or a vector (of size K) in the case of a Mixture model. 
+ The columns indcates the starting states while the rows indicates the transition states.
 }
 \description{
 Method returning the transition matrix.
@@ -22,17 +25,17 @@ Method returning the transition matrix.
 \examples{
 \dontrun{
 # load data
-data("sp500ret")
+data("sp500")
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 
-# run pdf method in-sample
-transmat.mle = MSGARCH::transmat(fit)
+# Extract the transition matrix 10 steps ahead
+transmat.mle = MSGARCH::transmat(fit, n = 10)
 
 print(transmat.mle)
 }

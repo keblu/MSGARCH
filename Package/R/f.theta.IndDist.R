@@ -1,66 +1,54 @@
-f.theta.RegIndDist = function(K, NbTotalParams, NbParamsModel, theta) {
-  
-  if (is.vector(theta)) 
-    theta = matrix(theta, nrow = 1)
-  nTheta = nrow(theta)
-  NbDistParams = NbTotalParams - NbParamsModel
-  if (NbDistParams[1] == 0) {
+f.theta.RegIndDist <- function(K, nb_total_params, nb_params_model, theta) {
+  if (is.vector(theta))
+    theta <- matrix(theta, nrow = 1)
+  n_theta <- nrow(theta)
+  nb_dist_params <- nb_total_params - nb_params_model
+  if (nb_dist_params[1] == 0) {
     return(theta)
   }
-  NbParamsTransition = ncol(theta) - sum(NbParamsModel) - NbDistParams[1]
-  newLength = sum(NbParamsModel) + sum(NbDistParams) + NbParamsTransition
-  newTheta = matrix(data = NA, nrow = nTheta, ncol = newLength)
-  for (i in 1:nTheta) {
-    DistParams = theta[i, (sum(NbParamsModel) + 1):(sum(NbParamsModel) + NbDistParams[1])]
-    PParams = theta[i, (sum(NbParamsModel) + NbDistParams[1] + 1):length(theta[i, 
-      ])]
-    
-    ind1 = 1
-    ind2 = 1
-    
+  nb_params_transition <- ncol(theta) - sum(nb_params_model) - nb_dist_params[1]
+  new_length <- sum(nb_params_model) + sum(nb_dist_params) + nb_params_transition
+  new_theta <- matrix(data = NA, nrow = n_theta, ncol = new_length)
+  for (i in 1:n_theta) {
+    dist_params <- theta[i, (sum(nb_params_model) + 1):(sum(nb_params_model) + nb_dist_params[1])]
+    p_params <- theta[i, (sum(nb_params_model) + nb_dist_params[1] + 1):length(theta[i, ])]
+    ind1 <- 1
+    ind2 <- 1
     for (j in 1:K) {
-      newTheta[i, ind2:(ind2 + NbParamsModel[j] - 1)] = theta[i, ind1:(ind1 + 
-        NbParamsModel[j] - 1)]
-      newTheta[i, (ind2 + NbParamsModel[j]):(ind2 + NbParamsModel[j] + NbDistParams[1] - 
-        1)] = DistParams
-      ind1 = ind1 + NbParamsModel[j]
-      ind2 = ind2 + NbParamsModel[j] + length(DistParams)
+      new_theta[i, ind2:(ind2 + nb_params_model[j] - 1)] <- theta[i, ind1:(ind1 + nb_params_model[j] - 1)]
+      new_theta[i, (ind2 + nb_params_model[j]):(ind2 + nb_params_model[j] + nb_dist_params[1] - 1)] <- dist_params
+      ind1 <- ind1 + nb_params_model[j]
+      ind2 <- ind2 + nb_params_model[j] + length(dist_params)
     }
-    newTheta[i, ind2:newLength] = PParams
+    new_theta[i, ind2:new_length] <- p_params
   }
-  return(newTheta)
+  return(new_theta)
 }
 
-f.theta.RegIndDist.reverse = function(K, NbTotalParams, NbParamsModel, theta) {
-  
-  if (is.vector(theta)) 
-    theta = matrix(theta, nrow = 1)
-  nTheta = nrow(theta)
-  NbParams = length(theta[1, ])
-  NbDistParams = NbTotalParams - NbParamsModel
-  if (NbDistParams[1] == 0) {
+f.theta.RegIndDist.reverse <- function(K, nb_total_params, nb_params_model, theta) {
+  if (is.vector(theta))
+    theta <- matrix(theta, nrow = 1)
+  n_theta <- nrow(theta)
+  nb_params <- length(theta[1, ])
+  nb_dist_params <- nb_total_params - nb_params_model
+  if (nb_dist_params[1] == 0) {
     return(theta)
   }
-  newLength = sum(NbParamsModel) + NbDistParams[1] + NbParams - sum(NbTotalParams)
-  
-  newTheta = matrix(data = NA, nrow = nTheta, ncol = newLength)
-  for (i in 1:nTheta) {
-    
-    PParams = theta[i, (sum(NbTotalParams) + 1):NbParams]
-    DistParams = theta[i, (NbParamsModel[1] + 1):(NbParamsModel[1] + NbDistParams[1])]
-    
-    
-    ind1 = 1
-    ind2 = 1
+  new_length <- sum(nb_params_model) + nb_dist_params[1] + nb_params - sum(nb_total_params)
+  new_theta <- matrix(data = NA, nrow = n_theta, ncol = new_length)
+  for (i in 1:n_theta) {
+    p_params <- theta[i, (sum(nb_total_params) + 1):nb_params]
+    dist_params <- theta[i, (nb_params_model[1] + 1):(nb_params_model[1] + nb_dist_params[1])]
+    ind1 <- 1
+    ind2 <- 1
     for (j in 1:K) {
-      newTheta[i, ind1:(ind1 + NbParamsModel[j] - 1)] = theta[i, ind2:(ind2 + 
-        NbParamsModel[j] - 1)]
-      ind1 = ind1 + NbParamsModel[j]
-      ind2 = ind2 + NbParamsModel[j] + length(DistParams)
+      new_theta[i, ind1:(ind1 + nb_params_model[j] - 1)] <- theta[i, ind2:(ind2 + nb_params_model[j] - 1)]
+      ind1 <- ind1 + nb_params_model[j]
+      ind2 <- ind2 + nb_params_model[j] + length(dist_params)
     }
-    newTheta[i, ind1:(ind1 + length(DistParams) - 1)] = DistParams
-    ind1 = ind1 + length(DistParams)
-    newTheta[i, ind1:newLength] = PParams
+    new_theta[i, ind1:(ind1 + length(dist_params) - 1)] <- dist_params
+    ind1 <- ind1 + length(dist_params)
+    new_theta[i, ind1:new_length] <- p_params
   }
-  return(newTheta)
+  return(new_theta)
 }

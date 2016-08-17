@@ -18,7 +18,7 @@ The control parameters have three components:
 \item \code{N.mcmc} (integer > 0) : Number of draws. (Default: \code{N.mcmc = 10000})
 \item \code{N.thin} (integer > 0) : Thinning factor (every \code{N.thin} draws are kept). (Default: \code{N.thin = 10})
 \item \code{theta0} : Starting value for the chain (if empty the specification default value are used).
-\item \code{enhance.theta0} : Boolean indicating if the default parameters value are enhance using \code{y} variance. (Default: \code{enhance.theta0 = FALSE})
+\item \code{do.enhance.theta0} : Boolean indicating if the default parameters value are enhance using \code{y} variance. (Default: \code{do.enhance.theta0 = FALSE})
 }}
 }
 \value{
@@ -41,9 +41,11 @@ The \code{MSGARCH_BAY_FIT} contains these methods:
 \item \code{\link{pit}} : Probability Integral Transform.
 \item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods.
 \item \code{\link{simahead}} : Step ahead simulation method.
+\item \code{\link{sim}} : Simulation method.
 \item \code{\link{pdf}} : Probability density function.
 \item \code{\link{cdf}} : Cumulative function.
 \item \code{\link{Pstate}} : State probabilities filtering method.
+\item \code{summary} : Summary of the fit.
 }
 }
 \description{
@@ -52,7 +54,7 @@ Method that performs Bayesian estimation of a \code{MSGARCH_SPEC} object on a se
 \details{
 The total number of draws is equal to \code{N.mcmc / N.thin}.
 The Bayesian estimation uses the \R package \code{adaptMCMC} (Andreas, 2012) which  
-implements the adaptive sampler of Vihola (2012). The argument \code{enhance.theta0}
+implements the adaptive sampler of Vihola (2012). The argument \code{do.enhance.theta0}
  uses the volatilities of rolling windows of \code{y} and adjust the default parameter of
  the specification so that the unconditional volatility of each regime
  is set to different quantiles of the volatilities of the rolling windows of \code{y}.
@@ -68,7 +70,7 @@ spec = MSGARCH::create.spec()
 # fit the model on the data with Bayesian estimation
 set.seed(123)
 fit = MSGARCH::fit.bayes(spec = spec, y = sp500, 
-                         ctr = list(N.burn = 100,N.mcmc = 1000, N.thin = 1))
+                         ctr = list(N.burn = 10000, N.mcmc = 10000, N.thin = 1))
 }                          
 }
 \references{

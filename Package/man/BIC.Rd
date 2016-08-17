@@ -21,13 +21,13 @@ If a matrix of MCMC posterior draws estimates is given, the BIC on the posterior
 \examples{
 \dontrun{
 # load data
-data("sp500ret")
+data("sp500")
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model by MLE                                                             
-fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 
 # compute BIC
 BIC = MSGARCH::BIC(fit)

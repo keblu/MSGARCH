@@ -17,7 +17,7 @@ The control parameters have two components to it:
 \item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (Default: \code{do.init = TRUE})
 \item \code{NP} : Number of parameter vectors in the population in \code{DEoptim} optimization. (Default: \code{NP = 200})
 \item \code{itermax} : Maximum iteration (population generation) allowed in \code{DEoptim} optimization. (Default: \code{maxit = 200})
-\item \code{enhance.theta0} : Boolean indicating if the default parameters value are enhance using \code{y} variance. (Default: \code{enhance.theta0 = TRUE})
+\item \code{do.enhance.theta0} : Boolean indicating if the default parameters value are enhance using \code{y} variance. (Default: \code{do.enhance.theta0 = TRUE})
 }}
 }
 \value{
@@ -40,9 +40,11 @@ The \code{MSGARCH_MLE_FIT} contains these methods:
 \item \code{\link{pit}} : Probability Integral Transform.
 \item \code{\link{risk}} : Value-at-Risk And Expected-Shortfall methods.
 \item \code{\link{simahead}} : Step ahead simulation method.
+\item \code{\link{sim}} : Simulation method.
 \item \code{\link{pdf}} : Probability density function.
 \item \code{\link{cdf}} : Cumulative function.
 \item \code{\link{Pstate}} : State probabilities filtering method.
+\item \code{summary} : Summary of the fit.
 }
 }
 \description{
@@ -51,7 +53,7 @@ Method that performs Maximum Likelihood estimation of a \code{MSGARCH_SPEC} obje
 \details{
 The Maximum likelihood estimation uses the \R package \code{nloptr} (Johnson, 2014) for main optimizer 
 while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an initialization for nloptr. 
- The argument \code{enhance.theta0}
+ The argument \code{do.enhance.theta0}
  uses the volatilities of rolling windows of \code{y} and adjust the default parameter of
  the specification so that the unconditional volatility of each regime
  is set to different quantiles of the volatilities of the rolling windows of \code{y}.
@@ -68,14 +70,15 @@ spec = MSGARCH::create.spec()
 set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500, 
                        ctr = list(do.init = TRUE, NP = 500, itermax = 500))
-  }                     
+summary(fit)
+  }           
 }
 \references{
 Ardia, D. Boudt, K. Carl, P. Mullen, K. M. & Peterson, B. G. (2011). Differential Evolution with \code{DEoptim}. \emph{R Journal}, 3, pp. 27-34
 
 Ardia, D. Mullen, K. M. Peterson, B. G. & Ulrich, J. (2015). \code{DEoptim}: Differential Evolution in \R. \url{https://cran.r-project.org/web/packages/DEoptim/}
 
-Mullen, K. M. Ardia, D. Gil, D. L. Windover, D. Cline, J.(2011) \code{DEoptim}: An \R Package for Global Optimization by Differential Evolution. \emph{Journal of Statistical Software}, 40, pp. 1-26
+Mullen, K. M. Ardia, D. Gil, D. L. Windover, D. Cline, J.(2011) \code{DEoptim}: An \R Package for Global Optimization by Differential Evolution. \emph{Journal of Statistical Software}, 40, pp. 1-26, DOI:	\url{http://dx.doi.org/10.18637/jss.v040.i06}
 
 Johnson, S. G. (2014). The NLopt Nonlinear-Optimization. \url{https://cran.r-project.org/web/packages/NLopt/}.
 }

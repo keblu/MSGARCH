@@ -1,11 +1,11 @@
 if(!exists("meta") || is.null(meta)) meta <- packageDescription("MSGARCH")
 year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
-vers <- paste("version", meta$Version)
+vers <- paste("Version", meta$Version)
 
 citHeader("To cite 'MSGARCH' in publications use:")
 
 citEntry(entry = "manual",
-	 title = "{M}arkov-{S}witching {GARCH} Models in {R}: The Package {MSGARCH}",
+	 title = "{M}arkov-{S}witching {GARCH} Models in {R}: The {MSGARCH} Package",
 	 author = personList(person("Keven","Bluteau"),
                              person("David","Ardia"),
                              person("Denis-Alexandre","Trottier"),
@@ -16,5 +16,5 @@ citEntry(entry = "manual",
 	 vers = vers,
 	 textVersion =
          paste("Keven Bluteau, David Ardia, Denis-Alexandre Trottier, Kris Boudt, Brian Peterson (", year,"). ",
-               "Markov-Switching GARCH Models in R: The Package MSGARCH.", ", vers.", sep = "")
+               "Markov-Switching GARCH Models in R: The MSGARCH Package. ", vers, ".", sep = "")
 )

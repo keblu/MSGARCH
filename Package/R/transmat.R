@@ -3,66 +3,64 @@
 #' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 #' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}}.
 #' @param theta Vector (of size d) of parameter estimates (not require when using a fit object).
+#' @param n Number of steps ahead. (Default: \code{n = 1}
 #' @examples 
 #'\dontrun{
 #'# load data
-#'data("sp500ret")
+#'data("sp500")
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
 #'
 #'# fit the model on the data with ML estimation using DEoptim intialization
 #' set.seed(123)
-#' fit = MSGARCH::fit.mle(spec = spec, y = sp500ret)
+#' fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #'
-#'# run pdf method in-sample
-#'transmat.mle = MSGARCH::transmat(fit)
+#'# Extract the transition matrix 10 steps ahead
+#'transmat.mle = MSGARCH::transmat(fit, n = 10)
 #'
 #'print(transmat.mle)
 #'}
 #' @return A matrix (of size K x K) in the case of a Markov-Switching model
-#'  or a vector (of size K) in the case of a Mixture model.
+#'  or a vector (of size K) in the case of a Mixture model. 
+#'  The columns indcates the starting states while the rows indicates the transition states. 
 #' @importFrom stats quantile
+#' @import expm
 #' @export
-transmat <- function(object, theta)
-{
-  UseMethod("transmat", object)
+transmat <- function(object, theta, n) {
+  UseMethod(generic = "transmat", object =  object)
 }
 
-transmat.MSGARCH_SPEC = function(object, theta){
-  
-  if(isTRUE(object$is.shape.ind)){
-    theta = object$func$f.do.shape.ind(theta = theta)
+transmat.MSGARCH_SPEC <- function(object, theta, n = 1) {
+  if (isTRUE(object$is.shape.ind)) {
+    theta <- object$func$f.do.shape.ind(theta = theta)
   }
-  
-  Nbparams = object$n.params
-  Nmodel = length(Nbparams)
-  Nbparams = object$n.params
-  paramsLoc = c(0,cumsum(Nbparams))
-  
-  
-  if(!isTRUE(object$is.mix)){
-    
-    p = matrix(nrow = Nmodel, ncol = Nmodel)
-    for (i in 1:(Nmodel-1)){
-      p[i,1:Nmodel] = theta[(paramsLoc[Nmodel+1]+1):(paramsLoc[Nmodel+1] + Nmodel)]
+  Nbparams <- object$n.params
+  n_model <- length(Nbparams)
+  Nbparams <- object$n.params
+  params_loc <- c(0, cumsum(Nbparams))
+  if (!isTRUE(object$is.mix)) {
+    p <- matrix(nrow = n_model, ncol = n_model)
+    for (i in 1:(n_model - 1)) {
+      p[i, 1:n_model] <- theta[(params_loc[n_model + 1] + 1):(params_loc[n_model + 1] + n_model)]
     }
-    p[Nmodel,] = 1-colSums(matrix(p[1:(Nmodel-1),], ncol = Nmodel ))
+    p[n_model, ] <- 1 - colSums(matrix(p[1:(n_model - 1), ], ncol = n_model))
   } else {
-    p = rep(0,Nmodel)
-    for (i in 1:(Nmodel-1)){
-      p[i] = theta[(paramsLoc[Nmodel+1]+1)]
+    p <- rep(0, n_model)
+    for (i in 1:(n_model - 1)) {
+      p[i] <- theta[(params_loc[n_model + 1] + 1)]
     }
-    p[Nmodel] = 1-sum(p)
-    
+    p[n_model] <- 1 - sum(p)
   }
+  p = p %^% n
+  col_label = paste0("t = ", 1:object$K)
+  row_label = paste0("t + ",n," = ", 1:object$K)
+  rownames(p) = row_label
+  colnames(p) = col_label
   return(p)
 }
 
 #' @export
-transmat.MSGARCH_MLE_FIT = function(object, theta = NULL) {
-  
-  return(MSGARCH::transmat(object = object$spec, theta = object$theta))
-  
+transmat.MSGARCH_MLE_FIT <- function(object, theta = NULL, n = 1) {
+  return(MSGARCH::transmat(object = object$spec, theta = object$theta, n = n))
 }
-

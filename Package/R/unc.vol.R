@@ -13,34 +13,30 @@
 #'unc.vol = MSGARCH::unc.vol(object = spec, theta = spec$theta0)
 #' @return Unconditional volatility (vector of size K or matrix of size M x K) of each regime.
 #' @export
-unc.vol <- function(object, theta)
-{
-  UseMethod("unc.vol", object)
+unc.vol <- function(object, theta) {
+  UseMethod(generic = "unc.vol", object =  object)
 }
 
 #' @export
-unc.vol.MSGARCH_SPEC = function(object, theta) {
-  
-  theta = f.check.theta(object, theta)
-  
-  for(i in 1:nrow(theta)){
-    out =  object$rcpp.func$unc_vol_Rcpp(theta, 0)
+unc.vol.MSGARCH_SPEC <- function(object, theta) {
+  theta <- f.check.theta(object, theta)
+  for (i in 1:nrow(theta)) {
+    out <- object$rcpp.func$unc_vol_Rcpp(theta, 0)
   }
-  
-  out = sqrt(out)
+  options(warn=-1)
+  out <- sqrt(out)
+  options(warn=0)
+  out = matrix(out, ncol = object$K,nrow = nrow(theta))
+  colnames(out) = paste0("State ", 1:object$K)
   return(out)
 }
 
 #' @export
-unc.vol.MSGARCH_MLE_FIT = function(object, theta = NULL) {
-  
+unc.vol.MSGARCH_MLE_FIT <- function(object, theta = NULL) {
   return(MSGARCH::unc.vol(object = object$spec, theta = object$theta))
-  
 }
 
 #' @export
-unc.vol.MSGARCH_BAY_FIT = function(object, theta = NULL) {
-  
+unc.vol.MSGARCH_BAY_FIT <- function(object, theta = NULL) {
   return(MSGARCH::unc.vol(object = object$spec, theta = object$theta))
-  
 }

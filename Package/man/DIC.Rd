@@ -10,30 +10,37 @@ DIC(fit)
 \item{fit}{Fit object of type \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
 }
 \value{
-A list containing six variables:
+A list containing four variables:
        \itemize{
        \item \code{DIC} : Deviance Information Criterion.
-       \item \code{IC}  : Bayesian Predictive Information Criterion.
-       \item \code{pD}  : Effective number of parameters (pD = Dbar - Dhat)
+       \item \code{IC}  : Bayesian Predictive Information Criterion (IC = 2 * pV + D.bar).
        \item \code{pV}  : Effective number of parameters (pV = var(D)/2)
        \item \code{D.bar}: Expected value of the deviance over the posterior
-       \item \code{D.hat}: Deviance at the mean posterior estimate
        }
 }
 \description{
 Compute Deviance Information Criterion (DIC).
 }
+\details{
+We define the deviance as: \deqn{D(\theta) = -2LLH(\mathbf{y}|\theta),} where \eqn{\mathbf{y}} are the data, \eqn{\theta} 
+ are the parameters, and LLH() is the log-likelihood function.
+ The expectation \deqn{\bar{D} = {\mathbf{E}}^{\theta}[D(\theta)]} is a measure of how well the model fits 
+ the data. The larger this is, the worse the fit. The effective number of parameters of the model can be define as
+\deqn{p_{V} = {\frac{1}{2}}\widehat{var}\left(D(\theta)\right).} The larger the effective
+number of parameters is, the easier it is for the model to fit the data, and so the deviance needs to be penalized.
+ Finally DIC is defined as: \deqn{\mathit{DIC} = p_{V}+\bar{D}.}
+}
 \examples{
 \dontrun{
 # load data
-data("sp500ret")
+data("sp500")
 
 # create model specification
 spec = MSGARCH::create.spec()
 
 # fit the model by Bayesian estimation 
 set.seed(123)                                                           
-fit = MSGARCH::fit.bayes(spec = spec, y = sp500ret)
+fit = MSGARCH::fit.bayes(spec = spec, y = sp500)
 
 # compute DIC
 DIC = MSGARCH::DIC(fit)

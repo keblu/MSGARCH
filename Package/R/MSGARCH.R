@@ -10,6 +10,12 @@
 #' single-regime GARCH process and regime-switching process as well as many conditional distributions. 
 #' This allows for a rich modeling environment for Markov-switching GARCH models. Each single-regime process in a one-lag process (e.g., GARCH(1,1)).
 #' Allowing for only one-lag has proved to be sufficient in financial econometrics and it reduces models complexity which can become a problem during the optimization procedure. 
+#' When optimization is taking place, we ensure that each regime is covariance-stationary and strictly positive (see details in \code{\link{kernel}} for more information)
+#'  which makes the entire process also covariance-stationary and strickly positive.
+#'  We also set a condition that each unique single-regime models type in a multiple-regime framework are in order of unconditional volatility.
+#'  This means that is if a three regimes specification with two \code{sGARCH} regimes and one \code{gjrGARCH} regime
+#'  is constructed with \code{\link{create.spec}}, the first \code{sGARCH} regime will have a lower unconditional volatility than the second
+#'  \code{sGARCH} regime while the \code{gjrGARCH} regime can have any unconditional volatility since it is the only regime with this model.
 #'  
 #'The authors acknowledge Google for financial support via the Google Summer of Code 2016
 #' project "MSGARCH"; see \url{https://summerofcode.withgoogle.com/projects/#6497774455488512}

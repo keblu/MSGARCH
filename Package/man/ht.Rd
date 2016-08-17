@@ -19,7 +19,7 @@ created with \code{\link{fit.bayes}}.}
 Condititional volatility time serie (array of size (T + 1) x M x K) in each regime.
 }
 \description{
-Method returning the conditional volatility in each regime.
+Method returning the conditional volatility of each regime.
 }
 \details{
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
