@@ -56,6 +56,8 @@ summary.MSGARCH_MLE_FIT <- function(object, ...) {
     colnames(stable_prob) = "Stable probabilities"
     print(stable_prob)
   }
+  print("Unconditional volatility:")
+  print(MSGARCH::unc.vol(object = object))
   print(paste0("Log-kernel: ", object$ll_likelihood))
   print(paste0("AIC: ",MSGARCH::AIC(object)))
   print(paste0("BIC: ",MSGARCH::BIC(object)))
@@ -77,6 +79,8 @@ summary.MSGARCH_BAY_FIT <- function(object, ...) {
     colnames(stable_prob) = "Stable probabilities"
     print(stable_prob)
   }
+  print("Posterior mean unconditional volatility:")
+  print(MSGARCH::unc.vol(object = object$spec, theta = theta_mean))
   print(paste0("Acceptance rate: ",object$accept))
   print(paste0("AIC: ",MSGARCH::AIC(object)))
   print(paste0("BIC: ",MSGARCH::BIC(object)))
