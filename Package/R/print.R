@@ -41,28 +41,32 @@ print.MSGARCH_SPEC <- function(x, ...) {
     print(spec$theta0)
   }
 }
-
+#' @export
 summary.MSGARCH_MLE_FIT <- function(object, ...) {
   print(object$spec)
-  print(paste0("Deoptim initialization: ", object$is.init))
+  print(paste0("DEoptim initialization: ", object$is.init))
   print(paste0("Fitted Parameters:"))
   print(object$theta)
   if(object$spec$K > 1){
-    print(paste0("Transition matrix:"))
-    print(transmat(object))
+    if(!object$spec$is.mix){
+      print(paste0("Transition matrix:"))
+      print(transmat(object))
+      stable_prob = transmat(object, n = 100) %*% matrix(rep(1/object$spec$K,object$spec$K), ncol = 1)
+    } else {
+      stable_prob = t(transmat(object))
+    }
     print(paste0("Stable probabilities:"))
-    stable_prob = transmat(object, n = 100) %*% matrix(rep(1/object$spec$K,object$spec$K), ncol = 1)
     rownames(stable_prob) = paste0("State ", 1:object$spec$K)
     colnames(stable_prob) = "Stable probabilities"
     print(stable_prob)
   }
   print("Unconditional volatility:")
   print(MSGARCH::unc.vol(object = object))
-  print(paste0("Log-kernel: ", object$ll_likelihood))
+  print(paste0("Log-kernel: ", object$log_kernel))
   print(paste0("AIC: ",MSGARCH::AIC(object)))
   print(paste0("BIC: ",MSGARCH::BIC(object)))
 }
-
+#' @export
 summary.MSGARCH_BAY_FIT <- function(object, ...) {
   print(object$spec)
   print(paste0("Bayesian posterior mean:"))
@@ -71,10 +75,14 @@ summary.MSGARCH_BAY_FIT <- function(object, ...) {
   print(paste0("Posterior variance-covariance matrix"))
   print(var(object$theta))
   if(object$spec$K > 1){
-    print(paste0("Posterior mean transition matrix:"))
-    print(transmat(object = object$spec,theta = theta_mean))
+    if(!object$spec$is.mix){
+      print(paste0("Posterior mean transition matrix:"))
+      print(transmat(object = object$spec,theta = theta_mean))
+      stable_prob = transmat(object = object$spec, theta = theta_mean, n = 100) %*% matrix(rep(1/object$spec$K,object$spec$K), ncol = 1)
+    } else {
+      stable_prob = t(transmat(object = object$spec, theta = theta_mean))
+    }
     print(paste0("Posterior mean stable probabilities:"))
-    stable_prob = transmat(object = object$spec, theta = theta_mean, n = 100) %*% matrix(rep(1/object$spec$K,object$spec$K), ncol = 1)
     rownames(stable_prob) = paste0("State ", 1:object$spec$K)
     colnames(stable_prob) = "Stable probabilities"
     print(stable_prob)

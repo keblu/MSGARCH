@@ -51,14 +51,17 @@ cdf <- function(object, x, theta, y, log = FALSE, do.its = FALSE) {
 cdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y,
                              log = TRUE, do.its = FALSE) {
   y <- f.check.y(y)
-  theta <- f.check.theta(object, theta)
+  if (is.vector(theta)) {
+    theta <- matrix(theta, nrow = 1)
+  }
+  theta_check <- f.check.theta(object, theta)
   if (isTRUE(do.its)) {
     x <- y
     tmp <- matrix(data = NA, nrow = nrow(theta), ncol = length(y) - 1)
     for (i in 1:nrow(theta)) {
       tmp2 <- matrix(data = NA, nrow = length(y) - 1, ncol = object$K)
       if (object$K == 1) {
-        tmp2 <- object$rcpp.func$cdf_Rcpp_its(theta[i, ], y, FALSE)
+        tmp2 <- object$rcpp.func$cdf_Rcpp_its(theta_check[i, ], y, FALSE)
         tmp[i, ] <- tmp2
       } else {
         Pstate <- MSGARCH::Pstate(object = object, theta = theta[i, ], y = y)
@@ -67,7 +70,7 @@ cdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y,
         for (j in 1:dim(Pstate)[3]) {
           Pstate.tmp[, j] <- Pstate[, , j]
         }
-        tmp2 <- object$rcpp.func$cdf_Rcpp_its(theta[i, ], y, FALSE)
+        tmp2 <- object$rcpp.func$cdf_Rcpp_its(theta_check[i, ], y, FALSE)
         tmp[i, ] <- rowSums(tmp2 * Pstate.tmp[2:(nrow(Pstate.tmp) - 1), ])
       }
     }
@@ -75,7 +78,7 @@ cdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y,
   } else {
     tmp <- matrix(data = NA, nrow = nrow(theta), ncol = length(x))
     for (i in 1:nrow(theta)) {
-      tmp[i, ] <- object$rcpp.func$cdf_Rcpp(x, theta[i, ], y, FALSE)
+      tmp[i, ] <- object$rcpp.func$cdf_Rcpp(x, theta_check[i, ], y, FALSE)
     }
   }
   out <- list()

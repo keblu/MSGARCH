@@ -13,7 +13,7 @@
 #' @return A list of class \code{MSGARCH_MLE_FIT} containing five components:
 #'        \itemize{
 #'        \item \code{theta} : Optimal parameters (vector of size d).
-#'        \item \code{ll_likelihood} : log-likelihood of \code{y} given the optimal parameters.
+#'        \item \code{log_kernel} : log-kernel of \code{y} given the optimal parameters.
 #'        \item \code{spec} : Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
 #'        \item \code{is.init} : Indicating if estimation was made with do.init option.
 #'        \item \code{y} :  Vector (of size T) of observations.
@@ -107,16 +107,16 @@ fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
   theta <- f.find.theta0(f.kernel, theta0 = theta0.init, lower = lower, upper = upper,
                         f.ineq = spec$rcpp.func$ineq_func, ineqlb = spec$ineqlb,
                         inequb = spec$inequb)
-  ll_likelihood <- f.kernel(theta)
-  if (ll_likelihood == -1e+10) {
+  log_kernel <- f.kernel(theta)
+  if (log_kernel == -1e+10) {
     tmp <- DEoptim::DEoptim(fn = f.nll, lower = lower, upper = upper, control = ctr.deoptim)
     theta <- tmp$optim$bestmem
-    ll_likelihood <- f.kernel(theta)
+    log_kernel <- f.kernel(theta)
   }
   theta <- f.sort.theta(spec = spec, theta = theta)
   theta <- matrix(theta, ncol = length(theta))
   colnames(theta) <- colnames(spec$theta0)
-  out <- list(theta = theta, ll_likelihood = ll_likelihood, spec = spec,
+  out <- list(theta = theta, log_kernel = log_kernel, spec = spec,
               is.init = any(ctr$do.init || spec$do.init), y = y)
   class(out) <- "MSGARCH_MLE_FIT"
   return(out)

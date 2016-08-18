@@ -52,7 +52,6 @@ pred <- function(object, x, theta, y, log = TRUE, do.its = FALSE) {
 #' @export
 pred.MSGARCH_SPEC <- function(object, x = NULL, theta, y, log = TRUE, do.its = FALSE) {
   y <- f.check.y(y)
-  theta <- f.check.theta(object, theta)
   N <- nrow(theta)
   if (isTRUE(do.its)) {
     nx <- length(y)

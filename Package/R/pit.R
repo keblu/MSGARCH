@@ -57,7 +57,6 @@ pit <- function(object, x, theta, y, do.norm = FALSE, do.its = FALSE) {
 #' @export
 pit.MSGARCH_SPEC <- function(object, x = NULL, theta, y, do.norm = FALSE, do.its = FALSE) {
   y <- f.check.y(y)
-  theta <- f.check.theta(object, theta)
   N <- nrow(theta)
   if (isTRUE(do.its)) {
     nx <- length(y)

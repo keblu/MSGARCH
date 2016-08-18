@@ -46,17 +46,23 @@ transmat.MSGARCH_SPEC <- function(object, theta, n = 1) {
     }
     p[n_model, ] <- 1 - colSums(matrix(p[1:(n_model - 1), ], ncol = n_model))
   } else {
-    p <- rep(0, n_model)
+    p <- matrix(rep(0, n_model),ncol = n_model)
     for (i in 1:(n_model - 1)) {
-      p[i] <- theta[(params_loc[n_model + 1] + 1)]
+      p[1,i] <- theta[(params_loc[n_model + 1] + 1)]
     }
-    p[n_model] <- 1 - sum(p)
+    p[1,n_model] <- 1 - sum(p)
   }
   if(!object$is.mix){
       p = p %^% n
   }
-  col_label = paste0("t = ", 1:object$K)
-  row_label = paste0("t + ",n," = ", 1:object$K)
+
+  if(object$is.mix){
+    col_label = paste0("State ", 1:object$K)
+    row_label = paste0("Probability")
+  } else {
+    col_label = paste0("t = ", 1:object$K)
+    row_label = paste0("t + ",n," = ", 1:object$K)
+  }
   rownames(p) = row_label
   colnames(p) = col_label
   return(p)

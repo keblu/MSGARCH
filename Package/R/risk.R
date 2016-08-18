@@ -56,7 +56,6 @@ risk.MSGARCH_SPEC <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE
   y <- c(0, y)
   y <- f.check.y(y)
   out <- list()
-  theta <- f.check.theta(object, theta)
   ny <- nrow(y)
   if (!isTRUE(do.its)) {
     start <- ny
