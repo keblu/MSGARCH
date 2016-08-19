@@ -49,7 +49,7 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   } else {
     rcpp.func$get_Pstate_Rcpp <- function(theta, y, PLast) {
       if (!isTRUE(PLast)) {
-        out <- matrix(1, nrow = length(y), ncol = 1)
+        out <- matrix(1, nrow = length(y) + 1, ncol = 1)
       } else {
         out <- matrix(1, nrow = 1, ncol = 1)
       }

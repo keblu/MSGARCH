@@ -6,9 +6,9 @@ print.MSGARCH_SPEC <- function(x, ...) {
     print(paste0("Specification Type: ", type))
     print(paste0("Specification Name: ", paste(spec$name, collapse = " ")))
     print(paste0("Number of parameters in variance model: ", paste(spec$n.params.vol,
-                 collapse = " ")))
+                                                                   collapse = " ")))
     print(paste0("Number of parameters in distribution: ", paste(spec$n.params -
-                  spec$n.params.vol, collapse = " ")))
+                                                                   spec$n.params.vol, collapse = " ")))
     spec$theta0 <- matrix(spec$theta0, ncol = length(spec$theta0))
     colnames(spec$theta0) <- spec$label
     print(paste0("Default parameters:"))
@@ -27,13 +27,13 @@ print.MSGARCH_SPEC <- function(x, ...) {
     print(paste0("Specification Type: ", type, type2))
     print(paste0("Specification Name: ", paste(spec$name, collapse = " ")))
     print(paste0("Number of parameters in each variance model: ", paste(spec$n.params.vol,
-                 collapse = " ")))
+                                                                        collapse = " ")))
     if (isTRUE(spec$is.shape.ind)) {
       print(paste0("Number of parameters in distribution: ", paste(spec$n.params[1] -
-                   spec$n.params.vol[1], collapse = " ")))
+                                                                     spec$n.params.vol[1], collapse = " ")))
     } else {
       print(paste0("Number of parameters in each distribution: ", paste(spec$n.params -
-                    spec$n.params.vol, collapse = " ")))
+                                                                          spec$n.params.vol, collapse = " ")))
     }
     spec$theta0 <- matrix(spec$theta0, ncol = length(spec$theta0))
     colnames(spec$theta0) <- spec$label
@@ -103,9 +103,9 @@ summary.MSGARCH_SPEC <- function(object, ...) {
     print(paste0("Specification Type: ", type))
     print(paste0("Specification Name: ", paste(spec$name, collapse = " ")))
     print(paste0("Number of parameters in variance model: ", paste(spec$n.params.vol,
-                 collapse = " ")))
+                                                                   collapse = " ")))
     print(paste0("Number of parameters in distribution: ", paste(spec$n.params -
-                 spec$n.params.vol, collapse = " ")))
+                                                                   spec$n.params.vol, collapse = " ")))
     spec$theta0 <- matrix(spec$theta0, ncol = length(spec$theta0))
     colnames(spec$theta0) <- spec$label
     print(paste0("Default parameters:"))
@@ -124,13 +124,13 @@ summary.MSGARCH_SPEC <- function(object, ...) {
     print(paste0("Specification Type: ", type, type2))
     print(paste0("Specification Name: ", paste(spec$name, collapse = " ")))
     print(paste0("Number of parameters in each variance model: ", paste(spec$n.params.vol,
-                  collapse = " ")))
+                                                                        collapse = " ")))
     if (isTRUE(spec$is.shape.ind)) {
       print(paste0("Number of parameters in distribution: ", paste(spec$n.params[1] -
-                   spec$n.params.vol[1], collapse = " ")))
+                                                                     spec$n.params.vol[1], collapse = " ")))
     } else {
       print(paste0("Number of parameters in each distribution: ", paste(spec$n.params -
-                   spec$n.params.vol, collapse = " ")))
+                                                                          spec$n.params.vol, collapse = " ")))
     }
     spec$theta0 <- matrix(spec$theta0, ncol = length(spec$theta0))
     colnames(spec$theta0) <- spec$label
@@ -148,50 +148,104 @@ plot.MSGARCH_SIM <- function(x, ...) {
   states = as.numeric(rownames(table(sim$state)))
   for(i in 1:length(states)){
     v = readline(prompt = "Pause. Press <Enter> to continue...")
-     percent_sim <- zoo::zoo(colSums(sim$state == states[i])/nrow(sim$state))
-     plot(percent_sim, plot.type = "single", ylab = "%", main = paste0("Percentage of simulation done in state ", i))
+    percent_sim <- zoo::zoo(colSums(sim$state == states[i])/nrow(sim$state))
+    plot(percent_sim, plot.type = "single", ylab = "%", main = paste0("Percentage of simulation done in state ", i))
   }
 }
 
-#'@import zoo
-#'@importFrom graphics plot
-#'@export
-plot.MSGARCH_HT <- function(x, ...) {
-  ht <- x
-  for (i in 1:dim(ht)[3]) {
-    tmp <- zoo::zoo(ht[, , i])
-    plot(tmp, plot.type = "single", ylab = "Volatility",
-         main = paste0("Volatility of State ", i))
-    v = readline(prompt = "Pause. Press <Enter> to continue...")
-  }
-}
 
-#'@import zoo
-#'@importFrom graphics plot
+#'@import zoo fanplot
+#'@importFrom graphics plot axis.Date
 #'@export
 plot.MSGARCH_PSTATE <- function(x, ...) {
   Pstate <- x
+  input_list <- list(...)
+  if(dim(Pstate)[2] > 1){
+    plot.func = function(x, main, input_list, ...){
+      if(!input_list$no_date){
+        plot(NULL, xlim=range(zoo::index(x)), xaxt = "n", ylim = range(tmp),
+             ylab = "Probability", main = main, xlab = "Date")
+        axis.Date(side = 1, x = zoo::index(x))
+        fanplot::fan(x, type = "interval",med.col = "blue", med.ln = TRUE)
+      } else{
+        plot(NULL, xlim=range(zoo::index(x)), ylim = range(tmp),
+             ylab = "Probability", main = main)
+        fanplot::fan(t(x), type = "interval",med.col = "blue", med.ln = TRUE)
+      }
+    }
+  } else {
+    plot.func = function(x, main,input_list, ...){
+      plot(x, plot.type = "single", ylab = "Probability", xlab = "Date", main = main)
+    } 
+  }
   for (i in 1:dim(Pstate)[3]) {
-    tmp <- zoo::zoo(Pstate[, , i])
-    plot(tmp, plot.type = "single", ylab = "Probability",
-         main = paste0("Probability to be in State ", i))
+    if(is.null(input_list$date)){
+      tmp <- zoo::zoo(Pstate[, ,i])
+      input_list$no_date = TRUE
+    } else {
+      if(ncol(Pstate)== 1){
+        tmp <- zoo::zoo(Pstate[, ,i], order.by = input_list$date)
+      } else{
+        tmp <- zoo::zoo(t(Pstate[, ,i]), order.by = input_list$date)
+      }
+      input_list$no_date = FALSE
+    }
+    plot.func(tmp, main = paste0("Filtered probability to be in State ", i), input_list)
     v = readline(prompt = "Pause. Press <Enter> to continue...")
   }
 }
 
-#'@import zoo
-#'@importFrom graphics plot
+#'@import zoo fanplot
+#'@importFrom graphics plot axis.Date
 #'@export
 plot.MSGARCH_HT <- function(x, ...) {
   ht <- x
+  input_list <- list(...)
+  if(dim(ht)[2] > 1){
+    plot.func = function(x, main, input_list, ...){
+      if(!input_list$no_date){
+        plot(NULL, xlim=range(zoo::index(x)), xaxt = "n", ylim = range(tmp),
+             ylab = "Volatility", main = main, xlab = "Date")
+        axis.Date(side = 1, x = zoo::index(x))
+        fanplot::fan(x, type = "interval",med.col = "blue", med.ln = TRUE)
+      } else{
+        plot(NULL, xlim=range(zoo::index(x)), ylim = range(tmp),
+             ylab = "Volatility", main = main)
+        fanplot::fan(t(x), type = "interval",med.col = "blue", med.ln = TRUE)
+      }
+    }
+  } else {
+    plot.func = function(x, main,input_list, ...){
+      plot(x, plot.type = "single", ylab = "Volatility", xlab = "Date", main = main)
+    } 
+  }
   if (is.matrix(ht)) {
-    tmp <- zoo::zoo(t(ht))
-    plot(tmp, plot.type = "single", ylab = "Volatility", main = paste0("Conditional volatility"))
+    if(is.null(input_list$date)){
+      tmp <- zoo::zoo(ht)
+      input_list$no_date = TRUE
+    } else {
+      if(ncol(ht)== 1){
+        tmp <- zoo::zoo(ht, order.by = input_list$date)
+      } else{
+        tmp <- zoo::zoo(t(ht), order.by = input_list$date)
+      }
+      input_list$no_date = FALSE
+    }
+    plot.func(tmp, main = paste0("Conditional volatility"),input_list)
   } else {
     for (i in 1:dim(ht)[3]) {
-      tmp <- zoo::zoo(ht[, , i])
-      plot(tmp, plot.type = "single", ylab = "Volatility",
-           main = paste0("Conditional volatility of state ", i))
+      if(is.null(input_list$date)){
+        tmp <- zoo::zoo(ht[, ,i])
+        input_list$no_date = TRUE
+      } else {
+        if(ncol(ht)== 1){
+          tmp <- zoo::zoo(ht[, ,i], order.by = input_list$date)
+        } else{
+          tmp <- zoo::zoo(t(ht[, ,i]), order.by = input_list$date)
+        }
+        input_list$no_date = FALSE
+      }
+      plot.func(tmp, main = paste0("Conditional volatility of state ", i),input_list)
       v = readline(prompt = "Pause. Press <Enter> to continue...")
     }
   }
@@ -277,14 +331,37 @@ plot.MSGARCH_PRED <- function(x, ...) {
 #'@export
 plot.MSGARCH_RISK <- function(x, ...) {
   risk <- x
+  input_list <- list(...)
   ts_rainbow <- rainbow(ncol(risk$VaR))
-  plot(zoo::zoo(risk$VaR), plot.type = "single", col = ts_rainbow, ylab = "Return",
-    xlab = "T", main = paste0("Value-At-Risk"))
+  if(is.null(input_list$date)){
+    tmp.VaR <- zoo::zoo(risk$VaR)
+    input_list$no_date = TRUE
+  } else {
+    if(ncol(risk$VaR)== 1){
+      tmp.VaR <- zoo::zoo(risk$VaR, order.by = input_list$date)
+    } else{
+      tmp.VaR <- zoo::zoo(risk$VaR, order.by = input_list$date)
+    }
+    input_list$no_date = FALSE
+  }
+  plot(tmp.VaR, plot.type = "single", col = ts_rainbow, ylab = "Return",
+       xlab = "T", main = paste0("Value-At-Risk"))
   legend("bottomright", legend = colnames(risk$VaR), col = ts_rainbow, lty = 1)
   if (!is.null(risk$ES)) {
+    if(is.null(input_list$date)){
+      tmp.ES <- zoo::zoo(risk$VaR)
+      input_list$no_date = TRUE
+    } else {
+      if(ncol(risk$ES)== 1){
+        tmp.ES <- zoo::zoo(risk$ES, order.by = input_list$date)
+      } else{
+        tmp.ES <- zoo::zoo(risk$ES, order.by = input_list$date)
+      }
+      input_list$no_date = FALSE
+    }
     v = readline(prompt = "Pause. Press <Enter> to continue...")
-    plot(zoo::zoo(risk$ES), plot.type = "single", col = ts_rainbow, ylab = "Return",
-      xlab = "T", main = paste0("Expected-shortfall"))
+    plot(tmp.ES, plot.type = "single", col = ts_rainbow, ylab = "Return",
+         xlab = "T", main = paste0("Expected-shortfall"))
     legend("bottomright", legend = colnames(risk$ES), lty = 1, col = ts_rainbow)
   }
 }

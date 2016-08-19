@@ -305,16 +305,16 @@ NumericMatrix SingleRegime<Model>::calc_ht(NumericMatrix& all_thetas, const Nume
     int nb_thetas = all_thetas.nrow();
     volatility vol;
     NumericVector theta_j;
-    NumericMatrix ht(nb_thetas, nb_obs+1);
+    NumericMatrix ht(nb_obs+1, nb_thetas);
     for (int j = 0; j < nb_thetas; j++) {    // loop over vectors of parameters
         theta_j = all_thetas(j,_);
         spec.loadparam(theta_j);
         spec.prep_ineq_vol();
         vol     = spec.set_vol(y[0]);          // initialize volatility
-        ht(j,0) = vol.h;
+        ht(0,j) = vol.h;
         for (int i = 1; i <= nb_obs; i++) {    // loop over observations
             spec.increment_vol(vol, y[i-1]);        // increment volatility
-            ht(j,i) = vol.h;
+            ht(i,j) = vol.h;
         }
     }
     return ht;

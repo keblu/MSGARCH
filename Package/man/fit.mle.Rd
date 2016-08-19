@@ -24,7 +24,7 @@ The control parameters have two components to it:
 A list of class \code{MSGARCH_MLE_FIT} containing five components:
        \itemize{
        \item \code{theta} : Optimal parameters (vector of size d).
-       \item \code{ll_likelihood} : log-likelihood of \code{y} given the optimal parameters.
+       \item \code{log_kernel} : log-kernel of \code{y} given the optimal parameters.
        \item \code{spec} : Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.
        \item \code{is.init} : Indicating if estimation was made with do.init option.
        \item \code{y} :  Vector (of size T) of observations.
