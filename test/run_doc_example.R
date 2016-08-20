@@ -5,7 +5,7 @@
 # http://kbroman.org/pkg_primer/pages/github.html
 # install.packages("devtools")
 # require("devtools")
-# devtools::install_github("keblu/MSGARCH")
+# devtools::install_github("keblu/MSGARCH",subdir="Package")
 # install.packages("./MSGARCH_0.16.tar.gz", repos = NULL, type = "source")
 
 rm(list = ls())
