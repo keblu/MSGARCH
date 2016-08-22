@@ -19,13 +19,13 @@ for volatility modeling. The core will be implemented in C++ while simple R func
 
 To install the latest stable version of the package download MSGARCH_0.16.tar.gz and use this line
 
-       > install.packages("./MSGARCH_0.16.tar.gz", repos = NULL, type = "source")
+      R > install.packages("./MSGARCH_0.16.tar.gz", repos = NULL, type = "source")
   
 We will eventually upload the latest stable version of the pacakge on CRAN in the comming weeks.
 To install the latest developpement version of the package use these line:
 
-      > install.packages("devtools")
-      > require("devtools")
-       > devtools::install_github("keblu/MSGARCH",subdir="Package")
+      R > install.packages("devtools")
+      R > require("devtools")
+      R > devtools::install_github("keblu/MSGARCH",subdir="Package")
  
 For a full explanation of the package functionallities please read the vignette located in the vignettes folder of the package.
