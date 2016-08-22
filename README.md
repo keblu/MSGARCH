@@ -10,9 +10,9 @@ for volatility modeling. The core will be implemented in C++ while simple R func
 
 ## Contents
 * MSGARCH.pdf: This document is the documentation for the MSGARCH package.
-* Package: This document is the latest developpement version of the package.
-* bin: Previous stable version fo the package.
-* test: Test folder with an R file containing all the example from the documentation for test purpose.
+* Package: This folder is The latest developpement version of the package.
+* bin: This folder continas the previous stable version of the package.
+* test: Test folder with an R file containing all the examples from the documentation for test purpose.
 * MSGARCH_0.16.tar.gz: Latest stable version of the package.
 
 ## Installation
