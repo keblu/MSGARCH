@@ -26,6 +26,6 @@ To install the latest developpement version of the package use these lines:
 
       R > install.packages("devtools")
       R > require("devtools")
-      R > devtools::install_github("keblu/MSGARCH",subdir="Package")
+      R > devtools::install_github("keblu/MSGARCH", subdir="Package")
  
 For a full explanation of the package functionallities please read the vignette located in the vignettes folder of the package.
