@@ -1,5 +1,4 @@
 # MSGARCH
-MSGARCH
 The goal of the MSGARCH package is to implement a package that will give the financial community tools to estimate,
 simulate, and test several MSGARCH models used in volatility (i.e., square root of conditional variance) forecasting.
 By relying on a hidden/latent variable, these models are able to switch among several processes for the conditional
