@@ -9,6 +9,7 @@
 #' \code{\link{sim}} starts the simulation a t = 0 creating an entire new process while  \code{\link{simahead}} starts the simulation at t = T + 1
 #'  taking in consideration all the information available in the original time serie \code{y}.
 #' @examples 
+#'\dontrun{
 #'# create model specification
 #' spec = MSGARCH::create.spec() 
 #'
@@ -17,6 +18,7 @@
 #' sim = MSGARCH::sim(object = spec, n = 1000, m = 1, theta = spec$theta0, burnin = 500)
 #' 
 #' plot(sim)
+#' }
 #' @return A list of class \code{MSGARCH_SIM} containing two components.
 #' \itemize{
 #' \item \code{draws}: Matrix (of size M x n) of simulated draws.
