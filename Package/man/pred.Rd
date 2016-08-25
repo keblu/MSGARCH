@@ -49,7 +49,7 @@ spec = MSGARCH::create.spec()
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
                            
 # run pred method in-sample     
 pred.its = MSGARCH::pred(object = fit, log = TRUE, do.its = TRUE)  

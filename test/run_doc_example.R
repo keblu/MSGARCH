@@ -22,7 +22,6 @@ fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 #set.seed(123)
 #fit = MSGARCH::fit.mle(spec = spec, y = sp500, 
 #                       ctr = list(do.init = TRUE, NP = 500, itermax = 500))
-#TODO summary method for fit object? # KB OK, DA does not work
 summary(fit)
 
 # compute the unconditional volatility in each regime
@@ -43,9 +42,6 @@ set.seed(123)
 simahead = MSGARCH::simahead(object = fit, n = 15, m = 100)
 plot(simahead)
 matplot(t(simahead$draws), pch = 20, type = "l")
-#TOFIX why "average simulated state" in title? # answer: Because we see 1 and 0 everywhere and the plot makes no sense at all so the average simulated state seems more adequat since we have a better view to what are the states that comes next and the "trend"
-#TODO impove speed answer: have to do C++ code so version
-#TOFIX why plot of states and no simulation? answer: it is there but in a different plot
 
 # compute the Value-at-Risk and Expected-shortfall 
 risk.its = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, do.its = TRUE)
@@ -102,11 +98,6 @@ BIC
 # compute the conditional volatility
 ht = MSGARCH::ht(object = fit)
 plot(ht)
-#y <- f.check.y(y)
-#theta <- f.check.theta(object, theta)
-#out <- object$rcpp.func$calc_ht(theta, y)
-#class(out) <- "MSGARCH_HT"
-#out <- sqrt(out)
                                                              
 # fit the model by Bayesian estimation 
 set.seed(123)                                                           
@@ -117,6 +108,7 @@ coda::traceplot(fit$theta)
 coda::autocorr.plot(fit$theta)
 pairs(x = as.matrix(fit$theta[,1:5]), pch = 20, cex = 0.8)
 par(mfrow = c(1,1))
+
 # run pred method on mesh at T + 1
 x = seq(from = min(fit$y), to = max(fit$y), length.out = 100)
 pred = MSGARCH::pred(object = fit, x = x, log = FALSE, do.its = FALSE)
