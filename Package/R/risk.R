@@ -24,9 +24,9 @@
 #' The \code{MSGARCH_RISK} contains the \code{plot} method. 
 #' The Bayesian risk estimator can take long time to calculate depending on the size of the chain.
 #' @examples 
-#'\dontrun{
 #'# load data
 #'data("sp500")
+#'sp500 = sp500[1:1000]
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
@@ -37,13 +37,12 @@
 #' 
 #'# compute the Value-at-Risk and Expected-shortfall 
 #'# Risk estimation in-sample 
-#'risk.its = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, do.its = TRUE)
+#'risk.its = MSGARCH::risk(object = fit, level = 0.95, ES = FALSE, do.its = TRUE)
 #'
 #'plot(risk.its)                     
 #'
 #'# Risk estimation at T + 1                     
-#'risk = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, do.its = FALSE)
-#'}
+#'risk = MSGARCH::risk(object = fit, level = 0.95, ES = FALSE, do.its = FALSE)
 #' @importFrom stats integrate sd uniroot                    
 #' @export
 risk <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE, do.its = FALSE) {

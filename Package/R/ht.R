@@ -7,9 +7,9 @@
 #' @param y  Vector (of size T) of observations (not require when using a fit object).
 #' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
 #' @examples 
-#'\dontrun{
 #'# load data
 #'data("sp500")
+#'sp500 = sp500[1:1000]
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
@@ -22,8 +22,7 @@
 #'ht = MSGARCH::ht(object = fit)
 #'
 #'plot(ht)
-#'}
-#' @return Condititional volatility time serie (array of size (T + 1) x M x K) in each regime.
+#' @return Condititional volatility (array of size (T + 1) x M x K) in each regime.
 #' @export
 ht <- function(object, theta, y) {
   UseMethod("ht", object)

@@ -5,9 +5,9 @@
 #' @param theta Vector (of size d) of parameter estimates (not require when using a fit object).
 #' @param n Number of steps ahead. (Default: \code{n = 1}
 #' @examples 
-#'\dontrun{
 #'# load data
 #'data("sp500")
+#'sp500 = sp500[1:1000]
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
@@ -20,7 +20,6 @@
 #'transmat.mle = MSGARCH::transmat(fit, n = 10)
 #'
 #'print(transmat.mle)
-#'}
 #' @return A matrix (of size K x K) in the case of a Markov-Switching model
 #'  or a vector (of size K) in the case of a Mixture model. 
 #'  The columns indcates the starting states while the rows indicates the transition states. 

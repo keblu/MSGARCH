@@ -36,9 +36,9 @@ If a matrix of parameter estimates is given, each parameter estimates is evaluat
   }
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
+sp500 = sp500[1:1000]
 
 # create model specification
 spec = MSGARCH::create.spec() 
@@ -49,7 +49,6 @@ fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 
 # compute the kernel
 kernel = MSGARCH::kernel(fit, log = TRUE)
-}
 }
 \references{
 Hamilton, J. D. (1989) A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle. \emph{Econometrica}, 57, pp.357-38

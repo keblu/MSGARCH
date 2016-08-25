@@ -1,8 +1,8 @@
 Package: MSGARCH
 Type: Package
-Title: Markov-Switching GARCH models
+Title: Markov-Switching GARCH Models
 Version: 0.16
-Date: 2016-08-18
+Date: 2016-08-25
 Authors@R: c(person("Keven", "Bluteau", role = c("aut", "cre"),
              email = "Keven.Bluteau@unine.ch"),
              person("David", "Ardia", role = c("aut"),
@@ -14,19 +14,15 @@ Authors@R: c(person("Keven", "Bluteau", role = c("aut", "cre"),
              person("Brian", "Peterson", role = c("ctb"),
              email = "brian@braverock.com"))
 Author: Keven Bluteau [aut, cre],
-    David Ardia [aut]
-    Denis-Alexandre Trottier [ctb]
-    Kris Boudt [ctb]
+    David Ardia [aut],
+    Denis-Alexandre Trottier [ctb],
+    Kris Boudt [ctb],
     Brian Peterson [ctb]
-Maintainer: Keven Bluteau <keven.bluteau@unine.ch>
-Description: The MSGARCH package offers functionalities to fit (by Maximum Likelihood or Bayesian), simulate, and forecast
-    various Markov-Switching GARCH processes.
+Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
+Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or Bayesian), simulate, and forecast various Markov-Switching GARCH processes.
 License: GPL (>= 2)
-Imports: Rcpp, adaptMCMC, DEoptim, nloptr, methods, stringr, ggplot2, reshape2, zoo, expm, fanplot
+Imports: Rcpp, adaptMCMC, DEoptim, nloptr, methods, stringr, ggplot2,
+        reshape2, zoo, expm, fanplot
 LinkingTo: Rcpp, RcppArmadillo
-Depends: RcppArmadillo
-Suggests: knitr, rmarkdown, testthat
-VignetteBuilder: knitr
 RoxygenNote: 5.0.1
 NeedsCompilation: yes
-Packaged: 2016-07-29 17:01:29 UTC; Keven

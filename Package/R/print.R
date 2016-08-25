@@ -349,7 +349,7 @@ plot.MSGARCH_RISK <- function(x, ...) {
   legend("bottomright", legend = colnames(risk$VaR), col = ts_rainbow, lty = 1)
   if (!is.null(risk$ES)) {
     if(is.null(input_list$date)){
-      tmp.ES <- zoo::zoo(risk$VaR)
+      tmp.ES <- zoo::zoo(risk$ES)
       input_list$no_date = TRUE
     } else {
       if(ncol(risk$ES)== 1){

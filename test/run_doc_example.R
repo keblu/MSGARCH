@@ -1,7 +1,3 @@
-
-#TOFIX: summary method for fit objects (MLE AND BAYESIAN)
-#TOFIX: error with DIC computation
-
 # http://kbroman.org/pkg_primer/pages/github.html
 # install.packages("devtools")
 # require("devtools")
@@ -129,4 +125,3 @@ plot(pred)
 # compute DIC
 DIC = MSGARCH::DIC(fit)
 DIC
-#TOFIX WE still have a problem with DIC output => pD is missing

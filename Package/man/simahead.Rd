@@ -37,9 +37,9 @@ The \code{MSGARCH_SIM} class contains the \code{plot} method. The difference bet
  taking in consideration all the information available in the original time serie \code{y}.
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
+sp500 = sp500[1:1000]
 
 # create model specification
 spec = MSGARCH::create.spec() 
@@ -50,9 +50,8 @@ fit = MSGARCH::fit.mle(spec = spec, y = sp500)
  
 # generate random draws
 set.seed(123)
-simahead = MSGARCH::simahead(object = fit, n = 30, m = 1000)
+simahead = MSGARCH::simahead(object = fit, n = 30, m = 100)
 
 plot(simahead)
-}
 }
 

@@ -54,15 +54,17 @@ Method that performs Bayesian estimation of a \code{MSGARCH_SPEC} object on a se
 \details{
 The total number of draws is equal to \code{N.mcmc / N.thin}.
 The Bayesian estimation uses the \R package \code{adaptMCMC} (Andreas, 2012) which  
-implements the adaptive sampler of Vihola (2012). The argument \code{do.enhance.theta0}
+implements the adaptive sampler of Vihola (2012). 
+ The starting parameters are the specification default parameters.
+The argument \code{do.enhance.theta0}
  uses the volatilities of rolling windows of \code{y} and adjust the default parameter of
  the specification so that the unconditional volatility of each regime
  is set to different quantiles of the volatilities of the rolling windows of \code{y}.
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
+sp500 = sp500[1:1000]
 
 # create model specification
 spec = MSGARCH::create.spec() 
@@ -70,15 +72,16 @@ spec = MSGARCH::create.spec()
 # fit the model on the data with Bayesian estimation
 set.seed(123)
 fit = MSGARCH::fit.bayes(spec = spec, y = sp500, 
-                         ctr = list(N.burn = 10000, N.mcmc = 10000, N.thin = 1))
-}                          
+                         ctr = list(N.burn = 500, N.mcmc = 1000, N.thin = 1))
+                         
+summary(fit)
 }
 \references{
-Andreas, S. (2012). \code{adaptMCMC}: Implementation of a Generic Adaptive Monte Carlo Markov Chain Sampler. \url{https://cran.r-project.org/web/packages/adaptMCMC/}.
+Andreas, S. (2012). \code{adaptMCMC}: Implementation of a Generic Adaptive Monte Carlo Markov Chain Sampler. \url{https://cran.r-project.org/package=adaptMCMC}.
 
 Metropolis, N.; Rosenbluth, A. W.; Rosenbluth, M. N.; Teller, A. H. & Teller, E. (1953). Equation of State Calculations by Fast Computing Machines. \emph{Journal of Chemical Physics}, 21, pp. 1087-1092.
 
-Plummer, M. Best, N. Cowles, K. & Vines, K. (2006). \code{CODA}: Convergence Diagnosis and Output Analysis for MCMC. \emph{R News}, 6, pp.7-11. \url{https://cran.r-project.org/web/packages/coda/}.
+Plummer, M. Best, N. Cowles, K. & Vines, K. (2006). \code{CODA}: Convergence Diagnosis and Output Analysis for MCMC. \emph{R News}, 6, pp.7-11. \url{https://cran.r-project.org/package=coda}.
 
 Vihola, M. (2012). Robust Adaptive Metropolis Algorithm with Coerced Acceptance Rate. \emph{Statistics and Computing}, 22, pp. 997-1008.
 }

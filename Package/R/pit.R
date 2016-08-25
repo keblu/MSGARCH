@@ -13,9 +13,9 @@
 #' If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 #' The \code{do.norm} argument transforms the PIT value into Normal variate so that normality test can be done.
 #' @examples
-#'\dontrun{
 #' # load data
 #'data("sp500")
+#'sp500 = sp500[1:1000]
 #'
 #'# create model specification
 #'spec = MSGARCH::create.spec() 
@@ -31,7 +31,7 @@
 #'                                                                          
 #'# generate random draws at T + 1 from model
 #'set.seed(123)
-#'sim.ahead = MSGARCH::simahead(object = fit, n = 1, m = 10000)
+#'sim.ahead = MSGARCH::simahead(object = fit, n = 1, m = 100)
 #'
 #'x = sim.ahead$draws
 #'
@@ -39,7 +39,6 @@
 #'pit = MSGARCH::pit(object = fit, x = x, do.norm = FALSE)
 #'
 #'plot(pit)
-#'}
 #' @return A list of class \code{MSGARCH_PIT} containing two components:
 #' \itemize{
 #' \item \code{pit}:\cr If \code{do.its = FALSE}: probability integral transform of the points \code{x} at \code{t = T + 1} or Normal variate derived from the probability integral transform of \code{x} (vector of size N).\cr
