@@ -12,7 +12,6 @@
 #' If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
 #' If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 #' @examples
-#' \dontrun{
 #' # load data 
 #'data("sp500")
 #'sp500 = sp500[1:1000]
@@ -34,7 +33,6 @@
 #'cdf = MSGARCH::cdf(object = fit, x = x, log = FALSE, do.its = FALSE)
 #'
 #'plot(cdf)
-#'}
 #' @return A list of class \code{MSGARCH_CDF} containing two components:
 #' \itemize{
 #' \item \code{cdf}:\cr  If \code{do.its = FALSE}: (Log-)Cumulative of the points \code{x} at \code{t = T + 1} (vector of size N or matrix of size M x N).\cr
