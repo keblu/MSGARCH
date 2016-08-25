@@ -22,5 +22,5 @@
 #', the International Institute of Forecasting and Industrielle-Alliance.
 #'@references Eddelbuettel, D. & Francois, R. (2011). \code{Rcpp}: Seamless \R and \code{C++} Integration. \emph{Journal of Statistical Software}, 40, pp. 1-18, \url{http://www.jstatsoft.org/v40/i08/}.
 #'@references Eddelbuettel, D. & Sanderson, C. (2014). \code{RcppArmadillo}: Accelerating \R with High--Performance \code{C++} Linear Algebra. \emph{Computational Statistics & Data Analysis}, 71, pp. 1054-1063, \url{http://dx.doi.org/10.1016/j.csda.2013.02.005}.
-#'@references Ghalanos, A. (2015). \code{rugarch}: Univariate GARCH Models. \url{https://cran.r-project.org/web/packages/rugarch/}.
+#'@references Ghalanos, A. (2015). \code{rugarch}: Univariate GARCH Models. \url{https://cran.r-project.org/package=rugarch}.
 "_PACKAGE"

@@ -8,7 +8,7 @@ more accurate risk measures. The package follows the structure of rugarch since 
 for volatility modeling. The core is implemented in C++ while simple R functions will facilitate usage of the package.
 
 ## Contents
-* MSGARCH.pdf: This document is the documentation for the MSGARCH package.
+* MSGARCH-manual.pdf: This document is the documentation for the MSGARCH package.
 * Package: This folder contains the latest developpement version of the package.
 * bin: This folder contains the previous stable version of the package.
 * test: Test folder with an R file containing all the examples from the documentation for test purpose.

@@ -69,7 +69,7 @@
 #' spec = MSGARCH::create.spec(model = c("sGARCH","gjrGARCH"), distribution = c("norm","std"),
 #'                              do.skew = c(TRUE,FALSE), do.mix = FALSE, do.shape.ind = FALSE) 
 #' print(spec)
-#' @import Rcpp RcppArmadillo
+#' @import Rcpp
 #' @export
 create.spec <- function(model = c("sGARCH", "sGARCH"),
                         distribution = c("norm", "norm"),

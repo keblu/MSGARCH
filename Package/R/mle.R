@@ -43,9 +43,9 @@
 #'  the specification so that the unconditional volatility of each regime
 #'  is set to different quantiles of the volatilities of the rolling windows of \code{y}.
 #' @references Ardia, D. Boudt, K. Carl, P. Mullen, K. M. & Peterson, B. G. (2011). Differential Evolution with \code{DEoptim}. \emph{R Journal}, 3, pp. 27-34
-#' @references Ardia, D. Mullen, K. M. Peterson, B. G. & Ulrich, J. (2015). \code{DEoptim}: Differential Evolution in \R. \url{https://cran.r-project.org/web/packages/DEoptim/}
+#' @references Ardia, D. Mullen, K. M. Peterson, B. G. & Ulrich, J. (2015). \code{DEoptim}: Differential Evolution in \R. \url{https://cran.r-project.org/package=DEoptim}
 #' @references Mullen, K. M. Ardia, D. Gil, D. L. Windover, D. Cline, J.(2011) \code{DEoptim}: An \R Package for Global Optimization by Differential Evolution. \emph{Journal of Statistical Software}, 40, pp. 1-26, DOI:	\url{http://dx.doi.org/10.18637/jss.v040.i06}
-#' @references Johnson, S. G. (2014). The NLopt Nonlinear-Optimization. \url{https://cran.r-project.org/web/packages/NLopt/}.
+#' @references Johnson, S. G. (2014). The NLopt Nonlinear-Optimization. \url{https://cran.r-project.org/package=nloptr}.
 #' @examples 
 #'\dontrun{
 #' # load data
