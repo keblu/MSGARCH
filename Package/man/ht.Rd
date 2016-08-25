@@ -16,7 +16,7 @@ created with \code{\link{fit.bayes}}.}
 \item{y}{Vector (of size T) of observations (not require when using a fit object).}
 }
 \value{
-Condititional volatility time serie (array of size (T + 1) x M x K) in each regime.
+Condititional volatility (array of size (T + 1) x M x K) in each regime.
 }
 \description{
 Method returning the conditional volatility of each regime.
@@ -28,13 +28,14 @@ If a matrix of parameter estimates is given, each parameter estimates is evaluat
 \dontrun{
 # load data
 data("sp500")
+sp500 = sp500[1:1000]
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 
 # Compute the conditional volatility
 ht = MSGARCH::ht(object = fit)

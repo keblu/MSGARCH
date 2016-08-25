@@ -54,7 +54,9 @@ Method that performs Bayesian estimation of a \code{MSGARCH_SPEC} object on a se
 \details{
 The total number of draws is equal to \code{N.mcmc / N.thin}.
 The Bayesian estimation uses the \R package \code{adaptMCMC} (Andreas, 2012) which  
-implements the adaptive sampler of Vihola (2012). The argument \code{do.enhance.theta0}
+implements the adaptive sampler of Vihola (2012). 
+ The starting parameters are the specification default parameters.
+The argument \code{do.enhance.theta0}
  uses the volatilities of rolling windows of \code{y} and adjust the default parameter of
  the specification so that the unconditional volatility of each regime
  is set to different quantiles of the volatilities of the rolling windows of \code{y}.
@@ -63,6 +65,7 @@ implements the adaptive sampler of Vihola (2012). The argument \code{do.enhance.
 \dontrun{
 # load data
 data("sp500")
+sp500 = sp500[1:1000]
 
 # create model specification
 spec = MSGARCH::create.spec() 
@@ -70,7 +73,9 @@ spec = MSGARCH::create.spec()
 # fit the model on the data with Bayesian estimation
 set.seed(123)
 fit = MSGARCH::fit.bayes(spec = spec, y = sp500, 
-                         ctr = list(N.burn = 10000, N.mcmc = 10000, N.thin = 1))
+                         ctr = list(N.burn = 5000, N.mcmc = 10000, N.thin = 1))
+                         
+summary(fit)
 }                          
 }
 \references{

@@ -19,8 +19,7 @@ Author: Keven Bluteau [aut, cre],
     Kris Boudt [ctb],
     Brian Peterson [ctb]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
-Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or Bayesian), simulate, and forecast
-    various Markov-Switching GARCH processes.
+Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or Bayesian), simulate, and forecast various Markov-Switching GARCH processes.
 License: GPL (>= 2)
 Imports: Rcpp, adaptMCMC, DEoptim, nloptr, methods, stringr, ggplot2,
         reshape2, zoo, expm, fanplot

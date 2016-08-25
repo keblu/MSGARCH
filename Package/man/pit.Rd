@@ -44,13 +44,14 @@ The \code{do.norm} argument transforms the PIT value into Normal variate so that
 \dontrun{
 # load data
 data("sp500")
+sp500 = sp500[1:1000]
 
 # create model specification
 spec = MSGARCH::create.spec() 
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
-fit = MSGARCH::fit.mle(spec = spec, y = sp500)
+fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 
 # run pit method in-sample              
 pit.its = MSGARCH::pit(object = fit, do.norm = FALSE, do.its = TRUE)                              

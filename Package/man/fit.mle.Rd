@@ -52,9 +52,9 @@ Method that performs Maximum Likelihood estimation of a \code{MSGARCH_SPEC} obje
 }
 \details{
 The Maximum likelihood estimation uses the \R package \code{nloptr} (Johnson, 2014) for main optimizer 
-while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an initialization for nloptr. 
- The argument \code{do.enhance.theta0}
- uses the volatilities of rolling windows of \code{y} and adjust the default parameter of
+while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an initialization for nloptr.
+ The starting parameters are the specification default parameters.
+ The argument \code{do.enhance.theta0} uses the volatilities of rolling windows of \code{y} and adjust the starting parameters of
  the specification so that the unconditional volatility of each regime
  is set to different quantiles of the volatilities of the rolling windows of \code{y}.
 }
@@ -62,6 +62,7 @@ while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an ini
 \dontrun{
 # load data
 data("sp500")
+sp500 = sp500[1:1000]
 
 # create model specification
 spec = MSGARCH::create.spec() 
