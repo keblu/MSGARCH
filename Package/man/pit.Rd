@@ -41,7 +41,6 @@ If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance e
 The \code{do.norm} argument transforms the PIT value into Normal variate so that normality test can be done.
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -60,7 +59,7 @@ plot(pit.its)
                                                                          
 # generate random draws at T + 1 from model
 set.seed(123)
-sim.ahead = MSGARCH::simahead(object = fit, n = 1, m = 10000)
+sim.ahead = MSGARCH::simahead(object = fit, n = 1, m = 100)
 
 x = sim.ahead$draws
 
@@ -68,6 +67,5 @@ x = sim.ahead$draws
 pit = MSGARCH::pit(object = fit, x = x, do.norm = FALSE)
 
 plot(pit)
-}
 }
 

@@ -23,7 +23,6 @@ A matrix (of size K x K) in the case of a Markov-Switching model
 Method returning the transition matrix.
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -39,6 +38,5 @@ fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 transmat.mle = MSGARCH::transmat(fit, n = 10)
 
 print(transmat.mle)
-}
 }
 

@@ -44,7 +44,6 @@ If \code{do.its = FALSE}, \code{x} the risk estimator at \code{t = T + 1}, the m
 If \code{do.its = TRUE}, The in-sample risk estimator are calculated.
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -58,12 +57,11 @@ fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 
 # compute the Value-at-Risk and Expected-shortfall 
 # Risk estimation in-sample 
-risk.its = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, do.its = TRUE)
+risk.its = MSGARCH::risk(object = fit, level = 0.95, ES = FALSE, do.its = TRUE)
 
 plot(risk.its)                     
 
 # Risk estimation at T + 1                     
-risk = MSGARCH::risk(object = fit, level = c(0.95,0.99), ES = TRUE, do.its = FALSE)
-}
+risk = MSGARCH::risk(object = fit, level = 0.95, ES = FALSE, do.its = FALSE)
 }
 

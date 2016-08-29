@@ -6,8 +6,14 @@ f.error <- function(message) {
 
 #Default parameters
 f.process.ctr <- function(ctr = list()) {
-  con <- list(theta0 = NULL, do.init = TRUE, N.mcmc = 10000, N.burn = 5000, N.thin = 10,
-    NP = 500, itermax = 500, do.enhance.theta0 = TRUE)
+  if(is.null(ctr$theta0)){
+    do.enhance.theta0 = TRUE
+  } else {
+    do.enhance.theta0 = FALSE
+  }
+  con <- list(theta0 = NULL, do.init = FALSE, N.mcmc = 1000, N.burn = 500, N.thin = 1,
+    NP = 500, itermax = 500, do.enhance.theta0 = do.enhance.theta0)
+  
   con[names(ctr)] <- ctr
   return(con)
 }

@@ -2,7 +2,6 @@
 #' @param fit Fit object of type \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.
 #' @references Gelman, A. Carlin, J. B. Stern, H. S. & Rubin, D. B. (2003). Bayesian Data Analysis. \emph{Chapman and Hall/CRC}
 #' @examples 
-#'\dontrun{
 #'# load data
 #'data("sp500")
 #'sp500 = sp500[1:1000]
@@ -16,7 +15,6 @@
 #'
 #'# compute DIC
 #'DIC = MSGARCH::DIC(fit)
-#'}
 #' @return A list containing four variables:
 #'        \itemize{
 #'        \item \code{DIC} : Deviance Information Criterion.
@@ -26,7 +24,7 @@
 #'        }
 #' @details We define the deviance as: \deqn{D(\theta) = -2LLH(\mathbf{y}|\theta),} where \eqn{\mathbf{y}} are the data, \eqn{\theta} 
 #'  are the parameters, and LLH() is the log-likelihood function.
-#'  The expectation \deqn{\bar{D} = {\mathbf{E}}^{\theta}[D(\theta)],} where \eqn{{\mathbf{E}}^{\theta}} is the expectation over all theta of a MCMC chain,
+#'  The expectation \deqn{\bar{D} = {\mathbf{E}}^{\theta}[D(\theta)],} where \eqn{{\mathbf{E}}^{\theta}} is the expectation over all theta in a MCMC chain,
 #'  is a measure of how well the model fits the data. The larger this is, the worse the fit. The effective number of parameters of the model can be define as
 #' \deqn{p_{V} = {\frac{1}{2}}\widehat{var}\left(D(\theta)\right),} where \eqn{\widehat{var}} is the the population variance estimator.
 #'   The larger the effective number of parameters is, the easier it is for the model to fit the data, and so the deviance needs to be penalized.

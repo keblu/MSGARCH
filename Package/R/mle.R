@@ -5,7 +5,7 @@
 #' @param ctr List of control parameters.
 #'        The control parameters have two components to it:
 #'        \itemize{
-#'        \item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (Default: \code{do.init = TRUE})
+#'        \item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (Default: \code{do.init = FALSE})
 #'        \item \code{NP} : Number of parameter vectors in the population in \code{DEoptim} optimization. (Default: \code{NP = 200})
 #'        \item \code{itermax} : Maximum iteration (population generation) allowed in \code{DEoptim} optimization. (Default: \code{maxit = 200})
 #'        \item \code{do.enhance.theta0} : Boolean indicating if the default parameters value are enhance using \code{y} variance. (Default: \code{do.enhance.theta0 = TRUE})
@@ -47,7 +47,6 @@
 #' @references Mullen, K. M. Ardia, D. Gil, D. L. Windover, D. Cline, J.(2011) \code{DEoptim}: An \R Package for Global Optimization by Differential Evolution. \emph{Journal of Statistical Software}, 40, pp. 1-26, DOI:	\url{http://dx.doi.org/10.18637/jss.v040.i06}
 #' @references Johnson, S. G. (2014). The NLopt Nonlinear-Optimization. \url{https://cran.r-project.org/package=nloptr}.
 #' @examples 
-#'\dontrun{
 #' # load data
 #' data("sp500")
 #' sp500 = sp500[1:1000]
@@ -57,10 +56,8 @@
 #' 
 #' # fit the model on the data with ML estimation using DEoptim intialization
 #' set.seed(123)
-#' fit = MSGARCH::fit.mle(spec = spec, y = sp500, 
-#'                        ctr = list(do.init = TRUE, NP = 500, itermax = 500))
+#' fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #' summary(fit)
-#'   }           
 #' @importFrom stats runif           
 #' @import DEoptim nloptr
 #' @export

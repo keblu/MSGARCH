@@ -45,7 +45,6 @@
 #'  the specification so that the unconditional volatility of each regime
 #'  is set to different quantiles of the volatilities of the rolling windows of \code{y}.
 #' @examples 
-#'\dontrun{
 #' # load data
 #' data("sp500")
 #' sp500 = sp500[1:1000]
@@ -56,10 +55,9 @@
 #' # fit the model on the data with Bayesian estimation
 #' set.seed(123)
 #' fit = MSGARCH::fit.bayes(spec = spec, y = sp500, 
-#'                          ctr = list(N.burn = 5000, N.mcmc = 10000, N.thin = 1))
+#'                          ctr = list(N.burn = 500, N.mcmc = 1000, N.thin = 1))
 #'                          
 #'summary(fit)
-#'}                          
 #' @references Andreas, S. (2012). \code{adaptMCMC}: Implementation of a Generic Adaptive Monte Carlo Markov Chain Sampler. \url{https://cran.r-project.org/package=adaptMCMC}.
 #' @references Metropolis, N.; Rosenbluth, A. W.; Rosenbluth, M. N.; Teller, A. H. & Teller, E. (1953). Equation of State Calculations by Fast Computing Machines. \emph{Journal of Chemical Physics}, 21, pp. 1087-1092.
 #' @references Plummer, M. Best, N. Cowles, K. & Vines, K. (2006). \code{CODA}: Convergence Diagnosis and Output Analysis for MCMC. \emph{R News}, 6, pp.7-11. \url{https://cran.r-project.org/package=coda}.

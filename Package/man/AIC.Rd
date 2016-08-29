@@ -19,7 +19,6 @@ Compute Akaike information criterion (AIC).
 If a matrix of MCMC posterior draws estimates is given, the AIC on the posterior mean is calculated.
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -32,7 +31,6 @@ fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 
 # compute AIC
 AIC = MSGARCH::AIC(fit)
-}
 }
 \references{
 Akaike, H. (1974). A New Look at the Statistical Model Identification. \emph{IEEE Transactions on Automatic Control}, 19, pp. 716-723.

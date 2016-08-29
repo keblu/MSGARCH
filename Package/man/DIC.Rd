@@ -31,7 +31,6 @@ We define the deviance as: \deqn{D(\theta) = -2LLH(\mathbf{y}|\theta),} where \e
  Finally DIC is defined as: \deqn{\mathit{DIC} = p_{V}+\bar{D}.}
 }
 \examples{
-\dontrun{
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -45,7 +44,6 @@ fit = MSGARCH::fit.bayes(spec = spec, y = sp500)
 
 # compute DIC
 DIC = MSGARCH::DIC(fit)
-}
 }
 \references{
 Gelman, A. Carlin, J. B. Stern, H. S. & Rubin, D. B. (2003). Bayesian Data Analysis. \emph{Chapman and Hall/CRC}

@@ -19,7 +19,6 @@
 #' \code{\link{sim}} starts the simulation a t = 0 creating an entire new process while  \code{\link{simahead}} starts the simulation at t = T + 1
 #'  taking in consideration all the information available in the original time serie \code{y}.
 #' @examples 
-#'\dontrun{
 #' # load data
 #'data("sp500")
 #'sp500 = sp500[1:1000]
@@ -33,10 +32,9 @@
 #'  
 #'# generate random draws
 #'set.seed(123)
-#' simahead = MSGARCH::simahead(object = fit, n = 30, m = 1000)
+#' simahead = MSGARCH::simahead(object = fit, n = 30, m = 100)
 #' 
 #' plot(simahead)
-#' }
 #' @export
 simahead <- function(object, n, m, theta, y) {
   UseMethod("simahead", object)
