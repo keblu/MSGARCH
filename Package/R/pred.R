@@ -63,7 +63,7 @@ pred.MSGARCH_SPEC <- function(object, x = NULL, theta, y, log = TRUE, do.its = F
     tmp[i, ] <- MSGARCH::pdf(object, x, theta = theta[i, ], y = y, log = FALSE,
                             do.its = do.its)$pdf
   }
-  tmp <- colMeans(tmp)
+  tmp <- colMeans(tmp, na.rm = TRUE)
   if (log) {
     tmp <- log(tmp)
   }
