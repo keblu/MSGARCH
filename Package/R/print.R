@@ -62,9 +62,11 @@ summary.MSGARCH_MLE_FIT <- function(object, ...) {
   }
   print("Unconditional volatility:")
   print(MSGARCH::unc.vol(object = object))
-  print(paste0("Log-kernel: ", object$log_kernel))
-  print(paste0("AIC: ",MSGARCH::AIC(object)))
-  print(paste0("BIC: ",MSGARCH::BIC(object)))
+  cat("Log-kernel: ", object$log_kernel,"\n")
+  AIC = MSGARCH::AIC(object)
+  cat("AIC: ", AIC,"\n")
+  BIC = MSGARCH::BIC(object)
+  cat("BIC: ", BIC)
 }
 #' @export
 summary.MSGARCH_BAY_FIT <- function(object, ...) {
@@ -89,10 +91,13 @@ summary.MSGARCH_BAY_FIT <- function(object, ...) {
   }
   print("Posterior mean unconditional volatility:")
   print(MSGARCH::unc.vol(object = object$spec, theta = theta_mean))
-  print(paste0("Acceptance rate: ",object$accept))
-  print(paste0("AIC: ",MSGARCH::AIC(object)))
-  print(paste0("BIC: ",MSGARCH::BIC(object)))
-  print(paste0("DIC: ",MSGARCH::DIC(object)$DIC))
+  cat("Acceptance rate: ",object$accept,"\n")
+  AIC = MSGARCH::AIC(object)
+  cat("AIC: ", AIC,"\n")
+  BIC = MSGARCH::BIC(object)
+  cat("BIC: ", BIC,"\n")
+  DIC = MSGARCH::DIC(object)$DIC
+  cat("DIC: ", DIC)
 }
 
 #' @export
