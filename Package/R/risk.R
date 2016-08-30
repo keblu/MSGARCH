@@ -52,7 +52,9 @@ risk <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE, do.its = FA
 #' @export
 risk.MSGARCH_SPEC <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE,
   do.its = FALSE) {
-  y <- c(0, y)
+  if(isTRUE(do.its)){
+    y <- c(mean(y), y)
+  }
   y <- f.check.y(y)
   out <- list()
   ny <- nrow(y)

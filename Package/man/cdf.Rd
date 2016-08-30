@@ -40,7 +40,6 @@ If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} 
 If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 }
 \examples{
-\dontrun{
 # load data 
 data("sp500")
 sp500 = sp500[1:1000]
@@ -62,6 +61,5 @@ x = seq(-3,3,0.01)
 cdf = MSGARCH::cdf(object = fit, x = x, log = FALSE, do.its = FALSE)
 
 plot(cdf)
-}
 }
 
