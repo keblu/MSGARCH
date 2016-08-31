@@ -68,7 +68,7 @@ pit.MSGARCH_SPEC <- function(object, x = NULL, theta, y, do.norm = FALSE, do.its
     tmp <- MSGARCH::cdf(object = object, x, theta = theta[i, ], y = y, log = FALSE,
                        do.its = do.its)$cdf
   }
-  tmp <- colMeans(tmp)
+  tmp <- colMeans(tmp, na.rm = TRUE)
   if (do.norm) {
     tmp <- qnorm(tmp, mean = 0, sd = 1)
   }
