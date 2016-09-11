@@ -25,14 +25,23 @@ unc.vol.MSGARCH_SPEC <- function(object, theta) {
   }
   
   if(any(is.null(out))){
-    out[out < 0] = NA
+    out = matrix(out, ncol = object$K,nrow = nrow(theta))
+    out = matrix(NA, nrow = nrow(out), ncol = ncol(out))
+    return(out)
   }
   
-  if(!any(is.na(out))){
+  if(any(is.na(out))){
+    out = matrix(out, ncol = object$K,nrow = nrow(theta))
+    out = matrix(NA, nrow = nrow(out), ncol = ncol(out))
+    return(out)
+  } else {
     if(any(out < 0)) {
-      out[out < 0] = NA
+      out = matrix(out, ncol = object$K,nrow = nrow(theta))
+      out = matrix(NA, nrow = nrow(out), ncol = ncol(out))
+      return(out)
     }
-  } 
+  }
+  
   out <- sqrt(out)
   out = matrix(out, ncol = object$K,nrow = nrow(theta))
   colnames(out) = paste0("State ", 1:object$K)
