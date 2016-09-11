@@ -23,9 +23,16 @@ unc.vol.MSGARCH_SPEC <- function(object, theta) {
   for (i in 1:nrow(theta)) {
     out <- object$rcpp.func$unc_vol_Rcpp(theta, 0)
   }
-  if(any(out < 0)) {
+  
+  if(any(is.null(out))){
     out[out < 0] = NA
   }
+  
+  if(!any(is.na(out))){
+    if(any(out < 0)) {
+      out[out < 0] = NA
+    }
+  } 
   out <- sqrt(out)
   out = matrix(out, ncol = object$K,nrow = nrow(theta))
   colnames(out) = paste0("State ", 1:object$K)
