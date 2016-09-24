@@ -7,7 +7,7 @@ Authors@R: c(person("Keven", "Bluteau", role = c("aut", "cre"),
              email = "Keven.Bluteau@unine.ch"),
              person("David", "Ardia", role = c("aut"),
              email = "David.Ardia@unine.ch"),
-             person("Denis-Alexandre", "Trottier", role = c("ctb"),
+             person("Denis-Alexandre", "Trottier", role = c("aut"),
              email = "denis-alexandre.trottier.1@ulaval.ca"),
              person("Kris", "Boudt", role = c("ctb"),
              email = "kris.boudt@vub.ac.be"),
@@ -15,7 +15,7 @@ Authors@R: c(person("Keven", "Bluteau", role = c("aut", "cre"),
              email = "brian@braverock.com"))
 Author: Keven Bluteau [aut, cre],
     David Ardia [aut],
-    Denis-Alexandre Trottier [ctb],
+    Denis-Alexandre Trottier [aut],
     Kris Boudt [ctb],
     Brian Peterson [ctb]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
