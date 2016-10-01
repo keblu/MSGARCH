@@ -40,14 +40,16 @@ transmat.MSGARCH_SPEC <- function(object, theta, n = 1) {
   params_loc <- c(0, cumsum(Nbparams))
   if (!isTRUE(object$is.mix)) {
     p <- matrix(nrow = n_model, ncol = n_model)
-    for (i in 1:(n_model - 1)) {
-      p[i, 1:n_model] <- theta[(params_loc[n_model + 1] + 1):(params_loc[n_model + 1] + n_model)]
+    for (i in 0:(n_model-1)) {
+
+        p[1:(n_model-1),i+1] <- theta[(params_loc[n_model + 1] + n_model*i+1-i):(params_loc[n_model + 1] + n_model*i+n_model-1-i)]
+      
     }
-    p[n_model, ] <- 1 - colSums(matrix(p[1:(n_model - 1), ], ncol = n_model))
+    p[n_model, ] <- 1 - colSums(matrix(p[1:(n_model-1), ], ncol = n_model))
   } else {
-    p <- matrix(rep(0, n_model),ncol = n_model)
+    p <- matrix(rep(0, n_model), ncol = n_model)
     for (i in 1:(n_model - 1)) {
-      p[1,i] <- theta[(params_loc[n_model + 1] + 1)]
+      p[1,i] <- theta[(params_loc[n_model + 1] + i)]
     }
     p[1,n_model] <- 1 - sum(p)
   }
@@ -58,10 +60,10 @@ transmat.MSGARCH_SPEC <- function(object, theta, n = 1) {
   if(object$is.mix){
     col_label = paste0("State ", 1:object$K)
     row_label = paste0("Probability")
-  } else {
+  } else {     
     col_label = paste0("t = ", 1:object$K)
     row_label = paste0("t + ",n," = ", 1:object$K)
-  }
+  } 
   rownames(p) = row_label
   colnames(p) = col_label
   return(p)

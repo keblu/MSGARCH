@@ -80,7 +80,6 @@ fit.bayes.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
       l.ctr$theta0 <- spec$theta0
     }
   }
-  l.ctr$theta0 <- f.sort.theta(spec = spec, theta = l.ctr$theta0)
   f.kernel <- function(x, log = TRUE) {
     name <- spec$name
     unique.spec <- unique(name, FALSE)

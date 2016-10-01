@@ -59,7 +59,7 @@
 #' fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #' summary(fit)
 #' @importFrom stats runif           
-#' @import DEoptim nloptr
+#' @import DEoptim nloptr dfoptim
 #' @export
 fit.mle <- function(spec, y, ctr = list()) {
   UseMethod("fit.mle", spec)
@@ -111,11 +111,11 @@ fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
     theta <- tmp$optim$bestmem
     log_kernel <- f.kernel(theta)
   }
-  theta <- f.sort.theta(spec = spec, theta = theta)
+  
   theta <- matrix(theta, ncol = length(theta))
   colnames(theta) <- colnames(spec$theta0)
-  out <- list(theta = theta, log_kernel = log_kernel, spec = spec,
-              is.init = any(ctr$do.init || spec$do.init), y = y)
+  out <- list( theta = theta, log_kernel = log_kernel, spec = spec,
+              is.init = any(ctr$do.init || spec$do.init), y = y,theta0.init = theta0.init)
   class(out) <- "MSGARCH_MLE_FIT"
   return(out)
 }

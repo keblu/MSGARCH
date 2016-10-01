@@ -69,79 +69,79 @@ f.check.theta <- function(spec, theta) {
   }
   return(theta)
 }
-
-#Function that sorts the theta according to the unconditional variance (Used for Bayesian estimation)
-f.sort.theta <- function(spec, theta) {
-  thetaUncVol <- theta
-  if (isTRUE(spec$is.shape.ind)) {
-    theta <- spec$func$f.do.shape.ind(theta = theta)
-  }
-  Nbparams <- spec$n.params
-  Nmodel <- length(Nbparams)
-  if (Nmodel == 1) {
-    return(theta)
-  }
-  name <- spec$name
-  unique.spec <- unique(name, FALSE)
-  params_loc <- c(0, cumsum(Nbparams))
-  tmp <- theta
-  pos <- 1:Nmodel
-  for (i in 1:length(unique.spec)) {
-    postmp <- pos
-    idx <- name == unique.spec[i]
-    posidx <- pos[idx]
-    Nmodelidx <- length(posidx)
-    idx_loc <- params_loc[c(idx)]
-    idx_params <- spec$n.params[c(idx)][1]
-    unc.vol <- MSGARCH::unc.vol(object = spec, thetaUncVol)
-    unc.vol.idx <- unc.vol[idx]
-    unc.vol.sort <- sort(unc.vol.idx, index.return = TRUE)
-    new.pos.index = 1
-    for (j in 1:Nmodelidx) {
-      new.pos <- which(unc.vol == unc.vol.sort$x[j])
-      if(length(new.pos) > 1){
-         new.pos <- new.pos[new.pos.index]
-         new.pos.index <- new.pos.index + 1
-      }
-      postmp[posidx[j]] <- new.pos
-    }
-    for (j in 1:Nmodelidx) {
-      ind <- unc.vol.sort$ix[j]
-      tmp[(idx_loc[j] + 1):(idx_loc[j] + idx_params)] <- theta[(idx_loc[ind] + 1):(idx_loc[ind] + idx_params)]
-    }
-  }
-  if (!isTRUE(spec$is.mix)) {
-    p <- matrix(nrow = Nmodel, ncol = Nmodel)
-    for (i in 1:(Nmodel - 1)) {
-      p[i, 1:Nmodel] <- tmp[(params_loc[Nmodel + 1] + 1):(params_loc[Nmodel + 1] + Nmodel)]
-    }
-    p[Nmodel, ] <- 1 - colSums(matrix(p[1:(Nmodel - 1), ], ncol = Nmodel))
-    tmpp <- p
-    for (i in 1:(Nmodel)) {
-      for (j in 1:(Nmodel)) {
-        tmpp[i, j] <- p[postmp[i], postmp[j]]
-      }
-    }
-    new.p <- as.vector(tmpp[1:(Nmodel - 1), ])
-    tmp[(params_loc[Nmodel + 1] + 1):length(tmp)] <- new.p
-  } else {
-    p <- rep(0, Nmodel)
-    for (i in 1:(Nmodel - 1)) {
-      p[i] <- tmp[(params_loc[Nmodel + 1] + 1)]
-    }
-    p[Nmodel] <- 1 - sum(p)
-    tmpp <- p
-    for (j in 1:(Nmodel)) {
-      tmpp[j] <- p[postmp[j]]
-    }
-    new.p <- tmpp[1:(Nmodel - 1)]
-    tmp[(params_loc[Nmodel + 1] + 1):length(tmp)] <- new.p
-  }
-  if (isTRUE(spec$is.shape.ind)) {
-    tmp <- spec$func$f.do.shape.ind.reverse(tmp)
-  }
-  return(tmp)
-}
+# 
+# #Function that sorts the theta according to the unconditional variance (Used for Bayesian estimation)
+# f.sort.theta <- function(spec, theta) {
+#   thetaUncVol <- theta
+#   if (isTRUE(spec$is.shape.ind)) {
+#     theta <- spec$func$f.do.shape.ind(theta = theta)
+#   }
+#   Nbparams <- spec$n.params
+#   Nmodel <- length(Nbparams)
+#   if (Nmodel == 1) {
+#     return(theta)
+#   }
+#   name <- spec$name
+#   unique.spec <- unique(name, FALSE)
+#   params_loc <- c(0, cumsum(Nbparams))
+#   tmp <- theta
+#   pos <- 1:Nmodel
+#   for (i in 1:length(unique.spec)) {
+#     postmp <- pos
+#     idx <- name == unique.spec[i]
+#     posidx <- pos[idx]
+#     Nmodelidx <- length(posidx)
+#     idx_loc <- params_loc[c(idx)]
+#     idx_params <- spec$n.params[c(idx)][1]
+#     unc.vol <- MSGARCH::unc.vol(object = spec, thetaUncVol)
+#     unc.vol.idx <- unc.vol[idx]
+#     unc.vol.sort <- sort(unc.vol.idx, index.return = TRUE)
+#     new.pos.index = 1
+#     for (j in 1:Nmodelidx) {
+#       new.pos <- which(unc.vol == unc.vol.sort$x[j])
+#       if(length(new.pos) > 1){
+#          new.pos <- new.pos[new.pos.index]
+#          new.pos.index <- new.pos.index + 1
+#       }
+#       postmp[posidx[j]] <- new.pos
+#     }
+#     for (j in 1:Nmodelidx) {
+#       ind <- unc.vol.sort$ix[j]
+#       tmp[(idx_loc[j] + 1):(idx_loc[j] + idx_params)] <- theta[(idx_loc[ind] + 1):(idx_loc[ind] + idx_params)]
+#     }
+#   }
+#   if (!isTRUE(spec$is.mix)) {
+#     p <- matrix(nrow = Nmodel, ncol = Nmodel)
+#     for (i in 1:(Nmodel - 1)) {
+#       p[i, 1:Nmodel] <- tmp[(params_loc[Nmodel + 1] + i*Nmodel-2):(params_loc[Nmodel + 1] + i*Nmodel)]
+#     }
+#     p[Nmodel, ] <- 1 - colSums(matrix(p[1:(Nmodel - 1), ], ncol = Nmodel))
+#     tmpp <- p
+#     for (i in 1:(Nmodel)) {
+#       for (j in 1:(Nmodel)) {
+#         tmpp[i, j] <- p[postmp[j], postmp[i]]
+#       }
+#     }
+#     new.p <- as.vector(tmpp[1:(Nmodel - 1), ])
+#     tmp[(params_loc[Nmodel + 1] + 1):length(tmp)] <- new.p
+#   } else {
+#     p <- rep(0, Nmodel)
+#     for (i in 1:(Nmodel - 1)) {
+#       p[i] <- tmp[(params_loc[Nmodel + 1] + 1)]
+#     }
+#     p[Nmodel] <- 1 - sum(p)
+#     tmpp <- p
+#     for (j in 1:(Nmodel)) {
+#       tmpp[j] <- p[postmp[j]]
+#     }
+#     new.p <- tmpp[1:(Nmodel - 1)]
+#     tmp[(params_loc[Nmodel + 1] + 1):length(tmp)] <- new.p
+#   }
+#   if (isTRUE(spec$is.shape.ind)) {
+#     tmp <- spec$func$f.do.shape.ind.reverse(tmp)
+#   }
+#   return(tmp)
+# }
 
 #Function that enhance theta0 according to the variance of moving windows of y 
 f.enhance.theta <- function(spec, theta, y) {
