@@ -111,7 +111,8 @@ fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
     theta <- tmp$optim$bestmem
     log_kernel <- f.kernel(theta)
   }
-  
+  theta = f.sort.theta(spec = spec, theta)
+  theta0.init = f.sort.theta(spec = spec, theta0.init)
   theta <- matrix(theta, ncol = length(theta))
   colnames(theta) <- colnames(spec$theta0)
   out <- list( theta = theta, log_kernel = log_kernel, spec = spec,
