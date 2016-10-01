@@ -12,11 +12,11 @@ for volatility modeling. The core is implemented in C++ while simple R functions
 * Package: This folder contains the latest developpement version of the package.
 * bin: This folder contains the previous stable version of the package.
 * test: Test folder with an R file containing all the examples from the documentation for test purpose.
-* MSGARCH_0.16.tar.gz: Latest stable version of the package.
+* MSGARCH_0.17.tar.gz: Latest stable version of the package.
 
 ## Installation
 
-To install the latest stable version is available on CRAN https://cran.r-project.org/web/packages/MSGARCH/index.html and ca be installed via:
+To install the latest stable version is available on CRAN https://cran.r-project.org/web/packages/MSGARCH/index.html and can be installed via:
 
       R > install.packages("MSGARCH")
   
