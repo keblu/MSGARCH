@@ -156,30 +156,36 @@ f.enhance.theta <- function(spec, theta, y) {
     vol[i] <- sqrt(var(y[sep[i]:sep[i + 1]]))
   }
   vol.goal <- quantile(vol, prob = seq(0.1, 0.9, length.out = K))
-  pos <- c(1, cumsum(spec$n.params) + 1)
-  if (isTRUE(spec$is.shape.ind)) {
-    theta <- spec$func$f.do.shape.ind(theta)
+  if(isTRUE(spec$is.shape.ind)){
+    pos <- c(1, cumsum(spec$n.params.vol) + 1)
+    pos[length(pos)] =  pos[length(pos)] + 1
+  } else{
+    pos <- c(1, cumsum(spec$n.params) + 1)
   }
-  if (isTRUE(spec$is.mix)) {
-    theta <- spec$func$f.do.mix(theta)
-  }
+  
+  # if (isTRUE(spec$is.shape.ind)) {
+  #   theta <- spec$func$f.do.shape.ind(theta)
+  # }
+  # if (isTRUE(spec$is.mix)) {
+  #   theta <- spec$func$f.do.mix(theta)
+  # }
   for (i in 1:K) {
     f.fun <- function(x) {
       theta.try <- theta
       theta.try[, pos[i]] <- x
-      if (isTRUE(spec$is.shape.ind)) {
-        theta.try <- spec$func$f.do.shape.ind.reverse(theta.try)
-      }
-      if (isTRUE(spec$is.mix)) {
-        theta.try <- spec$func$f.do.mix.reverse(theta.try)
-      }
-      unc.vol <- MSGARCH::unc.vol(spec, theta = theta.try)
-      if (isTRUE(spec$is.shape.ind)) {
-        theta.try <- spec$func$f.do.shape.ind(theta.try)
-      }
-      if (isTRUE(spec$is.mix)) {
-        theta.try <- spec$func$f.do.mix(theta.try)
-      }
+      # if (isTRUE(spec$is.shape.ind)) {
+      #   theta.try <- spec$func$f.do.shape.ind.reverse(theta.try)
+      # }
+      # if (isTRUE(spec$is.mix)) {
+      #   theta.try <- spec$func$f.do.mix.reverse(theta.try)
+      # }
+      unc.vol <- MSGARCH::unc.vol(object = spec,theta.try)
+      # if (isTRUE(spec$is.shape.ind)) {
+      #   theta.try <- spec$func$f.do.shape.ind(theta.try)
+      # }
+      # if (isTRUE(spec$is.mix)) {
+      #   theta.try <- spec$func$f.do.mix(theta.try)
+      # }
       return(unc.vol[i] - vol.goal[i])
     }
     theta[, pos[i]] <- uniroot(f.fun, lower = spec$lower[pos[i]], upper = spec$upper[pos[i]])$root
@@ -190,15 +196,16 @@ f.enhance.theta <- function(spec, theta, y) {
       theta[pos:length(theta)] <- (1 - 0.8) / (K - 1)
       for (i in 1:(K - 1)) {
         theta[pos] <- 0.8
-        pos <- pos + K + 1
+        pos <- pos + K 
       }
     }
   }
-  if (isTRUE(spec$is.shape.ind)) {
-    theta <- spec$func$f.do.shape.ind.reverse(theta)
-  }
-  if (isTRUE(spec$is.mix)) {
-    theta <- spec$func$f.do.mix.reverse(theta)
-  }
+  
+  # if (isTRUE(spec$is.shape.ind)) {
+  #   theta <- spec$func$f.do.shape.ind.reverse(theta)
+  # }
+  # if (isTRUE(spec$is.mix)) {
+  #   theta <- spec$func$f.do.mix.reverse(theta)
+  # }
   return(theta)
 }
