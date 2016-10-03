@@ -129,7 +129,7 @@ f.sort.theta <- function(spec, theta) {
   } else {
     p <- rep(0, Nmodel)
     for (i in 1:(Nmodel - 1)) {
-      p[i] <- tmp[(params_loc[Nmodel + 1] + 1)]
+      p[i] <- tmp[(params_loc[Nmodel + 1] + i)]
     }
     p[Nmodel] <- 1 - sum(p)
     tmpp <- p

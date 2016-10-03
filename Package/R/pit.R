@@ -72,9 +72,7 @@ pit.MSGARCH_SPEC <- function(object, x = NULL, theta, y, do.norm = FALSE, do.its
   if (do.norm) {
     tmp <- qnorm(tmp, mean = 0, sd = 1)
   }
-  if (any(is.nan(tmp))) {
-    stop("NaN value in PIT calculation")
-  }
+  
   out <- list()
   out$pit <- tmp
   out$x <- x

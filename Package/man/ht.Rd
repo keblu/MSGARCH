@@ -2,7 +2,7 @@
 % Please edit documentation in R/ht.R
 \name{ht}
 \alias{ht}
-\title{Conditional volatility in each regime.}
+\title{Conditional variance in each regime.}
 \usage{
 ht(object, theta, y)
 }
@@ -16,10 +16,10 @@ created with \code{\link{fit.bayes}}.}
 \item{y}{Vector (of size T) of observations (not require when using a fit object).}
 }
 \value{
-Condititional volatility (array of size (T + 1) x M x K) in each regime.
+Condititional variance (array of size (T + 1) x M x K) in each regime.
 }
 \description{
-Method returning the conditional volatility of each regime.
+Method returning the conditional variance of each regime.
 }
 \details{
 If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
@@ -36,7 +36,7 @@ spec = MSGARCH::create.spec()
 set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 
-# Compute the conditional volatility
+# Compute the conditional variance
 ht = MSGARCH::ht(object = fit)
 
 plot(ht)

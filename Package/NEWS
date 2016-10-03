@@ -1,16 +1,10 @@
-Changes in Version 0.08
-  o Add Bayesian estimation, change some variable names, Add full Roxygen documentation, Add create.spec function wrapper, add utility function (VaR, ES, AIC, BIC, PIT, PRED), Add data for test.
-Changes in Version 0.07
-  o Mixture of Garch and regime independent Distributioon option
-Changes in Version 0.06
-  o Skewed Distribution
-Changes in Version 0.05
-  o Added Gas model and distribution function related to the Gas
-Changes in Version 0.04
-  o Added Student and GED distribution
-Changes in Version 0.03
-  o Added GJR, Egarch, and Tgarch, added Starting spec value as starting population for DEoptim since there was problem with convergence regarding MSGARCH with Tgarch (For MSGARCH model it is recommended to use do.init)
-Changes in Version 0.02
-  o Build setup for evaluation of a simple Markov-Switching GARCH as base for several other specification
-Changes in Version 0.01
-  o Package setup
+Changes in Version 0.17
+  o Fixed many bugs when the number of states were above 2.
+  o Changed MLE estimation scheme
+  o Function ht now output the conditional variance and not the conditional volatility
+  o do.init is now FALSE by default
+  o do.enhance.theta0 is now TRUE by default
+Known bugs in version 0.17
+  o Sometimes do.enhance.theta0 gives an error concerning uniroot
+Changes in Version 0.16
+  o First release
