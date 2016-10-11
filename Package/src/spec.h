@@ -522,7 +522,10 @@ public:
     && alpha0 > lower[0] && alpha1 > lower[1] && beta > lower[2]
     && (ineq_func() < ineq_ub);
   }
-  
+  bool calc_r1_MSGARCH() {
+    return fz.calc_r1() 
+    && alpha0 > lower[0] && alpha1 > lower[1] && beta > lower[2];
+  }
   // initialize volatility 
   volatility set_vol(const double& y0) {
     volatility out;
@@ -599,7 +602,10 @@ public:
     && alpha0 > lower[0] && alpha1 > lower[1] && alpha2 > lower[2] && beta > lower[3] 
     && (ineq_func() < ineq_ub);
   }
-  
+  bool calc_r1_MSGARCH() {
+    return    fz.calc_r1()  
+    && alpha0 > lower[0] && alpha1 > lower[1] && alpha2 > lower[2] && beta > lower[3];
+  }
   // initialize volatility to its undonditional expected value  
   volatility set_vol(const double& y0) {
     volatility out;
@@ -677,6 +683,10 @@ public:
     return fz.calc_r1() && (ineq_theta > ineq_lb && ineq_theta < ineq_ub);
   }
   
+  bool calc_r1_MSGARCH() {
+    double ineq_theta = ineq_func();
+    return fz.calc_r1() && (ineq_theta > ineq_lb && ineq_theta < ineq_ub);
+  }
   // initialize volatility to its undonditional expected value  
   volatility set_vol(const double& y0) {
     volatility out;
@@ -759,7 +769,10 @@ public:
     && alpha0 > lower[0] && alpha1 > lower[1] && alpha2 > lower[2] && beta > lower[3]    
     && (ineq_func() < ineq_ub);
   }
-  
+  bool calc_r1_MSGARCH() {
+    return fz.calc_r1()  
+    && alpha0 > lower[0] && alpha1 > lower[1] && alpha2 > lower[2] && beta > lower[3];    
+  }
   // initialize volatility to its undonditional expected value 
   volatility set_vol(const double& y0) {
     volatility out;
@@ -859,7 +872,10 @@ public:
     && alpha0 > lower[0] && alpha1 > lower[1] && beta > lower[2] && beta < upper[2] 
     && (ineq_func() > ineq_lb);
   }
-  
+  bool calc_r1_MSGARCH() {
+    return fz_r1
+    && alpha0 > lower[0] && alpha1 > lower[1] && beta > lower[2] && beta < upper[2]; 
+  }
   // initialize volatility to its undonditional expected value  
   volatility set_vol(const double& y0) {
     volatility out;

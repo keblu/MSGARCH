@@ -24,7 +24,7 @@ public:
     virtual int spec_nb_coeffs_model() = 0;
     // emulate function members
     virtual void spec_loadparam(const NumericVector&) = 0;
-    virtual prior spec_calc_prior(const NumericVector&) = 0;
+    virtual prior spec_calc_prior(const NumericVector&, bool ms) = 0;
     virtual void spec_prep_ineq_vol() = 0;
     virtual double spec_ineq_func() = 0;
     virtual bool spec_calc_r1() = 0;
@@ -76,7 +76,7 @@ public:
         spec.prep_ineq_vol();
         return spec.ineq_func();
     }
-    prior calc_prior(const NumericVector&);
+    prior calc_prior(const NumericVector&, bool ms);
     NumericVector f_sim(const int&, const NumericVector&, const int&);
     NumericVector f_pdf(const NumericVector&, const NumericVector&, const NumericVector&, const bool&);
     NumericVector f_pdf_its( const NumericVector&, const NumericVector&, const bool&);
@@ -123,8 +123,8 @@ public:
     void spec_loadparam(const NumericVector& theta) {
         spec.loadparam(theta);
     }
-    prior spec_calc_prior(const NumericVector& theta) {
-        return calc_prior(theta);
+    prior spec_calc_prior(const NumericVector& theta, bool ms = false) {
+        return calc_prior(theta, ms);
     }
     void spec_prep_ineq_vol() {
         spec.prep_ineq_vol();
@@ -161,8 +161,13 @@ public:
 
 //---------------------- Prior calculation ----------------------//
 template <typename Model>
-prior SingleRegime<Model>::calc_prior(const NumericVector& theta) {
-    bool   r1 = spec.calc_r1();
+prior SingleRegime<Model>::calc_prior(const NumericVector& theta, bool ms = false) {
+  bool r1;
+  if(ms == true){
+    r1 = spec.calc_r1_MSGARCH();
+  } else {
+    r1 = spec.calc_r1();
+  }
     double r2 = -1e10;
     if (r1) {
         r2 = 0;
@@ -352,7 +357,7 @@ NumericVector SingleRegime<Model>::eval_model(NumericMatrix& all_thetas, const N
         theta_j = all_thetas(j,_);
         spec.loadparam(theta_j);
         spec.prep_ineq_vol();
-        pr      = calc_prior(theta_j);
+        pr      = calc_prior(theta_j, false);
         lnd[j]  = pr.r2;
         if (pr.r1) {                                         // if prior satisfied
             tmp = 0;

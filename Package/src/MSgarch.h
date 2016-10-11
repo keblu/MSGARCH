@@ -96,7 +96,7 @@ public:
       NbParams.push_back((*it)->spec_nb_coeffs());
       NbParamsModel.push_back((*it)->spec_nb_coeffs_model());
     }
-    P0      = rep(1.0/K, K);
+    P0      = rep(0, K);
     PLast   = rep(1.0/K, K);
     P_mean  = 1/K;
     P_sd    = 10;
@@ -196,15 +196,27 @@ public:
   // inequality function
   NumericVector ineq_func(const NumericVector& theta) {
     NumericVector out;
+    NumericVector ineq;
     loadparam(theta);
     prep_ineq_vol();
     for(many::iterator it = specs.begin(); it != specs.end(); ++it) 
-      out.push_back((*it)->spec_ineq_func());
+      ineq.push_back((*it)->spec_ineq_func());
+  
+    arma::mat ineq_mat(K,K);
+      for(int i = 0;i< K; i++) {
+        for(int j = 0;j < K; j++) {
+          ineq_mat(i,j) = ineq(j)*P(j,i);
+        }
+      }
+      arma::cx_vec eigen_ineq_mat = arma::eig_gen(ineq_mat);
+      double ineq_value_MSGARCH = max(arma::sqrt(arma::square(arma::real(eigen_ineq_mat)) + arma::square(arma::imag(eigen_ineq_mat))));
+      out.push_back(ineq_value_MSGARCH);
     if(K > 1){
       NumericMatrix Psub = P(Range(0,K-1), Range(0,K-2));
       for(int i = 0; i < K; i++)
         out.push_back(sum(Psub(i,_)));
     }
+    
     return out;
   } 
   
@@ -268,6 +280,16 @@ inline void MSgarch::loadparam(const NumericVector& theta) {
     k++;
   }
   P = P_mat;
+  arma::mat P_tmp = as<arma::mat>(P_mat);
+  for(int i = 0; i < 100;i++){
+    P_tmp = P_tmp * P_tmp;
+  }
+  for(int i = 0; i < K;i++){
+    for(int j = 0; j < K;j++){
+     P0(i) = P0(i) + 1/K * P_tmp(i,j);
+    }
+  }
+  
 }
 
 //------------------------------ Prior calculation  ------------------------------//
@@ -276,16 +298,27 @@ inline prior MSgarch::calc_prior(const NumericVector& theta) {
   // compute prior of individual models
   bool   r1_joint = 1;      // joint r1 of the models
   double r2_joint = 0;      // joint r2 of the models
+  NumericVector ineq;
   int k = 0;
   prior pr;
   for(many::iterator it = specs.begin(); it != specs.end(); ++it) { // loop over models
     NumericVector theta_it = extract_theta_it(theta, k);  // parameters of model 'it'
     NumericVector P_it     = extract_P_it(theta, k);      // transition probabilities from model 'it'
-    pr = (*it)->spec_calc_prior(theta_it);                // prior of model 'it'
+    pr = (*it)->spec_calc_prior(theta_it, true);                // prior of model 'it'
     r1_joint = r1_joint && pr.r1 && is_true(all((0 < P_it) & (P_it < 1))); 
     r2_joint += pr.r2 + sum(dnorm(P_it, P_mean, P_sd, 1)); 
     k++;
   }
+  ineq = ineq_func(theta);
+  arma::mat ineq_mat(K,K);
+  for(int i = 0;i< K; i++) {
+    for(int j = 0;i< K; j++) {
+      ineq_mat(i,j) = ineq(j)*P(j,i);
+    }
+  }
+  arma::cx_vec eigen_ineq_mat = arma::eig_gen(ineq_mat);
+  double ineq_value_MSGARCH = max(arma::sqrt(arma::square(arma::real(eigen_ineq_mat)) + arma::square(arma::imag(eigen_ineq_mat))));
+  r1_joint = r1_joint && ineq_value_MSGARCH < 1;
   // return result
   prior out;
   out.r1 = r1_joint;
