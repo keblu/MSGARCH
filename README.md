@@ -1,4 +1,4 @@
-[CRAN](http://www.r-pkg.org/badges/version/MSGARCH)](https://cran.r-project.org/package=MSGARCH) [![Downloads](http://cranlogs.r-pkg.org/badges/MSGARCH?color=brightgreen)](http://www.r-pkg.org/pkg/MSGARCH)
+[![CRAN](http://www.r-pkg.org/badges/version/MSGARCH)](https://cran.r-project.org/package=MSGARCH) [![Downloads](http://cranlogs.r-pkg.org/badges/MSGARCH?color=brightgreen)](http://www.r-pkg.org/pkg/MSGARCH)
 # MSGARCH
 The goal of the MSGARCH package is to implement a package that will give the financial community tools to estimate,
 simulate, and test several MSGARCH models used in volatility (i.e., square root of conditional variance) forecasting.
