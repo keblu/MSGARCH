@@ -147,9 +147,14 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
   for (j in 1:length(models.merge)) {
     models.list[[j]] <- get(models.merge[j])
   }
-  out <- suppressWarnings(expr = f.spec(models = models.list,
-                                        do.mix = do.mix,
-                                        do.shape.ind = do.shape.ind))
-  class(out) <- "MSGARCH_SPEC"
+  uncvol = NA
+  while (any(is.na(uncvol))){
+    out <- suppressWarnings(expr = f.spec(models = models.list,
+                                          do.mix = do.mix,
+                                          do.shape.ind = do.shape.ind))
+    
+    class(out) <- "MSGARCH_SPEC"
+    uncvol = MSGARCH::unc.vol(out,out$theta0)
+  }
   return(out)
 }
