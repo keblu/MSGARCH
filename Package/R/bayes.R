@@ -74,12 +74,12 @@ fit.bayes.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
   y <- f.check.y(y)
   l.ctr <- f.process.ctr(ctr)
   if (is.null(l.ctr$theta0)) {
-    if (isTRUE(ctr$do.enhance.theta0)) {
-      l.ctr$theta0 <- f.enhance.theta(spec = spec, theta = spec$theta0, y = y)
-    } else {
-      l.ctr$theta0 <- spec$theta0
-    }
+    l.ctr$theta0 <- spec$theta0
   }
+    if (isTRUE(ctr$do.enhance.theta0)) {
+      l.ctr$theta0 <- f.enhance.theta(spec = spec, theta = l.ctr$theta0, y = y)
+    }
+  
   f.kernel <- function(x, log = TRUE) {
     name <- spec$name
     unique.spec <- unique(name, FALSE)

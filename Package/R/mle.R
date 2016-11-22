@@ -8,6 +8,7 @@
 #'        \item \code{do.init} : Boolean indicating if there is a pre-optimization with the \R package \code{DEoptim} (Ardia et al., 2011). (Default: \code{do.init = FALSE})
 #'        \item \code{NP} : Number of parameter vectors in the population in \code{DEoptim} optimization. (Default: \code{NP = 200})
 #'        \item \code{itermax} : Maximum iteration (population generation) allowed in \code{DEoptim} optimization. (Default: \code{maxit = 200})
+#'        \item \code{theta0} : Starting value for the chain (if empty the specification default value are used).
 #'        \item \code{do.enhance.theta0} : Boolean indicating if the default parameters value are enhance using \code{y} variance. (Default: \code{do.enhance.theta0 = TRUE})
 #'        }
 #' @return A list of class \code{MSGARCH_MLE_FIT} containing five components:
@@ -69,11 +70,14 @@ fit.mle <- function(spec, y, ctr = list()) {
 fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
   y <- f.check.y(y)
   ctr <- f.process.ctr(ctr)
-  if (isTRUE(ctr$do.enhance.theta0)) {
-    theta0.init <- f.enhance.theta(spec = spec, theta = spec$theta0, y = y)
-  } else {
-    theta0.init <- spec$theta0
+  
+  if (is.null(ctr$theta0)) {
+    ctr$theta0 <- spec$theta0
   }
+  if (isTRUE(ctr$do.enhance.theta0)) {
+    ctr$theta0 <- f.enhance.theta(spec = spec, theta = ctr$theta0, y = y)
+  }
+  theta0.init = ctr$theta0
   lower <- spec$lower
   upper <- spec$upper
   if (any(ctr$do.init || spec$do.init)) {
