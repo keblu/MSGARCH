@@ -519,7 +519,7 @@ public:
   // check prior 
   bool calc_r1() {
     return fz.calc_r1() 
-    && alpha0 > lower[0] && alpha1 > lower[1] && beta > lower[2]
+    && alpha0 >= lower[0] && alpha1 >= lower[1] && beta >= lower[2]
     && (ineq_func() < ineq_ub);
   }
   
@@ -596,7 +596,7 @@ public:
   // computes r1 
   bool calc_r1() {
     return    fz.calc_r1()  
-    && alpha0 > lower[0] && alpha1 > lower[1] && alpha2 > lower[2] && beta > lower[3] 
+    && alpha0 >= lower[0] && alpha1 >= lower[1] && alpha2 >= lower[2] && beta >= lower[3] 
     && (ineq_func() < ineq_ub);
   }
   
@@ -756,7 +756,7 @@ public:
   // computes r1 
   bool calc_r1() {
     return fz.calc_r1()  
-    && alpha0 > lower[0] && alpha1 > lower[1] && alpha2 > lower[2] && beta > lower[3]    
+    && alpha0 >= lower[0] && alpha1 >= lower[1] && alpha2 >= lower[2] && beta >= lower[3]    
     && (ineq_func() < ineq_ub);
   }
   
@@ -856,7 +856,7 @@ public:
   // computes r1 
   bool calc_r1() {
     return fz_r1
-    && alpha0 > lower[0] && alpha1 > lower[1] && beta > lower[2] && beta < upper[2] 
+    && alpha0 >= lower[0] && alpha1 >= lower[1] && beta >= lower[2] && beta <= upper[2] 
     && (ineq_func() > ineq_lb);
   }
   
