@@ -31,9 +31,9 @@ ht <- function(object, theta, y) {
 
 #' @export
 ht.MSGARCH_SPEC <- function(object, theta, y) {
-  y <- f.check.y(y)
+  y     <- f.check.y(y)
   theta <- f.check.theta(object, theta)
-  out <- object$rcpp.func$calc_ht(theta, y)
+  out   <- object$rcpp.func$calc_ht(theta, y)
   class(out) <- "MSGARCH_HT"
   return(out)
 }

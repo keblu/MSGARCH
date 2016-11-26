@@ -76,7 +76,7 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
                         do.skew = c(FALSE, FALSE),
                         do.mix = FALSE,
                         do.shape.ind = FALSE) {
-  require(MSGARCH)
+  require("MSGARCH")
   distribution <- distribution[1:length(model)]
   do.skew <- do.skew[1:length(model)]
   valid.distribution <- c("norm", "std", "ged")
@@ -147,6 +147,7 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
   for (j in 1:length(models.merge)) {
     models.list[[j]] <- get(models.merge[j])
   }
+  # KB: use loop to ensure that spec is correctly created
   uncvol = NA
   while (any(is.na(uncvol))){
     out <- suppressWarnings(expr = f.spec(models = models.list,
@@ -154,7 +155,7 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
                                           do.shape.ind = do.shape.ind))
     
     class(out) <- "MSGARCH_SPEC"
-    uncvol = MSGARCH::unc.vol(out,out$theta0)
+    uncvol = MSGARCH::unc.vol(out, out$theta0)
   }
   return(out)
 }

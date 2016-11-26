@@ -4,7 +4,8 @@
 \alias{risk}
 \title{Value-at-Risk And Expected-shortfall.}
 \usage{
-risk(object, theta, y, level = c(0.95, 0.99), ES = TRUE, do.its = FALSE)
+risk(object, theta, y, level = c(0.95, 0.99), ES = TRUE, do.its = FALSE,
+  ctr = list(n.mesh = 500, tol = 1e-04, itermax = 5))
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
@@ -22,6 +23,8 @@ created with \code{\link{fit.bayes}}.}
 
 \item{do.its}{Boolean indicating if the in-sample risk estimator are returned.
 (Default: \code{do.its = FALSE})}
+
+\item{ctr}{List of control parameters for VaR evaluation.}
 }
 \value{
 A list containing of class \code{MSGARCH_RISK} containing two or three components:
@@ -33,7 +36,7 @@ A list containing of class \code{MSGARCH_RISK} containing two or three component
 \item \code{y}  : Vector (of size T) of observations.
 }
 The \code{MSGARCH_RISK} contains the \code{plot} method. 
-The Bayesian risk estimator can take long time to calculate depending on the size of the chain.
+The Bayesian risk estimator can take long time to calculate depending on the size of the MCMC chain.
 }
 \description{
 Method returning the Value-at-Risk and Expected-shortfall in-sample or at \code{t = T + 1} based on the predictive density.

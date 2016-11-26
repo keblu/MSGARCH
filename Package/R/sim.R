@@ -49,8 +49,8 @@ sim.MSGARCH_SPEC <- function(object, n = 1000, m = 1, theta, burnin = 500) {
     }
   }
   out <- list()
-  out$draws <- draws
-  out$state <- state
+  out$draws  <- draws
+  out$state  <- state
   class(out) <- "MSGARCH_SIM"
   return(out)
 }

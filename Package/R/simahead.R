@@ -62,8 +62,8 @@ simahead.MSGARCH_SPEC <- function(object, n, m, theta, y) {
     }
   }
   out <- list()
-  out$draws <- draws
-  out$state <- state
+  out$draws  <- draws
+  out$state  <- state
   class(out) <- "MSGARCH_SIM"
   return(out)
 }

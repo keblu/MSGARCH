@@ -1,3 +1,10 @@
+Changes in Version 0.17.2
+  o crps function added
+  o control parameters added to speedup for VaR calculation
+  o vignette removed and cited in the documentation with appropriate reference
+  o CITATION file modified
+  o check for input of check.enhance.theta
+  o change of optimization in do.enhance.theta
 Changes in Version 0.17
   o Fixed many bugs when the number of states were above 2.
   o Changed MLE estimation scheme

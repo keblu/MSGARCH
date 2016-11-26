@@ -77,19 +77,20 @@ fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
   if (isTRUE(ctr$do.enhance.theta0)) {
     ctr$theta0 <- f.enhance.theta(spec = spec, theta = ctr$theta0, y = y)
   }
-  theta0.init = ctr$theta0
+  theta0.init <- ctr$theta0
   lower <- spec$lower
   upper <- spec$upper
   if (any(ctr$do.init || spec$do.init)) {
-    pop = matrix(runif(length(lower)*10000, min = lower, max = upper), ncol = length(spec$theta0), byrow = TRUE)
-    pop_inv = t(replicate(n = 10000,upper)) +  t(replicate(n = 10000,lower)) - pop
-    total_pop = rbind(pop,pop_inv)
+    pop        = matrix(runif(length(lower)*10000, min = lower, max = upper), ncol = length(spec$theta0), byrow = TRUE)
+    pop_inv    = t(replicate(n = 10000, upper)) +  t(replicate(n = 10000, lower)) - pop
+    total_pop  = rbind(pop,pop_inv)
     likelihood = MSGARCH::kernel(object = spec,theta = total_pop, y = y)
-    ind = sort(likelihood, decreasing = TRUE, index.return = TRUE)
+    ind        = sort(likelihood, decreasing = TRUE, index.return = TRUE)
     initialpop = total_pop[ind$ix[1:ctr$NP], ]
   }
   f.kernel <- function(x, log = TRUE) {
-    return(MSGARCH::kernel(spec, x, y = y, log = log))
+    out = MSGARCH::kernel(spec, x, y = y, log = log)
+    return(out)
   }
   f.nll <- function(x) -f.kernel(x, log = TRUE)
   if (any(ctr$do.init || spec$do.init)) {

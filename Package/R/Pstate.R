@@ -31,9 +31,9 @@ Pstate <- function(object, theta, y) {
 
 #' @export
 Pstate.MSGARCH_SPEC <- function(object, theta, y) {
-  y <- as.matrix(y)
+  y     <- as.matrix(y)
   theta <- f.check.theta(object, theta)
-  out <- array(dim = c(nrow(y) + 1, nrow(theta), object$K))
+  out   <- array(dim = c(nrow(y) + 1, nrow(theta), object$K))
   for (i in 1:nrow(theta)) {
     tmp <- object$rcpp.func$get_Pstate_Rcpp(theta[i, ], y, FALSE)
     for (j in 1:object$K) {

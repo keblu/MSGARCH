@@ -8,7 +8,7 @@ f.error <- function(message) {
 f.process.ctr <- function(ctr = list()) {
   
   con <- list(theta0 = NULL, do.init = FALSE, N.mcmc = 1000, N.burn = 500, N.thin = 1,
-    NP = 500, itermax = 500, do.enhance.theta0 = FALSE)
+              NP = 500, itermax = 500, do.enhance.theta0 = FALSE)
   con[names(ctr)] <- ctr
   return(con)
 }
@@ -79,25 +79,25 @@ f.sort.theta <- function(spec, theta) {
   }
   name <- spec$name
   unique.spec <- unique(name, FALSE)
-  params_loc <- c(0, cumsum(Nbparams))
+  params_loc  <- c(0, cumsum(Nbparams))
   tmp <- theta
   pos <- 1:Nmodel
   for (i in 1:length(unique.spec)) {
-    postmp <- pos
-    idx <- name == unique.spec[i]
-    posidx <- pos[idx]
-    Nmodelidx <- length(posidx)
-    idx_loc <- params_loc[c(idx)]
-    idx_params <- spec$n.params[c(idx)][1]
-    unc.vol <- MSGARCH::unc.vol(object = spec, thetaUncVol)
-    unc.vol.idx <- unc.vol[idx]
+    postmp       <- pos
+    idx          <- name == unique.spec[i]
+    posidx       <- pos[idx]
+    Nmodelidx    <- length(posidx)
+    idx_loc      <- params_loc[c(idx)]
+    idx_params   <- spec$n.params[c(idx)][1]
+    unc.vol      <- MSGARCH::unc.vol(object = spec, thetaUncVol)
+    unc.vol.idx  <- unc.vol[idx]
     unc.vol.sort <- sort(unc.vol.idx, index.return = TRUE)
     new.pos.index = 1
     for (j in 1:Nmodelidx) {
       new.pos <- which(unc.vol == unc.vol.sort$x[j])
       if(length(new.pos) > 1){
-         new.pos <- new.pos[new.pos.index]
-         new.pos.index <- new.pos.index + 1
+        new.pos <- new.pos[new.pos.index]
+        new.pos.index <- new.pos.index + 1
       }
       postmp[posidx[j]] <- new.pos
     }
@@ -107,19 +107,19 @@ f.sort.theta <- function(spec, theta) {
     }
   }
   if (!isTRUE(spec$is.mix)) {
-      p <- matrix(nrow = Nmodel, ncol = Nmodel)
-      for (i in 0:(Nmodel-1)) {
-        
-        p[1:(Nmodel-1),i+1] <- theta[(params_loc[Nmodel + 1] + Nmodel*i+1-i):(params_loc[Nmodel + 1] + Nmodel*i+Nmodel-1-i)]
-        
-      }
-      p[Nmodel, ] <- 1 - colSums(matrix(p[1:(Nmodel-1), ], ncol = Nmodel))
-      tmpp <- p
-      for (i in 1:(Nmodel)) {
-        for (j in 1:(Nmodel)) {
+    p <- matrix(nrow = Nmodel, ncol = Nmodel)
+    for (i in 0:(Nmodel-1)) {
+      
+      p[1:(Nmodel-1),i+1] <- theta[(params_loc[Nmodel + 1] + Nmodel*i+1-i):(params_loc[Nmodel + 1] + Nmodel*i+Nmodel-1-i)]
+      
+    }
+    p[Nmodel, ] <- 1 - colSums(matrix(p[1:(Nmodel-1), ], ncol = Nmodel))
+    tmpp <- p
+    for (i in 1:(Nmodel)) {
+      for (j in 1:(Nmodel)) {
         tmpp[i, j] <- p[postmp[i], postmp[j]]
-        }
       }
+    }
     new.p <- as.vector(tmpp[1:(Nmodel - 1), ])
     tmp[(params_loc[Nmodel + 1] + 1):length(tmp)] <- new.p
   } else {
@@ -142,8 +142,16 @@ f.sort.theta <- function(spec, theta) {
 }
 
 #Function that enhance theta0 according to the variance of moving windows of y 
+#' @importFrom stats optim 
 f.enhance.theta <- function(spec, theta, y) {
-  K <- spec$K
+  
+  theta <- f.check.theta(spec, theta)
+  if (is.vector(theta)) {
+    # DA needed for the Rcpp framework
+    theta = matrix(theta, nrow = 1)
+  }
+  
+  K   <- spec$K
   l.y <- length(y)
   sep <- seq(from = 1, to = l.y, length.out = 11)
   vol <- NULL
@@ -154,40 +162,43 @@ f.enhance.theta <- function(spec, theta, y) {
     vol[i] <- sqrt(var(y[sep[i]:sep[i + 1]]))
   }
   vol.goal <- quantile(vol, prob = seq(0.1, 0.9, length.out = K))
-  if(isTRUE(spec$is.shape.ind)){
+  if (isTRUE(spec$is.shape.ind)) {
     pos <- c(1, cumsum(spec$n.params.vol) + 1)
-    pos[length(pos)] =  pos[length(pos)] + 1
-  } else{
+    pos[length(pos)] = pos[length(pos)] + 1
+  } else {
     pos <- c(1, cumsum(spec$n.params) + 1)
   }
   
-  # if (isTRUE(spec$is.shape.ind)) {
-  #   theta <- spec$func$f.do.shape.ind(theta)
-  # }
-  # if (isTRUE(spec$is.mix)) {
-  #   theta <- spec$func$f.do.mix(theta)
-  # }
   for (i in 1:K) {
     f.fun <- function(x) {
       theta.try <- theta
       theta.try[, pos[i]] <- x
-      # if (isTRUE(spec$is.shape.ind)) {
-      #   theta.try <- spec$func$f.do.shape.ind.reverse(theta.try)
-      # }
-      # if (isTRUE(spec$is.mix)) {
-      #   theta.try <- spec$func$f.do.mix.reverse(theta.try)
-      # }
-      unc.vol <- MSGARCH::unc.vol(object = spec,theta.try)
-      # if (isTRUE(spec$is.shape.ind)) {
-      #   theta.try <- spec$func$f.do.shape.ind(theta.try)
-      # }
-      # if (isTRUE(spec$is.mix)) {
-      #   theta.try <- spec$func$f.do.mix(theta.try)
-      # }
-      return(unc.vol[i] - vol.goal[i])
+      unc.vol <- MSGARCH::unc.vol(object = spec, theta.try)
+      #out = unc.vol[i] - vol.goal[i]
+      out = (unc.vol[i] - vol.goal[i])^2
+      return(out)
     }
-    theta[, pos[i]] <- uniroot(f.fun, lower = spec$lower[pos[i]], upper = spec$upper[pos[i]])$root
+    # DA replace the unitroot which fails sometimes in cluster by optimization 
+    #theta[, pos[i]] <- uniroot(f.fun, lower = spec$lower[pos[i]], upper = spec$upper[pos[i]])$root
+    theta.hat = spec$theta0[pos[i]]
+    
+    str = "f.enhance.theta -> fail in optimization"
+    is.ok = tryCatch({
+      tmp = stats::optim(par = theta.hat, fn = f.fun, method = "L-BFGS-B",
+                  lower = spec$lower[pos[i]], upper = spec$upper[pos[i]])
+      if (tmp$convergence == 0) {
+        theta.hat = tmp$par
+      }
+      TRUE
+    }, warning = function(warn) {
+      f.error(str)
+    }, error = function(err) {
+      f.error(str)
+    })
+    
+    theta[, pos[i]] <- theta.hat
   }
+  
   if (spec$K > 1) {
     if (!spec$is.mix) {
       pos <- pos[length(pos)]
@@ -199,11 +210,5 @@ f.enhance.theta <- function(spec, theta, y) {
     }
   }
   
-  # if (isTRUE(spec$is.shape.ind)) {
-  #   theta <- spec$func$f.do.shape.ind.reverse(theta)
-  # }
-  # if (isTRUE(spec$is.mix)) {
-  #   theta <- spec$func$f.do.mix.reverse(theta)
-  # }
   return(theta)
 }

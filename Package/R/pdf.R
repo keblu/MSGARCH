@@ -84,8 +84,8 @@ pdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y, log = FALSE, do.its = F
     tmp <- log(tmp)
   }
   out <- list()
-  out$pdf <- tmp
-  out$x <- x
+  out$pdf    <- tmp
+  out$x      <- x
   out$do.its <- do.its
   class(out) <- "MSGARCH_PDF"
   return(out)

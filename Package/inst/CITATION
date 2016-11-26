@@ -18,3 +18,15 @@ citEntry(entry = "manual",
          paste("Keven Bluteau, David Ardia, Denis-Alexandre Trottier, Kris Boudt, Brian Peterson (", year,"). ",
                "Markov-Switching GARCH Models in R: The MSGARCH Package. ", vers, ".", sep = "")
 )
+
+
+citEntry(entry = "Misc",
+  author = personList(person("David","Ardia"), person("Keven","Bluteau"), person("Kris","Boudt"), person("Denis-Alexandre","Trottier")),
+  title = "Markov-Switching {GARCH} Models in {R}: {T}he {MSGARCH} Package",
+  year = "2016",
+  note = "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2845809",
+  textVersion = paste(
+                "Ardia, David and Bluteau, Keven and Boudt, Kris and Trottier, Denis-Alexandre (2016).",
+                "Markov-Switching GARCH Models in R: The MSGARCH Package.",
+                "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2845809/")
+)

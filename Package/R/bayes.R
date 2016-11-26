@@ -76,9 +76,9 @@ fit.bayes.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
   if (is.null(l.ctr$theta0)) {
     l.ctr$theta0 <- spec$theta0
   }
-    if (isTRUE(ctr$do.enhance.theta0)) {
-      l.ctr$theta0 <- f.enhance.theta(spec = spec, theta = l.ctr$theta0, y = y)
-    }
+  if (isTRUE(ctr$do.enhance.theta0)) {
+    l.ctr$theta0 <- f.enhance.theta(spec = spec, theta = l.ctr$theta0, y = y)
+  }
   
   f.kernel <- function(x, log = TRUE) {
     name <- spec$name
@@ -94,9 +94,9 @@ fit.bayes.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
       } else {
         if (length(unc.vol) != 1) {
           for (j in 1:(length(unc.vol) - 1)) {
-          if (unc.vol[j] > unc.vol[j + 1]) {
-            return(-1e+10)
-          }
+            if (unc.vol[j] > unc.vol[j + 1]) {
+              return(-1e+10)
+            }
           }
         }
       }

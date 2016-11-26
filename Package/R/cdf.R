@@ -53,6 +53,7 @@ cdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y,
   if (is.vector(theta)) {
     theta <- matrix(theta, nrow = 1)
   }
+ 
   theta_check <- f.check.theta(object, theta)
   if (isTRUE(do.its)) {
     x <- y
@@ -84,8 +85,8 @@ cdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y,
   if (log) {
     tmp <- log(tmp)
   }
-  out$cdf <- tmp
-  out$x <- x
+  out$cdf    <- tmp
+  out$x      <- x
   out$do.its <- do.its
   class(out) <- "MSGARCH_CDF"
   return(out)

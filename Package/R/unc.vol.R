@@ -25,19 +25,16 @@ unc.vol.MSGARCH_SPEC <- function(object, theta) {
   }
   
   if(any(is.null(out))){
-    out = matrix(out, ncol = object$K,nrow = nrow(theta))
-    out = matrix(NA, nrow = nrow(out), ncol = ncol(out))
+    out = matrix(data = NA, ncol = object$K, nrow = nrow(theta))
     return(out)
   }
   
   if(any(is.na(out))){
-    out = matrix(out, ncol = object$K,nrow = nrow(theta))
-    out = matrix(NA, nrow = nrow(out), ncol = ncol(out))
+    out = matrix(data = NA, ncol = object$K,nrow = nrow(theta))
     return(out)
   } else {
     if(any(out < 0)) {
-      out = matrix(out, ncol = object$K,nrow = nrow(theta))
-      out = matrix(NA, nrow = nrow(out), ncol = ncol(out))
+      out = matrix(data = NA, ncol = object$K, nrow = nrow(theta))
       return(out)
     }
   }
