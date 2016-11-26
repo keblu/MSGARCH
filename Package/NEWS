@@ -1,3 +1,5 @@
+Changes in Version 0.17.3
+  o fix bound problem
 Changes in Version 0.17.2
   o crps function added
   o control parameters added to speedup for VaR calculation

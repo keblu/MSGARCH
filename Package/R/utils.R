@@ -185,7 +185,7 @@ f.enhance.theta <- function(spec, theta, y) {
     str = "f.enhance.theta -> fail in optimization"
     is.ok = tryCatch({
       tmp = stats::optim(par = theta.hat, fn = f.fun, method = "L-BFGS-B",
-                  lower = spec$lower[pos[i]], upper = spec$upper[pos[i]])
+                  lower = spec$lower[pos[i]]+0.0001, upper = spec$upper[pos[i]]-0.0001)
       if (tmp$convergence == 0) {
         theta.hat = tmp$par
       }
