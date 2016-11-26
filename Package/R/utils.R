@@ -145,7 +145,6 @@ f.sort.theta <- function(spec, theta) {
 #' @importFrom stats optim 
 f.enhance.theta <- function(spec, theta, y) {
   
-  theta <- f.check.theta(spec, theta)
   if (is.vector(theta)) {
     # DA needed for the Rcpp framework
     theta = matrix(theta, nrow = 1)
@@ -168,7 +167,7 @@ f.enhance.theta <- function(spec, theta, y) {
   } else {
     pos <- c(1, cumsum(spec$n.params) + 1)
   }
-  
+  is.ok = NULL
   for (i in 1:K) {
     f.fun <- function(x) {
       theta.try <- theta
@@ -183,9 +182,9 @@ f.enhance.theta <- function(spec, theta, y) {
     theta.hat = spec$theta0[pos[i]]
     
     str = "f.enhance.theta -> fail in optimization"
-    is.ok = tryCatch({
-      tmp = stats::optim(par = theta.hat, fn = f.fun, method = "L-BFGS-B",
-                  lower = spec$lower[pos[i]]+0.0001, upper = spec$upper[pos[i]]-0.0001)
+    is.ok[i] = tryCatch({
+      tmp = stats::optim(par = theta.hat, fn = f.fun, method = "Brent",
+                  lower = spec$lower[pos[i]]+0.001, upper = spec$upper[pos[i]]-0.001)
       if (tmp$convergence == 0) {
         theta.hat = tmp$par
       }
@@ -195,9 +194,10 @@ f.enhance.theta <- function(spec, theta, y) {
     }, error = function(err) {
       f.error(str)
     })
-    
-    theta[, pos[i]] <- theta.hat
   }
+   if (any(!isTRUE(is.ok))){
+     theta = spec$theta0
+   }
   
   if (spec$K > 1) {
     if (!spec$is.mix) {
