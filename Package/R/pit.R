@@ -54,7 +54,7 @@ pit <- function(object, x, theta, y, do.norm = FALSE, do.its = FALSE) {
 }
 
 #' @export
-pit.MSGARCH_SPEC <- function(object, x = NULL, theta, y, do.norm = FALSE, do.its = FALSE) {
+pit.MSGARCH_SPEC <- function(object, x = NULL, theta = NULL, y = NULL, do.norm = FALSE, do.its = FALSE) {
   y <- f.check.y(y)
   N <- nrow(theta)
   if (isTRUE(do.its)) {
@@ -65,8 +65,7 @@ pit.MSGARCH_SPEC <- function(object, x = NULL, theta, y, do.norm = FALSE, do.its
   }
   tmp <- matrix(data = NA, nrow = N, ncol = nx)
   for (i in 1:N) {
-    tmp <- MSGARCH::cdf(object = object, x, theta = theta[i, ], y = y, log = FALSE,
-                       do.its = do.its)$cdf
+    tmp <- MSGARCH::cdf(object = object, x, theta = theta[i, ], y = y, log = FALSE, do.its = do.its)$cdf
   }
   tmp <- colMeans(tmp, na.rm = TRUE)
   if (do.norm) {

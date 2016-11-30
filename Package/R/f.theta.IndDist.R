@@ -1,3 +1,5 @@
+
+## DA improve the writing
 f.theta.RegIndDist <- function(K, nb_total_params, nb_params_model, theta) {
   if (is.vector(theta))
     theta <- matrix(theta, nrow = 1)

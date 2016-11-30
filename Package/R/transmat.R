@@ -30,7 +30,7 @@ transmat <- function(object, theta, n) {
   UseMethod(generic = "transmat", object =  object)
 }
 
-transmat.MSGARCH_SPEC <- function(object, theta, n = 1) {
+transmat.MSGARCH_SPEC <- function(object, theta = NULL, n = 1) {
   if (isTRUE(object$is.shape.ind)) {
     theta <- object$func$f.do.shape.ind(theta = theta)
   }

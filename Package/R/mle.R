@@ -84,7 +84,8 @@ fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
     pop        = matrix(runif(length(lower)*10000, min = lower, max = upper), ncol = length(spec$theta0), byrow = TRUE)
     pop_inv    = t(replicate(n = 10000, upper)) +  t(replicate(n = 10000, lower)) - pop
     total_pop  = rbind(pop,pop_inv)
-    likelihood = MSGARCH::kernel(object = spec,theta = total_pop, y = y)
+    # DA fix naming to loglik
+    likelihood = MSGARCH::kernel(object = spec,theta = total_pop, y = y, log = TRUE)
     ind        = sort(likelihood, decreasing = TRUE, index.return = TRUE)
     initialpop = total_pop[ind$ix[1:ctr$NP], ]
   }
@@ -112,13 +113,15 @@ fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
                         inequb = spec$inequb)
   log_kernel <- f.kernel(theta)
   if (log_kernel == -1e+10) {
-    tmp <- DEoptim::DEoptim(fn = f.nll, lower = lower, upper = upper, control = ctr.deoptim)
-    theta <- tmp$optim$bestmem
-    log_kernel <- f.kernel(theta)
+    str = "f.find.theta0 -> DEoptim initialization"
+    ctr.deoptim <- DEoptim::DEoptim.control(NP = ctr$NP, itermax = ctr$itermax, trace = FALSE)
+    tmp         <- DEoptim::DEoptim(fn = f.nll, lower = lower, upper = upper, control = ctr.deoptim)
+    theta       <- tmp$optim$bestmem
+    log_kernel  <- f.kernel(theta)
   }
-  theta = f.sort.theta(spec = spec, theta)
-  theta0.init = f.sort.theta(spec = spec, theta0.init)
-  theta <- matrix(theta, ncol = length(theta))
+  theta       <- f.sort.theta(spec = spec, theta)
+  theta0.init <- f.sort.theta(spec = spec, theta0.init)
+  theta       <- matrix(theta, ncol = length(theta))
   colnames(theta) <- colnames(spec$theta0)
   out <- list( theta = theta, log_kernel = log_kernel, spec = spec,
               is.init = any(ctr$do.init || spec$do.init), y = y,theta0.init = theta0.init)

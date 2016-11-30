@@ -31,7 +31,7 @@ sim <- function(object, n, m, theta, burnin = 500) {
 }
 
 #' @export
-sim.MSGARCH_SPEC <- function(object, n = 1000, m = 1, theta, burnin = 500) {
+sim.MSGARCH_SPEC <- function(object, n = 1000, m = 1, theta = NULL, burnin = 500) {
   theta <- f.check.theta(object, theta)
   if (nrow(theta) == 1) {
     theta <- matrix(theta[rep(1, m), ], ncol = ncol(theta))

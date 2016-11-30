@@ -82,7 +82,7 @@ risk.MSGARCH_SPEC <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE
   }
   for (v in start:end) {
     f.pdf <- function(x) {
-      out <- MSGARCH::pred(object, x, theta, y[1:v], log = FALSE)$pred
+      out <- MSGARCH::pred(object, x, theta, y[1:v], log = FALSE, do.its = FALSE)$pred
       return(out)
     }
     # gross approximation for VaR
@@ -95,8 +95,8 @@ risk.MSGARCH_SPEC <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE
     for (i in 1:np) {
       p_i <- p[i]
       calc.step <- function(V) {
-        lPDF <- MSGARCH::pred(object, x = V, theta = theta, y = y[1:v], log = TRUE)$pred
-        CDF  <- MSGARCH::pit(object, x = V, theta = theta, y = y[1:v])$pit
+        lPDF <- MSGARCH::pred(object, x = V, theta = theta, y = y[1:v], log = TRUE, do.its = FALSE)$pred
+        CDF  <- MSGARCH::pit(object, x = V, theta = theta, y = y[1:v], do.norm = FALSE, do.its = FALSE)$pit
         err  <- p_i - CDF
         step <- err * exp(-lPDF)
         out  <- list(step = step, err = abs(err))
@@ -123,7 +123,7 @@ risk.MSGARCH_SPEC <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE
     if (isTRUE(ES)) {
       for (i in 1:np) {
         f.condMean <- function(x) {
-          out <- x * MSGARCH::pred(object, x, theta, y[1:v], log = FALSE)$pred
+          out <- x * MSGARCH::pred(object, x, theta, y[1:v], log = FALSE, do.its = FALSE)$pred
           return(out)
         }
         out$ES[v + step, i] <- integrate(f.condMean, lower = -Inf, upper = out$VaR[v + step, i], 

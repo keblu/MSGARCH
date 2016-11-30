@@ -47,10 +47,9 @@ f.DIC <- function(spec, theta, y) {
   }
   LL <- rowSums(MSGARCH::pdf(object = spec, theta = theta, y = y,
                           log = TRUE, do.its = TRUE)$pdf, na.rm = TRUE)
-  D.bar <- -2 * mean(x = LL)
+  D.bar     <- -2 * mean(x = LL)
   theta.bar <- colMeans(x = theta)
-  pV <- var(x = -2 * LL) / 2
-  out <- list(DIC = pV + D.bar, IC = 2 * pV + D.bar,
-              pV = pV, D.bar = D.bar)
+  pV        <- var(x = -2 * LL) / 2
+  out       <- list(DIC = pV + D.bar, IC = 2 * pV + D.bar, pV = pV, D.bar = D.bar)
   return(out)
 }

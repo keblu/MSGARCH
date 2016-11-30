@@ -18,7 +18,7 @@ unc.vol <- function(object, theta) {
 }
 
 #' @export
-unc.vol.MSGARCH_SPEC <- function(object, theta) {
+unc.vol.MSGARCH_SPEC <- function(object, theta = NULL) {
   theta <- f.check.theta(object, theta)
   for (i in 1:nrow(theta)) {
     out <- object$rcpp.func$unc_vol_Rcpp(theta, 0)

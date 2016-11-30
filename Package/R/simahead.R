@@ -41,7 +41,7 @@ simahead <- function(object, n, m, theta, y) {
 }
 
 #' @export
-simahead.MSGARCH_SPEC <- function(object, n, m, theta, y) {
+simahead.MSGARCH_SPEC <- function(object, n, m, theta = NULL, y = NULL) {
   y <- f.check.y(y)
   theta <- f.check.theta(object, theta)
   if (nrow(theta) == 1) {

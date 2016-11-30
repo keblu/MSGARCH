@@ -61,7 +61,7 @@ pdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y, log = FALSE, do.its = F
     for (i in 1:nrow(theta)) {
       tmp2 <- matrix(data = NA, nrow = length(y) - 1, ncol = object$K)
       if (object$K == 1) {
-        tmp2 <- object$rcpp.func$pdf_Rcpp_its(theta_check[i, ], y, FALSE)
+        tmp2 <- object$rcpp.func$pdf_Rcpp_its(theta_check[i,], y, FALSE)
         tmp[i, ] <- tmp2
       } else {
         Pstate <- MSGARCH::Pstate(object = object, theta = theta[i, ], y = y)
@@ -69,7 +69,7 @@ pdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y, log = FALSE, do.its = F
         for (j in 1:dim(Pstate)[3]) {
           Pstate.tmp[, j] <- Pstate[, , j]
         }
-        tmp2 <- object$rcpp.func$pdf_Rcpp_its(theta_check[i, ], y, FALSE)
+        tmp2 <- object$rcpp.func$pdf_Rcpp_its(theta_check[i,], y, FALSE)
         tmp[i, ] <- rowSums(tmp2 * Pstate.tmp[2:(nrow(Pstate.tmp) - 1), ])
       }
     }
@@ -77,7 +77,19 @@ pdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y, log = FALSE, do.its = F
   } else {
     tmp <- matrix(data = NA, nrow = nrow(theta_check), ncol = length(x))
     for (i in 1:nrow(theta)) {
-      tmp[i, ] <- object$rcpp.func$pdf_Rcpp(x, theta_check[i, ], y, FALSE)
+      # DA we need to check the inputs
+      str = "PDF FAIL IN CPP"
+      is.ok = tryCatch({
+        tmp[i, ] <- object$rcpp.func$pdf_Rcpp(x, theta_check[i,], y, FALSE)
+        TRUE
+      }, warning = function(warn) {
+        f.error(str)
+        browser()
+      }, error = function(err) {
+        f.error(str)
+        browser()
+      })
+      #tmp[i, ] <- object$rcpp.func$pdf_Rcpp(x, theta_check[i, ,drop = FALSE], y, FALSE)
     }
   }
   if (log) {
@@ -93,14 +105,14 @@ pdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y, log = FALSE, do.its = F
 
 #' @export
 pdf.MSGARCH_MLE_FIT <- function(object, x = NULL, theta = NULL, y = NULL, log = TRUE,
-                               do.its = FALSE) {
+                                do.its = FALSE) {
   return(MSGARCH::pdf(object = object$spec, x = x, theta = object$theta, y = object$y,
                       log = log, do.its = do.its))
 }
 
 #' @export
 pdf.MSGARCH_BAY_FIT <- function(object, x = NULL, theta = NULL, y = NULL, log = TRUE,
-                               do.its = FALSE) {
+                                do.its = FALSE) {
   return(MSGARCH::pdf(object = object$spec, x = x, theta = object$theta, y = object$y,
                       log = log, do.its = do.its))
 }

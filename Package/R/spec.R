@@ -25,24 +25,25 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   dist <- NULL
   name <- mod$name
   for (i in 1:length(name)) {
+    # DA consider replacing with simple code without "stringr"
     dist[i] <- stringr::str_sub(name[i], start = stringr::str_locate(name, "_")[i, 1] + 1, nchar(name[i]))
   }
   uniqueDist <- unique(dist)
   if (isTRUE(do.shape.ind) && length(uniqueDist) > 1) {
     stop("The distribution of each regime must be the same if the distribution are not regime dependent")
   }
-  n.params <- mod$NbParams
+  n.params     <- mod$NbParams
   n.params.vol <- mod$NbParamsModel
   rcpp.func <- list()
-  rcpp.func$calc_ht <- mod$calc_ht
-  rcpp.func$eval_model <- mod$eval_model
-  ineq_func.base <- mod$ineq_func
-  rcpp.func$sim <- mod$f_sim
-  rcpp.func$pdf_Rcpp <- mod$f_pdf
-  rcpp.func$cdf_Rcpp <- mod$f_cdf
-  rcpp.func$rnd_Rcpp <- mod$f_rnd
+  rcpp.func$calc_ht      <- mod$calc_ht
+  rcpp.func$eval_model   <- mod$eval_model
+  ineq_func.base         <- mod$ineq_func
+  rcpp.func$sim          <- mod$f_sim
+  rcpp.func$pdf_Rcpp     <- mod$f_pdf
+  rcpp.func$cdf_Rcpp     <- mod$f_cdf
+  rcpp.func$rnd_Rcpp     <- mod$f_rnd
   rcpp.func$pdf_Rcpp_its <- mod$f_pdf_its
-  rcpp.func$ineq_func <- mod$ineq_func
+  rcpp.func$ineq_func    <- mod$ineq_func
   rcpp.func$cdf_Rcpp_its <- mod$f_cdf_its
   rcpp.func$unc_vol_Rcpp <- mod$f_unc_vol
   if (K > 1) {
@@ -78,10 +79,10 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   if (isTRUE(do.mix) && !isTRUE(do.shape.ind)) {
     mod$lower <- as.vector(func$f.do.mix.reverse(mod$lower))
     newParamsLength <- length(mod$lower)
-    mod$upper <- as.vector(func$f.do.mix.reverse(mod$upper))
+    mod$upper  <- as.vector(func$f.do.mix.reverse(mod$upper))
     mod$theta0 <- as.vector(func$f.do.mix.reverse(mod$theta0))
     mod$Sigma0 <- mod$Sigma0[1:newParamsLength]
-    mod$label <- mod$label[1:newParamsLength]
+    mod$label  <- mod$label[1:newParamsLength]
     rcpp.func$ineq_func <- function(theta) {
       theta <- as.vector(f.theta.mixture(K, nb_total_params, theta))
       return(ineq_func.base(theta))
@@ -90,13 +91,13 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
     mod$lower <- as.vector(func$f.do.mix.reverse(mod$lower))
     mod$lower <- as.vector(func$f.do.shape.ind.reverse(mod$lower))
     newParamsLength <- length(mod$lower)
-    mod$upper <- as.vector(func$f.do.mix.reverse(mod$upper))
-    mod$upper <- as.vector(func$f.do.shape.ind.reverse(mod$upper))
+    mod$upper  <- as.vector(func$f.do.mix.reverse(mod$upper))
+    mod$upper  <- as.vector(func$f.do.shape.ind.reverse(mod$upper))
     mod$theta0 <- as.vector(func$f.do.mix.reverse(mod$theta0))
     mod$theta0 <- as.vector(func$f.do.shape.ind.reverse(mod$theta0))
     mod$Sigma0 <- mod$Sigma0[1:newParamsLength]
-    mod$label <- func$f.do.shape.ind.reverse(mod$label)
-    mod$label <- mod$label[1:newParamsLength]
+    mod$label  <- func$f.do.shape.ind.reverse(mod$label)
+    mod$label  <- mod$label[1:newParamsLength]
     rcpp.func$ineq_func <- function(theta) {
       theta <- as.vector(f.theta.mixture(K, nb_total_params, theta))
       theta <- as.vector(f.theta.RegIndDist(K, n.params, n.params.vol, theta))
@@ -105,11 +106,11 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   } else if (!isTRUE(do.mix) && isTRUE(do.shape.ind)) {
     mod$lower <- as.vector(func$f.do.shape.ind.reverse(mod$lower))
     newParamsLength <- length(mod$lower)
-    mod$upper <- as.vector(func$f.do.shape.ind.reverse(mod$upper))
+    mod$upper  <- as.vector(func$f.do.shape.ind.reverse(mod$upper))
     mod$theta0 <- as.vector(func$f.do.shape.ind.reverse(mod$theta0))
     mod$Sigma0 <- mod$Sigma0[1:newParamsLength]
-    mod$label <- func$f.do.shape.ind.reverse(mod$label)
-    mod$label <- mod$label[1:newParamsLength]
+    mod$label  <- func$f.do.shape.ind.reverse(mod$label)
+    mod$label  <- mod$label[1:newParamsLength]
     rcpp.func$ineq_func <- function(theta) {
       theta <- as.vector(f.theta.RegIndDist(K, n.params, n.params.vol, theta))
       return(ineq_func.base(theta))

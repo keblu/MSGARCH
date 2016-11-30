@@ -38,7 +38,7 @@ kernel <- function(object, theta, y, log = TRUE) {
 }
 
 #' @export
-kernel.MSGARCH_SPEC <- function(object, theta, y, log = TRUE) {
+kernel.MSGARCH_SPEC <- function(object, theta, y = NULL, log = TRUE) {
   y     <- f.check.y(y)
   theta <- f.check.theta(object, theta)
   lnd   <- object$rcpp.func$eval_model(theta, y)

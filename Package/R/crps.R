@@ -37,7 +37,7 @@ crps = function(object, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a 
   w5  = 1 - w4 #tail_l
   W   = cbind(w1, w2, w3, w4, w5)
   
-  cdf = MSGARCH::pit(object, x = x, do.norm = FALSE)$pit
+  cdf = MSGARCH::pit(object, x = x, do.norm = FALSE, do.its = FALSE)$pit
   id  = yn < x
   tmp = (cdf - id)^2
   X   = matrix(data = tmp, nrow = n.x, ncol = 5)

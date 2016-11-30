@@ -4,7 +4,7 @@
 \alias{pred}
 \title{Predictive function.}
 \usage{
-pred(object, x, theta, y, log = TRUE, do.its = FALSE)
+pred(object, x, theta, y, log = FALSE, do.its = FALSE)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
@@ -17,7 +17,7 @@ created with \code{\link{fit.bayes}}.}
 
 \item{y}{Vector (of size T) of observations (not require when using a fit object).}
 
-\item{log}{Boolean indicating if the log-density is returned. (Default: \code{log = TRUE})}
+\item{log}{Boolean indicating if the log-density is returned. (Default: \code{log = FALSE})}
 
 \item{do.its}{Boolean indicating if the in-sample predictive is returned. (Default: \code{do.its = FALSE})}
 }

@@ -12,7 +12,7 @@ crps(object, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a = 0, b =
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 created with \code{\link{fit.bayes}}.}
 
-\item{yn}{scalar point at \code{t = T + 1} to be evaluated.}
+\item{yn}{scalar value at \code{t = T + 1} to be evaluated.}
 
 \item{ctr}{control list parameters.}
 }
@@ -37,7 +37,7 @@ spec = MSGARCH::create.spec()
 set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 
-# run at T + 1 from model
+# run at T + 1 from model       
 crps = MSGARCH::crps(object = fit, yn = 0.6)
 
 }

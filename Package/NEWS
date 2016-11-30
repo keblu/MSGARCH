@@ -1,3 +1,6 @@
+Changes in Version 0.17.5
+  o fix ctr.deoptim in mle.R
+  o unify of defaults inputs for the various classes
 Changes in Version 0.17.3
   o fix bound problem
 Changes in Version 0.17.2

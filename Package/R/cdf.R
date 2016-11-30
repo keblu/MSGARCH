@@ -47,8 +47,7 @@ cdf <- function(object, x, theta, y, log = FALSE, do.its = FALSE) {
 }
 
 #' @export
-cdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y,
-                             log = TRUE, do.its = FALSE) {
+cdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y, log = FALSE, do.its = FALSE) {
   y <- f.check.y(y)
   if (is.vector(theta)) {
     theta <- matrix(theta, nrow = 1)
@@ -94,14 +93,14 @@ cdf.MSGARCH_SPEC <- function(object, x = NULL, theta, y,
 
 #' @export
 cdf.MSGARCH_MLE_FIT <- function(object, x = NULL, theta = NULL, y = NULL,
-                                log = TRUE, do.its = FALSE) {
+                                log = FALSE, do.its = FALSE) {
   return(MSGARCH::cdf(object = object$spec, x = x, theta = object$theta,
                       y = object$y, log = log, do.its = do.its))
 }
 
 #' @export
 cdf.MSGARCH_BAY_FIT <- function(object, x = NULL, theta = NULL, y = NULL,
-                                log = TRUE, do.its = FALSE) {
+                                log = FALSE, do.its = FALSE) {
   return(MSGARCH::cdf(object = object$spec, x = x, theta = object$theta,
                       y = object$y, log = log, do.its = do.its))
 }
