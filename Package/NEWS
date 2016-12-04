@@ -1,3 +1,5 @@
+Changes in Version 0.17.6
+  o additional checks for create.spec when failing to properly instanciate it
 Changes in Version 0.17.5
   o fix ctr.deoptim in mle.R
   o unify of defaults inputs for the various classes

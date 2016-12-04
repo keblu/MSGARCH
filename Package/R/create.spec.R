@@ -157,5 +157,28 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
     class(out) <- "MSGARCH_SPEC"
     uncvol = MSGARCH::unc.vol(out, out$theta0)
   }
+  
+  test.pred = NA
+  test.pit  = NA
+  test.uc   = NA
+  test.all  = is.na(c(test.pred, test.pit, test.uc))
+  test.k    = 1
+  max.k     = 10
+  y0 = c(-0.46, 0.42, 0.85, 0.83, 2.10, -0.47, 0.26, 0.52, -0.76, -1.51)
+  while (any(test.all)) {
+    out <- suppressWarnings(expr = f.spec(models = models.list,
+                                          do.mix = do.mix,
+                                          do.shape.ind = do.shape.ind))
+    class(out) <- "MSGARCH_SPEC"
+    test.pred = MSGARCH::pred(object = out, x = 0, theta = out$theta0, y = y0, log = FALSE, do.its = FALSE)
+    test.pit  = MSGARCH::pit(object = out, x = 0, theta = out$theta0, y = y0, do.norm = FALSE, do.its = FALSE)
+    test.uc   = MSGARCH::unc.vol(object = out, theta = out$theta0)
+    test.all  = is.na(c(test.pred, test.pit, test.uc))
+    test.k    = test.k + 1 
+    if (test.k > max.k) {
+      break
+    }
+  }
+  
   return(out)
 }
