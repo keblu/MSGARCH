@@ -1,0 +1,34 @@
+\documentclass[11pt]{article}
+\usepackage[round]{natbib}
+\usepackage[margin=1in]{geometry}
+\geometry{letterpaper}
+\usepackage{url}
+
+\begin{document}
+\title{MSGARCH: Markov--Switching GARCH Models in R}
+\author{David Ardia\\
+Institute of Financial Analysis, University of Neuch\^atel, Switzerland\\
+D\'epartement de Finance, Assurance et Immobilier, Universit\'e Laval, Qu\'ebec, Canada
+\and
+Keven Bluteau\\
+Institute of Financial Analysis, University of Neuch\^atel, Switzerland
+\and
+Kris Boudt\\
+Vrije Universiteit Brussel\\
+Vrije Universiteit Amsterdam\\
+\and
+Denis--Alexandre Trottier\\
+Laval University
+}
+%\date{}
+	
+\maketitle
+
+\section*{Summary}
+
+MSGARCH is an R package \citep{R} which implements Markov--switching GARCH--type models very efficiently by using C++ object--oriented programming techniques. It allows the user to perform simulations as well as Maximum Likelihood and Bayesian estimation of a very large class of Markov--switching GARCH--type models. Risk management tools such as Value--at--Risk and Expected--Shortfall calculations are available. We refer the reader to \citet{ArdiaEtAl2016} for a full description of the package's usage. The latest version of the package is available at \url{https://github.com/keblu/MSGARCH}.
+
+\bibliographystyle{plainnat}
+\bibliography{paper}
+	
+\end{document}
