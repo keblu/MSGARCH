@@ -1,23 +1,23 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 0.17.6
-Date: 2016-12-04
-Authors@R: c(person("Keven", "Bluteau", role = c("aut", "cre"),
+Version: 0.17.7
+Date: 2016-12-31
+Authors@R: c(person("David", "Ardia", role = c("aut"),
+             email = "david.ardia.ch@gmail.com"),
+             person("Keven", "Bluteau", role = c("aut", "cre"),
              email = "Keven.Bluteau@unine.ch"),
-             person("David", "Ardia", role = c("aut"),
-             email = "David.Ardia@unine.ch"),
-             person("Denis-Alexandre", "Trottier", role = c("aut"),
-             email = "denis-alexandre.trottier.1@ulaval.ca"),
              person("Kris", "Boudt", role = c("ctb"),
              email = "kris.boudt@vub.ac.be"),
              person("Brian", "Peterson", role = c("ctb"),
-             email = "brian@braverock.com"))
-Author: Keven Bluteau [aut, cre],
-    David Ardia [aut],
-    Denis-Alexandre Trottier [aut],
+             email = "brian@braverock.com"),
+             person("Denis-Alexandre", "Trottier", role = c("aut"),
+             email = "denis-alexandre.trottier.1@ulaval.ca"))
+Author: David Ardia [aut],
+    Keven Bluteau [aut, cre],
     Kris Boudt [ctb],
-    Brian Peterson [ctb]
+    Brian Peterson [ctb],
+    Denis-Alexandre Trottier [aut]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
 Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or Bayesian), simulate, and forecast various Markov-Switching GARCH processes.
 License: GPL (>= 2)
