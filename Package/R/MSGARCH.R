@@ -15,7 +15,7 @@
 #'  This means that is if a three regimes specification with two \code{sGARCH} regimes and one \code{gjrGARCH} regime
 #'  is constructed with \code{\link{create.spec}}, the first \code{sGARCH} regime will have a lower unconditional volatility than the second
 #'  \code{sGARCH} regime while the \code{gjrGARCH} regime can have any unconditional volatility since it is the only regime with this model.
-#'  For a full demonstration of the package please read \href{../doc/MSGARCH.pdf}{Markov-Switching GARCH Models in R: The MSGARCH Package}.
+#'  For a full demonstration of the package please read \href{https://ssrn.com/abstract=2845809}{Markov-Switching GARCH Models in R: The MSGARCH Package}.
 #'The authors acknowledge Google for financial support via the Google Summer of Code 2016
 #' project "MSGARCH"; see \url{https://summerofcode.withgoogle.com/projects/#6497774455488512}
 #', the International Institute of Forecasting and Industrielle-Alliance.
