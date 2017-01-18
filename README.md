@@ -14,7 +14,6 @@ for volatility modeling. The core is implemented in C++ while simple R functions
 * Package: This folder contains the latest developpement version of the package.
 * bin: This folder contains the previous stable version of the package.
 * test: Test folder with an R file containing all the examples from the documentation for test purpose.
-* MSGARCH_0.17.tar.gz: Latest stable version of the package.
 
 ## Installation
 
@@ -28,4 +27,4 @@ To install the latest developpement version of the package (which may contain bu
       R > require("devtools")
       R > devtools::install_github("keblu/MSGARCH", subdir="Package")
  
-For a full explanation of the package functionallities please read the vignette located in the vignettes folder of the package.
+For a full explanation of the package functionallities please read the vignette located at https://ssrn.com/abstract=2845809. 
