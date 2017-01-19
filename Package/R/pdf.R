@@ -1,17 +1,19 @@
 #' Probability density function.
-#' @description Method returning the probability density in-sample or of a vector of points at \code{t = T + 1}.
+#' @description Method returning the probability density in-sample or of a vector of points  consider as one step ahead draws (\code{t = T + 1}).
 #' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 #' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 #' created with \code{\link{fit.bayes}}.
-#' @param x Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{do.its = FALSE}).
-#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).
-#' @param y  Vector (of size T) of observations (not require when using a fit object).
+#' @param x Vector (of size N) of points evaluated at \code{t = T + 1} (used when \code{do.its = FALSE}).
+#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not required when using a fit object) where d must have
+#'  the same length as the default parameters of the specification.
+#' @param y  Vector (of size T) of observations (not required when using a fit object).
 #' @param log  Boolean indicating if the log-density is returned. (Default: \code{log = FALSE})
 #' @param do.its  Boolean indicating if the in-sample pdf is returned. (Default: \code{do.its = FALSE})
-#' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually. 
+#' @details If a matrix of parameter estimates is given, each parameter estimate (each row) is evaluated individually. 
 #' If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
 #' If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 #' @examples 
+#' require("MSGARCH")
 #'# load data
 #'data("sp500")
 #'sp500 = sp500[1:1000]
@@ -35,12 +37,13 @@
 #'pdf = MSGARCH::pdf(object = fit, x = x, log = FALSE, do.its = FALSE)
 #'
 #'plot(pdf)
-#' @return A list of class \code{MSGARCH_PDF} containing two components:
+#' @return A list of class \code{MSGARCH_PDF} containing three components:
 #' \itemize{
 #' \item \code{pdf}:\cr If \code{do.its = FALSE}: (Log-)Probability density of the points \code{x} at \code{t = T + 1} (vector of size N or matrix of size M x N) \cr
 #'                   If \code{do.its = TRUE}: In-sample (Log-)Probability density of \code{y} (vector of size T or matrix of size M x T). 
-#' \item \code{x}:\cr If \code{do.its = FALSE}: Vector (of size N) of point at \code{t = T + 1} evaluated.\cr
+#' \item \code{x}:\cr If \code{do.its = FALSE}: Vector (of size N) of points evaluated at \code{t = T + 1}. \cr
 #'                 If \code{do.its = TRUE}: Vector (of size T) of observations.
+#' \item \code{do.its}: Orinigal user inputed \code{do.its} for reference.
 #' }
 #'The class \code{MSGARCH_PDF} contains the \code{plot} method only if \code{do.its = FALSE}.
 #' @export

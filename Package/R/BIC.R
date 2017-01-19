@@ -2,6 +2,7 @@
 #' @param fit Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}
 #' @references Schwarz, G. (1978). Estimating the dimension of a model. \emph{Annals of Statistics}, 6, pp. 461-464. 
 #' @examples 
+#' require("MSGARCH")
 #' # load data
 #'data("sp500")
 #'sp500 = sp500[1:1000]
@@ -14,7 +15,8 @@
 #'
 #'# compute BIC
 #'BIC = MSGARCH::BIC(fit)
-#' @details If a matrix of MCMC posterior draws estimates is given, the BIC on the posterior mean is calculated.
+#' @details Compute Bayesian information criterion (BIC) based on the work of Schwarz (Schwarz, 1978).
+#' If a matrix of MCMC posterior draws estimates is given, the BIC on the posterior mean is calculated.
 #' @return BIC value.
 #' @export
 BIC <- function(fit) {

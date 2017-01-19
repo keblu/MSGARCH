@@ -12,27 +12,28 @@ risk(object, theta, y, level = c(0.95, 0.99), ES = TRUE, do.its = FALSE,
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 created with \code{\link{fit.bayes}}.}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not required when using a fit object) where d must have
+the same length as the default parameters of the specification.}
 
-\item{y}{Vector (of size T) of observations (not require when using a fit object).}
+\item{y}{Vector (of size T) of observations (not required when using a fit object).}
 
 \item{level}{Vector (of size R) of Value-at-risk and Expected-shortfall levels.\cr
 (Default: \code{level = c(0.95,0.99)})}
 
 \item{ES}{Boolean indicating if Expected-shortfall is also calculated. (Default: \code{ES = TRUE})}
 
-\item{do.its}{Boolean indicating if the in-sample risk estimator are returned.
+\item{do.its}{Boolean indicating if the in-sample risk estimators are returned.
 (Default: \code{do.its = FALSE})}
 
-\item{ctr}{List of control parameters for VaR evaluation.}
+\item{ctr}{List of control parameters for risk evaluation.}
 }
 \value{
-A list containing of class \code{MSGARCH_RISK} containing two or three components:
+A list of class \code{MSGARCH_RISK} containing two or three components:
 \itemize{
-\item \code{VaR} : \cr If \code{do.its = FALSE}: Value-at-Risk at \code{t = T + 1} at the choosen levels (vector of size R).\cr
-                   If \code{do.its = TRUE}: In-sample Value-at-Risk at the choosen levels (Matrix of size T x R).
-\item \code{ES}  :\cr If \code{do.its = FALSE}: Expected-shortfall at \code{t = T + 1} at the choosen levels (vector of size R).\cr
-                   If \code{do.its = TRUE}: In-sample Expected-shortfall at the choosen levels (Matrix of size T x R).
+\item \code{VaR} : \cr If \code{do.its = FALSE}: Value-at-Risk at \code{t = T + 1} at the chosen levels (vector of size R).\cr
+                   If \code{do.its = TRUE}: In-sample Value-at-Risk at the chosen levels (Matrix of size T x R).
+\item \code{ES}  :\cr If \code{do.its = FALSE}: Expected-shortfall at \code{t = T + 1} at the chosen levels (vector of size R).\cr
+                   If \code{do.its = TRUE}: In-sample Expected-shortfall at the chosen levels (Matrix of size T x R).
 \item \code{y}  : Vector (of size T) of observations.
 }
 The \code{MSGARCH_RISK} contains the \code{plot} method. 
@@ -44,9 +45,10 @@ Method returning the Value-at-Risk and Expected-shortfall in-sample or at \code{
 \details{
 If a matrix of MCMC posterior draws estimates is given, the Bayesian Value-at-Risk and Expected-shortfall are calculated.
 If \code{do.its = FALSE}, \code{x} the risk estimator at \code{t = T + 1}, the method uses the variance estimated at \code{t = T + 1}.
-If \code{do.its = TRUE}, The in-sample risk estimator are calculated.
+If \code{do.its = TRUE}, the in-sample risk estimator are calculated.
 }
 \examples{
+require("MSGARCH")
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -54,7 +56,7 @@ sp500 = sp500[1:1000]
 # create model specification
 spec = MSGARCH::create.spec() 
 
-# fit the model on the data with ML estimation using DEoptim intialization
+# fit the model on the data with ML estimation
 set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 

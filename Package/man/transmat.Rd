@@ -10,19 +10,21 @@ transmat(object, theta, n)
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}}.}
 
-\item{theta}{Vector (of size d) of parameter estimates (not require when using a fit object).}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not required when using a fit object) where d must have
+the same length as the default parameters of the specification.}
 
 \item{n}{Number of steps ahead. (Default: \code{n = 1}}
 }
 \value{
 A matrix (of size K x K) in the case of a Markov-Switching model
  or a vector (of size K) in the case of a Mixture model. 
- The columns indcates the starting states while the rows indicates the transition states.
+ The columns indicates the starting states while the rows indicates the transition states.
 }
 \description{
 Method returning the transition matrix.
 }
 \examples{
+require("MSGARCH")
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -30,7 +32,7 @@ sp500 = sp500[1:1000]
 # create model specification
 spec = MSGARCH::create.spec() 
 
-# fit the model on the data with ML estimation using DEoptim intialization
+# fit the model on the data with ML estimation
 set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 

@@ -16,9 +16,11 @@ BIC value.
 Compute Bayesian information criterion (BIC).
 }
 \details{
+Compute Bayesian information criterion (BIC) based on the work of Schwarz (Schwarz, 1978).
 If a matrix of MCMC posterior draws estimates is given, the BIC on the posterior mean is calculated.
 }
 \examples{
+require("MSGARCH")
 # load data
 data("sp500")
 sp500 = sp500[1:1000]

@@ -11,7 +11,8 @@ kernel(object, theta, y, log = TRUE)
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 created with \code{\link{fit.bayes}}.}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not required when using a fit object) where d must have
+the same length as the default parameters of the specification.}
 
 \item{y}{Vector (of size T) of observations (not require when using a fit object).}
 
@@ -24,18 +25,19 @@ created with \code{\link{fit.bayes}}.}
 Method returning the kernel value of a vector of observations given a model specification.
 }
 \details{
-If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
+If a matrix of parameter estimates is given, each parameter estimate (each row) is evaluated individually.
  The kernel is a combination of the prior and the likelihood function. 
  The kernel is equal to prior(\eqn{\theta}) + L(y|\eqn{\theta}) where L is the likelihood
  of y given the parameter \eqn{\theta}. When doing optimization, the goal is to minimize the negative log-kernel.
  \itemize{
  \item Details on the prior \cr
        The prior is different for each specification. It ensures that the \eqn{\theta} makes the conditional variance process stationary, positive,
-       and that it respect that the sums of the probabilities in the case of a multiple-regime models are all equal to 1. If any of these three conditions is not respected the prior return \code{-1e10}, meaning that the optimizer or sampler
+       and that it respectsthat the sums of the probabilities in the case of a multiple-regime model are all equal to 1. If any of these three conditions is not respected the prior returns \code{-1e10}, meaning that the optimizer or the sampler
        will know that \eqn{\theta} is not a good candidate.
   }
 }
 \examples{
+require("MSGARCH")
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -43,7 +45,7 @@ sp500 = sp500[1:1000]
 # create model specification
 spec = MSGARCH::create.spec() 
 
-# fit the model on the data with ML estimation using DEoptim intialization
+# fit the model on the data with ML estimation
 set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 

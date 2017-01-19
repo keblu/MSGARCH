@@ -13,9 +13,10 @@ sim(object, n, m, theta, burnin = 500)
 
 \item{m}{Number of simulations. (Default: \code{m = 1})}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates.}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not required when using a fit object) where d must have
+the same length as the default parameters of the specification.}
 
-\item{burnin}{(integer >= 0) Burnin period discarded (first simulation draws). (Default: \code{burnin = 500})}
+\item{burnin}{Burnin period discarded (first simulation draws). (Default: \code{burnin = 500})}
 }
 \value{
 A list of class \code{MSGARCH_SIM} containing two components.
@@ -29,12 +30,13 @@ A list of class \code{MSGARCH_SIM} containing two components.
 Method simulating a \code{MSGARCH} process.
 }
 \details{
-If a matrix of parameter estimates is given, each parameter estimates is evaluated individually and \code{m = M}.  The difference between \code{\link{sim}} and \code{\link{simahead}} is that
+If a matrix of parameters estimates is given, each parameter estimates is evaluated individually and \code{m = M}.  The difference between \code{\link{sim}} and \code{\link{simahead}} is that
 \code{\link{sim}} starts the simulation a t = 0 creating an entire new process while  \code{\link{simahead}} starts the simulation at t = T + 1
- taking in consideration all the information available in the original time serie \code{y}.
+ taking in consideration all the information available in the original time series \code{y}.
 }
 \examples{
 \dontrun{
+require("MSGARCH")
 # create model specification
 spec = MSGARCH::create.spec() 
 

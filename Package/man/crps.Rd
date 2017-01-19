@@ -12,12 +12,12 @@ crps(object, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a = 0, b =
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 created with \code{\link{fit.bayes}}.}
 
-\item{yn}{scalar value at \code{t = T + 1} to be evaluated.}
+\item{yn}{Scalar value to be evaluated at \code{t = T + 1}.}
 
-\item{ctr}{control list parameters.}
+\item{ctr}{Control list parameters.}
 }
 \value{
-a vector with five crps measures
+A vector with five crps measures
 }
 \description{
 Method returning the CRPS at \code{t = T + 1}.
@@ -26,6 +26,7 @@ Method returning the CRPS at \code{t = T + 1}.
 If a matrix of MCMC posterior draws estimates is given, the Bayesian CRPS is calculated.
 }
 \examples{
+require("MSGARCH")
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -33,7 +34,7 @@ sp500 = sp500[1:1000]
 # create model specification
 spec = MSGARCH::create.spec() 
 
-# fit the model on the data with ML estimation using DEoptim intialization
+# fit the model on the data with ML estimation
 set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 

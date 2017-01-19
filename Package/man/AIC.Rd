@@ -16,9 +16,11 @@ AIC value.
 Compute Akaike information criterion (AIC).
 }
 \details{
+Compute Akaike information criterion (AIC) based on the work of Akaike (Akaike, 1974).
 If a matrix of MCMC posterior draws estimates is given, the AIC on the posterior mean is calculated.
 }
 \examples{
+require("MSGARCH")
 # load data
 data("sp500")
 sp500 = sp500[1:1000]

@@ -11,7 +11,8 @@ unc.vol(object, theta)
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 created with \code{\link{fit.bayes}}.}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not required when using a fit object) where d must have
+the same length as the default parameters of the specification.}
 }
 \value{
 Unconditional volatility (vector of size K or matrix of size M x K) of each regime.
@@ -20,9 +21,10 @@ Unconditional volatility (vector of size K or matrix of size M x K) of each regi
 Method returning the unconditional volatility of the process in each state.
 }
 \details{
-If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
+If a matrix of parameter estimates (each row) is given, each parameter estimates is evaluated individually.
 }
 \examples{
+require("MSGARCH")
 # create model specification
 spec = MSGARCH::create.spec() 
 

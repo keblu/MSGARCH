@@ -43,7 +43,7 @@ The \code{MSGARCH_MLE_FIT} contains these methods:
 \item \code{\link{simahead}} : Step ahead simulation method.
 \item \code{\link{sim}} : Simulation method.
 \item \code{\link{pdf}} : Probability density function.
-\item \code{\link{cdf}} : Cumulative function.
+\item \code{\link{cdf}} : Cumulative distribution function.
 \item \code{\link{Pstate}} : State probabilities filtering method.
 \item \code{summary} : Summary of the fit.
 }
@@ -52,14 +52,15 @@ The \code{MSGARCH_MLE_FIT} contains these methods:
 Method that performs Maximum Likelihood estimation of a \code{MSGARCH_SPEC} object on a set of observations.
 }
 \details{
-The Maximum likelihood estimation uses the \R package \code{nloptr} (Johnson, 2014) for main optimizer 
-while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an initialization for nloptr.
+The Maximum likelihood estimation uses the \R package \code{dfoptim} (Varadhan and Borchers, 2016) for main optimizer and \code{nloptr} (Johnson, 2014) in case of non-convergence
+while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an initialization for \code{dfoptim} and \code{nloptr}.
  The starting parameters are the specification default parameters.
  The argument \code{do.enhance.theta0} uses the volatilities of rolling windows of \code{y} and adjust the starting parameters of
  the specification so that the unconditional volatility of each regime
  is set to different quantiles of the volatilities of the rolling windows of \code{y}.
 }
 \examples{
+require("MSGARCH")
 # load data
 data("sp500")
 sp500 = sp500[1:1000]
@@ -80,5 +81,7 @@ Ardia, D. Mullen, K. M. Peterson, B. G. & Ulrich, J. (2015). \code{DEoptim}: Dif
 Mullen, K. M. Ardia, D. Gil, D. L. Windover, D. Cline, J.(2011) \code{DEoptim}: An \R Package for Global Optimization by Differential Evolution. \emph{Journal of Statistical Software}, 40, pp. 1-26, DOI:	\url{http://dx.doi.org/10.18637/jss.v040.i06}
 
 Johnson, S. G. (2014). The NLopt Nonlinear-Optimization. \url{https://cran.r-project.org/package=nloptr}.
+
+Varadhan, R., Borchers H. W. (2016. dfoptim: Derivative-Free Optimization. \url{https://cran.r-project.org/package=dfoptim}.
 }
 

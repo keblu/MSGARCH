@@ -2,7 +2,7 @@
 % Please edit documentation in R/cdf.R
 \name{cdf}
 \alias{cdf}
-\title{Cumulative  function.}
+\title{Cumulative distribution function.}
 \usage{
 cdf(object, x, theta, y, log = FALSE, do.its = FALSE)
 }
@@ -11,35 +11,38 @@ cdf(object, x, theta, y, log = FALSE, do.its = FALSE)
 or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 created with \code{\link{fit.bayes}}.}
 
-\item{x}{Vector (of size N) of point at \code{t = T + 1} to be evaluated (used when \code{do.its = FALSE}).}
+\item{x}{Vector (of size N) of points evaluated at \code{t = T + 1} (used when \code{do.its = FALSE}).}
 
-\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).}
+\item{theta}{Vector (of size d) or matrix (of size M x d) of parameter estimates (not required when using a fit object) where d must have
+the same length as the default parameters of the specification.}
 
-\item{y}{Vector (of size T) of observations (not require when using a fit object).}
+\item{y}{Vector (of size T) of observations (not required when using a fit object).}
 
 \item{log}{Boolean indicating if the log cumulative is returned. (Default: \code{log = FALSE})}
 
 \item{do.its}{Boolean indicating if the in-sample cdf is returned. (Default: \code{do.its = FALSE})}
 }
 \value{
-A list of class \code{MSGARCH_CDF} containing two components:
+A list of class \code{MSGARCH_CDF} containing three components:
 \itemize{
 \item \code{cdf}:\cr  If \code{do.its = FALSE}: (Log-)Cumulative of the points \code{x} at \code{t = T + 1} (vector of size N or matrix of size M x N).\cr
                   If \code{do.its = TRUE}: In-sample (Log-)Cumulative of \code{y} (vector of size T or matrix of size M x T). 
-\item \code{x}: \cr If \code{do.its = FALSE}: Vector (of size N) of point at \code{t = T + 1} evaluated.\cr
+\item \code{x}: \cr If \code{do.its = FALSE}: Vector (of size N) of points evaluated at \code{t = T + 1}. \cr
                 If \code{do.its = TRUE}: Vector (of size T) of observations.
+\item \code{do.its}: Orinigal user inputed \code{do.its} for reference.
 }
 The class \code{MSGARCH_CDF} contains the \code{plot} method only if \code{do.its = FALSE}.
 }
 \description{
-Method returning the cumulative function in-sample or of a vector of points at \code{t = T + 1}.
+Method returning the cumulative distribution function in-sample or of a vector of points consider as one step ahead draws (\code{t = T + 1}).
 }
 \details{
-If a matrix of parameter estimates is given, each parameter estimates is evaluated individually. 
-If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
+If a matrix of parameter estimates is given, each parameter estimate (each row) is evaluated individually. 
+If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realizations and the method uses the variance estimate at \code{t = T + 1}.
 If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 }
 \examples{
+require("MSGARCH")
 # load data 
 data("sp500")
 sp500 = sp500[1:1000]
@@ -47,7 +50,7 @@ sp500 = sp500[1:1000]
 # create model specification
 spec = MSGARCH::create.spec() 
 
-# fit the model on the data with ML estimation using DEoptim intialization
+# fit the model on the data with ML estimation
 set.seed(123)
 fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 

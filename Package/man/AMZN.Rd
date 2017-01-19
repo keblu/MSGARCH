@@ -7,6 +7,6 @@
   Yahoo Finance \url{https://finance.yahoo.com/}.
 }
 \usage{data("AMZN")}
-\format{Matrix containing 4529 observations.}
+\format{Matrix containing 4,529 observations.}
 \source{Yahoo Finance \url{https://finance.yahoo.com/}}
 \keyword{datasets}

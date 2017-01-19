@@ -3,9 +3,11 @@
 #' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
 #' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
 #' created with \code{\link{fit.bayes}}.
-#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not require when using a fit object).
-#' @details If a matrix of parameter estimates is given, each parameter estimates is evaluated individually.
+#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not required when using a fit object) where d must have
+#'  the same length as the default parameters of the specification.
+#' @details If a matrix of parameter estimates (each row) is given, each parameter estimates is evaluated individually.
 #' @examples 
+#' require("MSGARCH")
 #' # create model specification
 #'spec = MSGARCH::create.spec() 
 #'
