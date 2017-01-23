@@ -17,7 +17,7 @@ for volatility modeling. The core is implemented in C++ while simple R functions
 
 ## Installation
 
-To install the latest stable version is available on CRAN https://cran.r-project.org/web/packages/MSGARCH/index.html and can be installed via:
+To install the latest stable version is available on CRAN (https://CRAN.R-project.org/package=MSGARCH) and can be installed via:
 
       R > install.packages("MSGARCH")
   
