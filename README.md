@@ -35,3 +35,8 @@ https://ssrn.com/abstract=2845809
 
 Ardia, D., Bluteau, K., Boudt, K., Peterson, B., Trottier, D.-A. (2017).    
 _MSGARCH package_  
+
+## Acknowledgements
+
+The authors acknowledge Google for financial support via the Google Summer of Code 2016
+project "MSGARCH", the International Institute of Forecasters (IIF, https://forecasters.org) and Industrielle-Alliance.
