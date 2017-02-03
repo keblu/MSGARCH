@@ -1,13 +1,10 @@
+# MSGARCH
+Markov-switching GARCH models in R
+
 [![CRAN](http://www.r-pkg.org/badges/version/MSGARCH)](https://cran.r-project.org/package=MSGARCH) [![Downloads](http://cranlogs.r-pkg.org/badges/MSGARCH?color=brightgreen)](http://www.r-pkg.org/pkg/MSGARCH)[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/MSGARCH?color=brightgreen)](http://www.r-pkg.org/pkg/MSGARCH)
 
-# MSGARCH
-The goal of the MSGARCH package is to implement a package that will give the financial community tools to estimate,
-simulate, and test several MSGARCH models used in volatility (i.e., square root of conditional variance) forecasting.
-By relying on a hidden/latent variable, these models are able to switch among several processes for the conditional
-volatility and therefore, account for structural break in the volatility dynamics. MSGARCH have gained a huge interest 
-in the financial risk management community over the recent years as they are better at forecasting volatility and provide
-more accurate risk measures. The package follows the structure of rugarch since this is one of the most used packages
-for volatility modeling. The core is implemented in C++ while simple R functions will facilitate usage of the package.
+## Introduction
+Markov-switching GARCH models have become popular to model the structural break in the conditional variance dynamics of financial time series. The R package `MSGARCH` ([Ardia et al. (2016)](https://ssrn.com/abstract=2845809), Ardia et al., 2017) implements Markov-switching GARCH-type models very effficiently by using C object-oriented programming techniques. It allows the user to perform simulations as well as Maximum Likelihood and Bayesian estimation of a very large class of Markov-switching GARCH-type models. Risk management tools such as Value-at-Risk and Expected-Shortfall calculations are available. See [Ardia et al. (2016)](https://ssrn.com/abstract=2845809) for further details.
 
 ## Contents
 * MSGARCH-manual.pdf: This document is the documentation for the MSGARCH package.
@@ -17,14 +14,24 @@ for volatility modeling. The core is implemented in C++ while simple R functions
 
 ## Installation
 
-To install the latest stable version is available on CRAN (https://CRAN.R-project.org/package=MSGARCH) and can be installed via:
+The latest stable version of `MSGARCH` is available on CRAN (https://CRAN.R-project.org/package=MSGARCH) and can be installed via:
 
       R > install.packages("MSGARCH")
   
-To install the latest developpement version of the package (which may contain bugs) use these lines:
+To install the latest development  version of `MSGARCH` (which may contain bugs!) use these lines:
 
       R > install.packages("devtools")
       R > require("devtools")
       R > devtools::install_github("keblu/MSGARCH", subdir="Package")
- 
-For a full explanation of the package functionallities please read the vignette located at https://ssrn.com/abstract=2845809. 
+
+## References
+
+Please cite `MSGARCH` in publications:
+
+Ardia, D., Bluteau, K., Boudt, K., Trottier, D.-A. (2016).  
+_Markov-switching GARCH models in R: The MSGARCH package_.  
+Working paper.  
+https://ssrn.com/abstract=2845809
+
+Ardia, D., Bluteau, K., Boudt, K., Peterson, B., Trottier, D.-A. (2017).    
+_MSGARCH package_  
