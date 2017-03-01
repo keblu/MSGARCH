@@ -6,7 +6,7 @@ Markov-switching GARCH models in R
 [![Github Issues](http://githubbadges.herokuapp.com/keblu/MSGARCH/issues.svg)](https://github.com/keblu/MSGARCH/issues)
 
 ## Introduction
-Markov-switching GARCH models have become popular to model the structural break in the conditional variance dynamics of financial time series. The R package `MSGARCH` ([Ardia et al., 2016](https://ssrn.com/abstract=2845809), Ardia et al., 2017) implements Markov-switching GARCH-type models very effficiently by using C object-oriented programming techniques. It allows the user to perform simulations as well as Maximum Likelihood and Bayesian estimation of a very large class of Markov-switching GARCH-type models. Risk management tools such as Value-at-Risk and Expected-Shortfall calculations are available. See [Ardia et al. (2016)](https://ssrn.com/abstract=2845809) for further details.
+Markov-switching GARCH models have become popular to model the structural break in the conditional variance dynamics of financial time series. The R package `MSGARCH` ([Ardia et al., 2016](https://ssrn.com/abstract=2845809), Ardia et al., 2017) implements Markov-switching GARCH-type models very effficiently by using C object-oriented programming techniques. It allows the user to perform simulations as well as Maximum Likelihood and Bayesian estimation of a very large class of Markov-switching GARCH-type models. Risk management tools such as Value-at-Risk and Expected-Shortfall calculations are available. See [Ardia et al. (2016)](https://ssrn.com/abstract=2845809) for further details. A large-scale empirical study is presented in [Ardia et al. (2017)](https://ssrn.com/abstract=2918413).
 
 ## Contents
 * MSGARCH-manual.pdf: This document is the documentation for the MSGARCH package.
@@ -35,10 +35,16 @@ _Markov-switching GARCH models in R: The MSGARCH package_.
 Working paper.  
 https://ssrn.com/abstract=2845809
 
+Ardia, D., Bluteau, K., Boudt, K., Catania, L. (2017).    
+_Forecasting performance of Markov-switching GARCH models: A large-scale empirical study_.    
+Working paper.    
+https://ssrn.com/abstract=2918413  
+
 Ardia, D., Bluteau, K., Boudt, K., Peterson, B., Trottier, D.-A. (2017).    
 _MSGARCH package_  
 
 ## Acknowledgements
 
 The authors acknowledge Google for financial support via the Google Summer of Code 2016
-project "MSGARCH", the International Institute of Forecasters (IIF, https://forecasters.org) and Industrielle-Alliance.
+project "MSGARCH", the International Institute of Forecasters (IIF, https://forecasters.org), Industrielle-Alliance, 
+FQRSC (Grant # 2015-NP-179931) and Fonds de Donations at the University of Neuchâtel, Switzerland.

@@ -2,7 +2,7 @@ Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
 Version: 0.17.8
-Date: 2016-01-19
+Date: 2017-03-01
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com"),
              person("Keven", "Bluteau", role = c("aut", "cre"),
@@ -19,7 +19,8 @@ Author: David Ardia [aut],
     Brian Peterson [ctb],
     Denis-Alexandre Trottier [aut]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
-Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or Bayesian), simulate, and forecast various Markov-Switching GARCH processes.
+Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or Bayesian), simulate, and forecast various 
+  Markov-Switching GARCH processes.
 License: GPL (>= 2)
 BugReports: https://github.com/keblu/MSGARCH/issues
 URL: https://github.com/keblu/MSGARCH
