@@ -14,6 +14,8 @@ fit.bayes(spec, y, ctr = list())
 \item{ctr}{A list of control parameters. \cr
 The control parameters have three components:
 \itemize{
+\item \code{adapt} : Boolean indicating if the adaptive sampler is used. (Default: \code{adapt = TRUE})
+\item \code{acc.rate} (0 < acc.rate < 1): acceptance rate of the adaptive sampler. (Default: \code{acc.rate = 0.4})
 \item \code{N.burn} (integer >= 0): Number of discarded draws. (Default: \code{N.burn = 5000})
 \item \code{N.mcmc} (integer > 0) : Number of draws. (Default: \code{N.mcmc = 10000})
 \item \code{N.thin} (integer > 0) : Thinning factor (every \code{N.thin} draws are kept). (Default: \code{N.thin = 10})
