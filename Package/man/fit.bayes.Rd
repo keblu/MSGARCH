@@ -73,7 +73,8 @@ spec = MSGARCH::create.spec()
 # fit the model on the data with Bayesian estimation
 set.seed(123)
 fit = MSGARCH::fit.bayes(spec = spec, y = sp500, 
-                         ctr = list(N.burn = 500, N.mcmc = 1000, N.thin = 1))
+                         ctr = list(N.burn = 500, N.mcmc = 1000, N.thin = 1,
+                          adapt = TRUE, acc.rate = 0.4))
                          
 summary(fit)
 }

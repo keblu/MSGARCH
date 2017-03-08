@@ -1,3 +1,5 @@
+Changes in Version 0.17.9
+  o add an option to modify the accptance rate of the adaptive sampler
 Changes in Version 0.17.8
   o doc updated
 Changes in Version 0.17.7

@@ -8,7 +8,7 @@ f.error <- function(message) {
 f.process.ctr <- function(ctr = list()) {
   
   con <- list(theta0 = NULL, do.init = FALSE, N.mcmc = 1000, N.burn = 500, N.thin = 1,
-              NP = 500, itermax = 500, do.enhance.theta0 = FALSE)
+              NP = 500, itermax = 500, do.enhance.theta0 = FALSE, acc.rate = 0.4, adapt = TRUE)
   con[names(ctr)] <- ctr
   return(con)
 }

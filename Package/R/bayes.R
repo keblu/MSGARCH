@@ -5,6 +5,8 @@
 #' @param ctr  A list of control parameters. \cr
 #'        The control parameters have three components:
 #'        \itemize{
+#'        \item \code{adapt} : Boolean indicating if the adaptive sampler is used. (Default: \code{adapt = TRUE})
+#'        \item \code{acc.rate} (0 < acc.rate < 1): acceptance rate of the adaptive sampler. (Default: \code{acc.rate = 0.4})
 #'        \item \code{N.burn} (integer >= 0): Number of discarded draws. (Default: \code{N.burn = 5000})
 #'        \item \code{N.mcmc} (integer > 0) : Number of draws. (Default: \code{N.mcmc = 10000})
 #'        \item \code{N.thin} (integer > 0) : Thinning factor (every \code{N.thin} draws are kept). (Default: \code{N.thin = 10})
@@ -56,7 +58,8 @@
 #' # fit the model on the data with Bayesian estimation
 #' set.seed(123)
 #' fit = MSGARCH::fit.bayes(spec = spec, y = sp500, 
-#'                          ctr = list(N.burn = 500, N.mcmc = 1000, N.thin = 1))
+#'                          ctr = list(N.burn = 500, N.mcmc = 1000, N.thin = 1,
+#'                           adapt = TRUE, acc.rate = 0.4))
 #'                          
 #'summary(fit)
 #' @references Andreas, S. (2012). \code{adaptMCMC}: Implementation of a Generic Adaptive Monte Carlo Markov Chain Sampler. \url{https://cran.r-project.org/package=adaptMCMC}.
@@ -105,7 +108,7 @@ fit.bayes.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
     return(out)
   }
   outmh <- adaptMCMC::MCMC(p = f.kernel, n = l.ctr$N.burn + l.ctr$N.mcmc,
-                           init = l.ctr$theta0, adapt = TRUE, acc.rate = 0.4)
+                           init = l.ctr$theta0, adapt = l.ctr$adapt, acc.rate = l.ctr$acc.rate)
   by <- seq(from = (l.ctr$N.burn + 1), to = (l.ctr$N.burn + l.ctr$N.mcmc),
             by = l.ctr$N.thin)
   outmh$samples <- outmh$samples[by, , drop = FALSE]

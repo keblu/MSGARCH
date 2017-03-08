@@ -1,0 +1,14 @@
+inst/lib
+.Rproj.user
+Package/src/*.o
+Package/src/*.so
+Package/src/*.dll
+Package/src/symbols.rds
+.Rhistory
+.RData
+
+## QtCreator
+Rcpp.pro
+Rcpp.pro.user
+*.autosave
+.#*
