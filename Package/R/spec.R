@@ -43,6 +43,7 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   rcpp.func$cdf_Rcpp     <- mod$f_cdf
   rcpp.func$rnd_Rcpp     <- mod$f_rnd
   rcpp.func$pdf_Rcpp_its <- mod$f_pdf_its
+  rcpp.func$simahead <- mod$f_simAhead
   rcpp.func$ineq_func    <- mod$ineq_func
   rcpp.func$cdf_Rcpp_its <- mod$f_cdf_its
   rcpp.func$unc_vol_Rcpp <- mod$f_unc_vol

@@ -21,6 +21,7 @@ RCPP_MODULE(MSgarch){
   .field( "NbParamsModel",&MSgarch ::NbParamsModel)
   .method( "f_get_Pstate",&MSgarch ::f_get_Pstate )
   .method( "f_sim",      &MSgarch ::f_sim )
+  .method( "f_simAhead",      &MSgarch ::f_simAhead )
   .method( "calc_ht",    &MSgarch ::calc_ht )
   .method( "eval_model", &MSgarch ::eval_model )
   .method( "ineq_func",  &MSgarch ::ineq_func )

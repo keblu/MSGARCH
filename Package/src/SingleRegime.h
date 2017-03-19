@@ -86,7 +86,7 @@ public:
     NumericVector f_unc_vol(NumericMatrix&, const NumericVector&);
     NumericMatrix calc_ht(NumericMatrix&, const NumericVector&);
     NumericVector eval_model(NumericMatrix&, const NumericVector&);
-
+    NumericVector f_simAhead(const NumericVector&,const int&, const NumericVector& , const NumericVector&);
     // Handles to 'spec' data members
     std::string spec_name() {
         return spec.name;
@@ -296,6 +296,27 @@ NumericVector SingleRegime<Model>::f_rnd(const int& n, const NumericVector& thet
     for (int t = 1; t <= ny; t++)
         spec.increment_vol(vol, y[t-1]);
     return sqrt(vol.h) * spec.rndgen(n);
+}
+
+template <typename Model>
+NumericVector SingleRegime<Model>::f_simAhead(const NumericVector& y, const int& n, const NumericVector& theta, const NumericVector& P0_) {
+  // setup
+	int nb_obs = y.size();                 // total number of observations to simulate
+	NumericVector y_sim(n);  
+	spec.loadparam(theta);                       // load parameters   
+	spec.prep_ineq_vol();                        // prep for 'set_vol'
+	volatility vol = spec.set_vol(y[0]);
+	for (int t = 1; t < nb_obs; t++) {                 
+       spec.increment_vol(vol, y[t-1]);                  // increment all volatilities
+    }
+	NumericVector z = spec.rndgen(n);                // random innovation from initial state
+	y_sim[0] = z[0] * sqrt(vol.h);           // first draw
+	  
+	for (int t = 1; t < n; t++){     
+		spec.increment_vol(vol, y_sim[t-1]);        // increment all volatilities
+		y_sim[t] = z[t] * sqrt(vol.h);
+	}		// new draw
+  return(y_sim);
 }
 
 //---------------------- Conditional variance calculation ----------------------//

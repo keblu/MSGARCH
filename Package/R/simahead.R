@@ -44,25 +44,28 @@ simahead <- function(object, n, m, theta, y) {
 
 #' @export
 simahead.MSGARCH_SPEC <- function(object, n, m, theta = NULL, y = NULL) {
-  y <- f.check.y(y)
-  theta <- f.check.theta(object, theta)
+  y <- MSGARCH:::f.check.y(y)
+  theta <-  MSGARCH:::f.check.theta(object, theta)
   if (nrow(theta) == 1) {
+    P_0 = matrix(MSGARCH::Pstate(object, theta = theta, y =y)[(length(y)+1),,], ncol = object$K)
+    P_0 = matrix(rep(P_0,m),ncol =object$K, byrow = TRUE)
     theta <- matrix(theta[rep(1, m), ], ncol = ncol(theta))
+  } else {
+    P_0 =MSGARCH::Pstate(object, theta = theta, y =y)[(length(y)+1),,1:2]
+    m = nrow(theta)
   }
   draws <- matrix(data = NA, nrow = nrow(theta), ncol = n)
   state <- matrix(data = NA, nrow = nrow(theta), ncol = n)
-  for (j in 1:n) {
-    for (i in 1:nrow(theta)) {
-      tmp <- object$rcpp.func$rnd_Rcpp(1, theta[i, ], c(y, draws[i, 0:(j - 1)]))
+  for (i in 1:m) {
+     tmp <- object$rcpp.func$simahead(y=y, n=n, theta = theta[i,],P_0[i,])
       if (object$K == 1) {
-        draws[i, j] <- tmp
-        state[i, j] <- 1
+        draws[i,] <- tmp
+        state[i,] <- rep(1,length(tmp))
       } else {
-        draws[i, j] <- tmp$draws
-        state[i, j] <- tmp$state
+        draws[i,] <- tmp$draws
+        state[i,] <- tmp$state
       }
     }
-  }
   out <- list()
   out$draws  <- draws
   out$state  <- state

@@ -236,6 +236,8 @@ public:
   // model simulation
   Rcpp::List f_sim(const int&, const NumericVector&, const int&);
   
+  Rcpp::List f_simAhead(const NumericVector& ,const int&, const NumericVector&, const NumericVector&);
+  
   Rcpp::List f_rnd(const int&, const NumericVector&, const NumericVector&);
   // compute loglikelihood matrix
   NumericMatrix calc_lndMat(const NumericVector&);
@@ -519,6 +521,33 @@ inline Rcpp::List MSgarch::f_sim(const int& n, const NumericVector& theta, const
   NumericVector SS(S.begin() + burnin, S.end());
   return(Rcpp::List::create(Rcpp::Named("draws")=yy,
                             Rcpp::Named("state")=SS));
+  
+}
+
+inline Rcpp::List MSgarch::f_simAhead(const NumericVector& y, const int& n, const NumericVector& theta, const NumericVector& P0_) {
+  
+  // setup
+	int nb_obs = y.size();                 // total number of observations to simulate
+	NumericVector y_sim(n);  
+	NumericVector S(n);
+	loadparam(theta);                       // load parameters   
+	prep_ineq_vol();                        // prep for 'set_vol'
+	volatilityVector vol = set_vol(y[0]);
+	for (int t = 1; t < nb_obs; t++) {                 
+       increment_vol(vol, y[t-1]);                  // increment all volatilities
+    }
+	S[0]     = sampleState(P0_);             // sample initial state
+	double z = rndgen(S[0]);                // random innovation from initial state
+	y_sim[0] = z * sqrt(vol[S[0]].h);           // first draw
+	  
+	for (int t = 1; t < n; t++){     
+		S[t] = sampleState(P(S[t-1],_));      // sample new state
+		z    = rndgen(S[t]);                  // sample new innovation
+		increment_vol(vol, y_sim[t-1]);        // increment all volatilities
+		y_sim[t] = z * sqrt(vol[S[t]].h);
+	}		// new draw
+  return(Rcpp::List::create(Rcpp::Named("draws")=y_sim,
+                            Rcpp::Named("state")=S));
   
 }
 
