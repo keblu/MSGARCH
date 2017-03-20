@@ -51,7 +51,7 @@ simahead.MSGARCH_SPEC <- function(object, n, m, theta = NULL, y = NULL) {
     P_0 = matrix(rep(P_0,m),ncol =object$K, byrow = TRUE)
     theta <- matrix(theta[rep(1, m), ], ncol = ncol(theta))
   } else {
-    P_0 =MSGARCH::Pstate(object, theta = theta, y =y)[(length(y)+1),,1:2]
+    P_0 = matrix(MSGARCH::Pstate(object, theta = theta, y =y)[(length(y)+1),,1:object$K],ncol = object$K, byrow = TRUE)
     m = nrow(theta)
   }
   draws <- matrix(data = NA, nrow = nrow(theta), ncol = n)
