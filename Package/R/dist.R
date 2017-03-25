@@ -1,3 +1,4 @@
+#' @export
 ddist = function(y, dist = "norm", shape = 100, skew = 1, log = FALSE){
   valid.distribution <- c("norm", "std", "ged")
   if (!any(dist == valid.distribution)) {
@@ -24,6 +25,7 @@ ddist = function(y, dist = "norm", shape = 100, skew = 1, log = FALSE){
   return(out)
 }
 
+#' @export
 rdist = function(n, dist = "norm", shape = 100, skew = 1){
   valid.distribution <- c("norm", "std", "ged")
   if (!any(dist == valid.distribution)) {
@@ -47,6 +49,7 @@ rdist = function(n, dist = "norm", shape = 100, skew = 1){
   return(out)
 }
 
+#' @export
 qdist = function(y, dist = "norm", shape = 100, skew = 1){
   valid.distribution <- c("norm", "std", "ged")
   if (!any(dist == valid.distribution)) {
@@ -70,6 +73,7 @@ qdist = function(y, dist = "norm", shape = 100, skew = 1){
   return(out)
 }
 
+#' @export
 pdist = function(y, dist = "norm", shape = 100, skew = 1){
   valid.distribution <- c("norm", "std", "ged")
   if (!any(dist == valid.distribution)) {
