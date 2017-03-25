@@ -1,3 +1,4 @@
+ddist = function(y, dist = "norm", shape = 100, skew = 1, log = FALSE){
   valid.distribution <- c("norm", "std", "ged")
   if (!any(dist == valid.distribution)) {
     stop(paste0("error: The distribution ", dist, "
@@ -23,6 +24,7 @@
   return(out)
 }
 
+rdist = function(n, dist = "norm", shape = 100, skew = 1){
   valid.distribution <- c("norm", "std", "ged")
   if (!any(dist == valid.distribution)) {
     stop(paste0("error: The distribution ", dist, "
@@ -45,6 +47,7 @@
   return(out)
 }
 
+qdist = function(y, dist = "norm", shape = 100, skew = 1){
   valid.distribution <- c("norm", "std", "ged")
   if (!any(dist == valid.distribution)) {
     stop(paste0("error: The distribution ", dist, "
@@ -67,6 +70,7 @@
   return(out)
 }
 
+pdist = function(y, dist = "norm", shape = 100, skew = 1){
   valid.distribution <- c("norm", "std", "ged")
   if (!any(dist == valid.distribution)) {
     stop(paste0("error: The distribution ", dist, "
