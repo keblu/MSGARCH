@@ -1,7 +1,7 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 0.18.0
+Version: 0.18.1
 Date: 2017-03-01
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com"),

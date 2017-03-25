@@ -1,3 +1,7 @@
+Changes in Version 0.18.1
+  o added wrapper arround standardize distribution
+Changes in Version 0.18
+  o fix CRPS to be compatible with spec object 
 Changes in Version 0.17.9
   o add an option to modify the accptance rate of the adaptive sampler
 Changes in Version 0.17.8
