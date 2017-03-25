@@ -31,4 +31,3 @@ spec = MSGARCH::create.spec()
 # compute the unconditional volatility in each regime
 unc.vol = MSGARCH::unc.vol(object = spec, theta = spec$theta0)
 }
-

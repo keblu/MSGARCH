@@ -65,4 +65,3 @@ cdf = MSGARCH::cdf(object = fit, x = x, log = FALSE, do.its = FALSE)
 
 plot(cdf)
 }
-

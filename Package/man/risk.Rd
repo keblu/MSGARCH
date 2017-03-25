@@ -69,4 +69,3 @@ plot(risk.its)
 # Risk estimation at T + 1                     
 risk = MSGARCH::risk(object = fit, level = 0.95, ES = FALSE, do.its = FALSE)
 }
-

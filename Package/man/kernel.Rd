@@ -55,4 +55,3 @@ kernel = MSGARCH::kernel(fit, log = TRUE)
 \references{
 Hamilton, J. D. (1989) A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle. \emph{Econometrica}, 57, pp.357-38
 }
-

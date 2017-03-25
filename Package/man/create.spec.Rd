@@ -98,4 +98,3 @@ Nelson, D. B. (1991). Conditional Heteroskedasticity in Asset Returns: A New App
 
 Zakoian, J.-M. (1994). Threshold Heteroskedastic Models. \emph{Journal of Economic Dynamics and Control}, 18, pp. 931-955.
 }
-

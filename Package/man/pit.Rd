@@ -71,4 +71,3 @@ pit = MSGARCH::pit(object = fit, x = x, do.norm = FALSE)
 
 plot(pit)
 }
-

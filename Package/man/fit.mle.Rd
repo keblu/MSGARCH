@@ -84,4 +84,3 @@ Johnson, S. G. (2014). The NLopt Nonlinear-Optimization. \url{https://cran.r-pro
 
 Varadhan, R., Borchers H. W. (2016. dfoptim: Derivative-Free Optimization. \url{https://cran.r-project.org/package=dfoptim}.
 }
-

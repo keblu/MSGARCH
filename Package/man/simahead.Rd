@@ -56,4 +56,3 @@ simahead = MSGARCH::simahead(object = fit, n = 30, m = 100)
 
 plot(simahead)
 }
-

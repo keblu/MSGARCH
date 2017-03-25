@@ -87,4 +87,3 @@ Plummer, M. Best, N. Cowles, K. & Vines, K. (2006). \code{CODA}: Convergence Dia
 
 Vihola, M. (2012). Robust Adaptive Metropolis Algorithm with Coerced Acceptance Rate. \emph{Statistics and Computing}, 22, pp. 997-1008.
 }
-

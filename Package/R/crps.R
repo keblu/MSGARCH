@@ -24,9 +24,13 @@
 #'
 #' @return A vector with five crps measures
 #' @importFrom stats pnorm dnorm
+#' @export
+crps <- function(object, theta, y, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a = 0, b = 1)) {
+  UseMethod("crps", object)
+}
 
 #' @export
-crps = function(object, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a = 0, b = 1)) {
+crps.MSGARCH_SPEC = function(object, theta, y, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a = 0, b = 1)) {
   
   x   = seq(from = ctr$lower, to = ctr$upper, length.out = ctr$n.mesh)
   n.x = length(x)
@@ -38,7 +42,7 @@ crps = function(object, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a 
   w5  = 1 - w4 #tail_l
   W   = cbind(w1, w2, w3, w4, w5)
   
-  cdf = MSGARCH::pit(object, x = x, do.norm = FALSE, do.its = FALSE)$pit
+  cdf = MSGARCH::pit(object, x = x, y = y, theta = theta, do.norm = FALSE, do.its = FALSE)$pit
   id  = yn < x
   tmp = (cdf - id)^2
   X   = matrix(data = tmp, nrow = n.x, ncol = 5)
@@ -46,4 +50,14 @@ crps = function(object, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a 
   out = apply(W * X, 2, sum) / (ctr$n.mesh - 1)
   names(out) = c("unif", "center", "tails", "tail_r", "tail_l")
   return(out)
+}
+
+#' @export
+crps.MSGARCH_MLE_FIT <- function(object, theta = NULL, y = NULL, yn = NULL,  ctr = list(lower = -20, upper = 20, n.mesh = 500, a = 0, b = 1)) {
+  return(MSGARCH::crps(object = object$spec, theta = object$theta, y = object$y, yn = yn, ctr = ctr))
+}
+
+#' @export
+crps.MSGARCH_BAY_FIT <- function(object, theta = NULL, y = NULL, yn = NULL,  ctr = list(lower = -20, upper = 20, n.mesh = 500, a = 0, b = 1)) {
+  return(MSGARCH::crps(object = object$spec, theta = object$theta, y = object$y, yn = yn, ctr = ctr))
 }

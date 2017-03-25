@@ -49,4 +49,3 @@ DIC = MSGARCH::DIC(fit)
 \references{
 Spiegelhalter, David J., et al. (2002). Bayesian measures of model complexity and fit. \emph{Journal of the Royal Statistical Society: Series B (Statistical Methodology)}
 }
-

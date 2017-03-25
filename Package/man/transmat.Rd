@@ -41,4 +41,3 @@ transmat.mle = MSGARCH::transmat(fit, n = 10)
 
 print(transmat.mle)
 }
-

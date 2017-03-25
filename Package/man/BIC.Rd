@@ -37,4 +37,3 @@ BIC = MSGARCH::BIC(fit)
 \references{
 Schwarz, G. (1978). Estimating the dimension of a model. \emph{Annals of Statistics}, 6, pp. 461-464.
 }
-

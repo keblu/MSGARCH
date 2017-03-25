@@ -47,4 +47,3 @@ sim = MSGARCH::sim(object = spec, n = 1000, m = 1, theta = spec$theta0, burnin =
 plot(sim)
 }
 }
-

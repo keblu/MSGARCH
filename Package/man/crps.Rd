@@ -4,8 +4,8 @@
 \alias{crps}
 \title{CRPS (continuous ranked probability score) measure.}
 \usage{
-crps(object, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a = 0, b =
-  1))
+crps(object, theta, y, yn, ctr = list(lower = -20, upper = 20, n.mesh = 500, a
+  = 0, b = 1))
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
@@ -42,4 +42,3 @@ fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
 crps = MSGARCH::crps(object = fit, yn = 0.6)
 
 }
-

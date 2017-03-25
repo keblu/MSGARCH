@@ -67,4 +67,3 @@ pred = MSGARCH::pred(object = fit, x = x, log = TRUE, do.its = FALSE)
 
 plot(pred)
 }
-

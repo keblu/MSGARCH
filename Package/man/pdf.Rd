@@ -67,4 +67,3 @@ pdf = MSGARCH::pdf(object = fit, x = x, log = FALSE, do.its = FALSE)
 
 plot(pdf)
 }
-

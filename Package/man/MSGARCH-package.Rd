@@ -38,4 +38,27 @@ Haas, M. Mittnik, S. Paolella, MS. (2004). A New Approach to Markov-Switching GA
 
 Ghalanos, A. (2015). \code{rugarch}: Univariate GARCH Models. \url{https://cran.r-project.org/package=rugarch}.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/keblu/MSGARCH}
+  \item Report bugs at \url{https://github.com/keblu/MSGARCH/issues}
+}
 
+}
+\author{
+\strong{Maintainer}: Keven Bluteau \email{Keven.Bluteau@unine.ch}
+
+Authors:
+\itemize{
+  \item David Ardia \email{david.ardia.ch@gmail.com}
+  \item Denis-Alexandre Trottier \email{denis-alexandre.trottier.1@ulaval.ca}
+}
+
+Other contributors:
+\itemize{
+  \item Kris Boudt \email{kris.boudt@vub.ac.be} [contributor]
+  \item Brian Peterson \email{brian@braverock.com} [contributor]
+}
+
+}

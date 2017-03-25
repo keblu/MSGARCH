@@ -43,4 +43,3 @@ ht = MSGARCH::ht(object = fit)
 
 plot(ht)
 }
-

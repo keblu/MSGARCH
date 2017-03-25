@@ -44,4 +44,3 @@ Pstate  = MSGARCH::Pstate(object = fit)
 
 plot(Pstate)
 }
-

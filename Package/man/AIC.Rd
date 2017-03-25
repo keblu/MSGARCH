@@ -37,4 +37,3 @@ AIC = MSGARCH::AIC(fit)
 \references{
 Akaike, H. (1974). A New Look at the Statistical Model Identification. \emph{IEEE Transactions on Automatic Control}, 19, pp. 716-723.
 }
-
