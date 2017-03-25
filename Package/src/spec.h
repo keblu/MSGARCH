@@ -296,6 +296,10 @@ public:
     return out;
   }
   
+  double calc_invsample(const double& x) {
+    return(f1.invsample(x));
+  }
+  
   // returns the ratio involved in the GAS(1,1) model
   double calc_S(const double& x) {return 1 + x * f1.Sratio(x);}
   
@@ -466,6 +470,11 @@ public:
       out[i] = ((u[i] < pcut)? (f1.invsample(0.5 * u[i] * (xi2 + 1)) / xi - mu_xi) / sig_xi
                   : (f1.invsample(0.5 * u[i] * (1 + 1/xi2) - 0.5/xi2 + 0.5) * xi - mu_xi  ) / sig_xi);
     return out;
+  }
+    double calc_invsample(const double& x) {
+		double out = ((x < pcut)? (f1.invsample(0.5 * x * (xi2 + 1)) / xi - mu_xi) / sig_xi
+                  : (f1.invsample(0.5 * x * (1 + 1/xi2) - 0.5/xi2 + 0.5) * xi - mu_xi  ) / sig_xi);
+    return(out);
   }
 };
 
@@ -885,5 +894,11 @@ public:
   }
 };
 
+typedef Symmetric <Normal>    norm_sym;
+typedef Skewed <Normal>     norm_skew;
+typedef Symmetric <Student>      std_sym;
+typedef Skewed <Student>      std_skew;
+typedef Symmetric <Ged>     ged_sym;
+typedef Skewed <Ged>     ged_skew;
 
 #endif // spec.h
