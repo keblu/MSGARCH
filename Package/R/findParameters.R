@@ -4,7 +4,16 @@ f.find.theta0 <- function(f.kernel, theta0, lower = NULL, upper = NULL, f.ineq =
   
   ctr.deoptim <- DEoptim::DEoptim.control(NP = 50 * length(theta0), itermax = 500, trace = FALSE)
   
-  tmp = suppressWarnings(dfoptim::nmkb(par = theta0, fn = f.nll, lower = lower, upper = upper,control = list(maxfeval = 100*length(theta0)^2)))
+  tmp = try(dfoptim::nmkb(par = theta0, fn = f.nll, lower = lower,
+                          upper = upper,
+                          control = list(maxfeval = 100*length(theta0)^2)),
+            silent = TRUE)
+  
+  if (is(tmp, "try-error")){
+    tmp = NULL
+    tmp$convergence = 100
+  }
+  
   if (tmp$convergence > 0){
     str <- "f.find.theta0 -> failed optimization, trying with neldermead"
     f.error(str)

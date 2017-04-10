@@ -36,7 +36,7 @@
 #' \item \code{\link{Pstate}} : State probabilities filtering method.
 #' \item \code{summary} : Summary of the fit.
 #' }
-#' 
+#'
 #' @details The Maximum likelihood estimation uses the \R package \code{dfoptim} (Varadhan and Borchers, 2016) for main optimizer and \code{nloptr} (Johnson, 2014) in case of non-convergence
 #' while it uses the \R package \code{DEoptim} when \code{do.init = TRUE} as an initialization for \code{dfoptim} and \code{nloptr}.
 #'  The starting parameters are the specification default parameters.
@@ -48,31 +48,46 @@
 #' @references Mullen, K. M. Ardia, D. Gil, D. L. Windover, D. Cline, J.(2011) \code{DEoptim}: An \R Package for Global Optimization by Differential Evolution. \emph{Journal of Statistical Software}, 40, pp. 1-26, DOI:	\url{http://dx.doi.org/10.18637/jss.v040.i06}
 #' @references Johnson, S. G. (2014). The NLopt Nonlinear-Optimization. \url{https://cran.r-project.org/package=nloptr}.
 #' @references Varadhan, R., Borchers H. W. (2016. dfoptim: Derivative-Free Optimization. \url{https://cran.r-project.org/package=dfoptim}.
-#' @examples 
+#' @examples
 #' require("MSGARCH")
 #' # load data
 #' data("sp500")
 #' sp500 = sp500[1:1000]
-#' 
+#'
 #' # create model specification
-#' spec = MSGARCH::create.spec() 
-#' 
+#' spec = MSGARCH::create.spec()
+#'
 #' # fit the model on the data with ML estimation using DEoptim intialization
 #' set.seed(123)
 #' fit = MSGARCH::fit.mle(spec = spec, y = sp500)
 #' summary(fit)
-#' @importFrom stats runif           
+#' @importFrom stats runif
 #' @import DEoptim nloptr dfoptim
 #' @export
-fit.mle <- function(spec, y, ctr = list()) {
+fit.mle <- function(spec, y, ctr = list(), adjStartingValues = TRUE) {
   UseMethod("fit.mle", spec)
 }
 
 #' @export
-fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
+fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list(), adjStartingValues = TRUE) {
+
+  start = Sys.time()
+
   y <- f.check.y(y)
   ctr <- f.process.ctr(ctr)
-  
+
+  if ((adjStartingValues) & (spec$K > 1)) {
+
+    new.theta0 <- try(StartingValueMSGARCH(y, spec), silent = TRUE)
+
+    if (!is(new.theta0, "try-error")) {
+      old.theta0  <- spec$theta0
+      spec$theta0 <- new.theta0
+    } else {
+      old.theta0 <- NULL
+    }
+  }
+
   if (is.null(ctr$theta0)) {
     ctr$theta0 <- spec$theta0
   }
@@ -116,6 +131,7 @@ fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
   log_kernel <- f.kernel(theta)
   if (log_kernel == -1e+10) {
     str = "f.find.theta0 -> DEoptim initialization"
+    f.error(str)
     ctr.deoptim <- DEoptim::DEoptim.control(NP = ctr$NP, itermax = ctr$itermax, trace = FALSE)
     tmp         <- DEoptim::DEoptim(fn = f.nll, lower = lower, upper = upper, control = ctr.deoptim)
     theta       <- tmp$optim$bestmem
@@ -125,7 +141,10 @@ fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
   theta0.init <- f.sort.theta(spec = spec, theta0.init)
   theta       <- matrix(theta, ncol = length(theta))
   colnames(theta) <- colnames(spec$theta0)
-  out <- list( theta = theta, log_kernel = log_kernel, spec = spec,
+
+  elapsed.time = Sys.time() - start
+
+  out <- list( theta = theta, log_kernel = log_kernel, spec = spec, elapsed.time = elapsed.time,
               is.init = any(ctr$do.init || spec$do.init), y = y,theta0.init = theta0.init)
   class(out) <- "MSGARCH_MLE_FIT"
   return(out)

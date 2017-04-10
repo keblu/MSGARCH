@@ -5,7 +5,7 @@
 using namespace Rcpp;
 
 typedef std::pair<double, double> pair;
-
+const double LND_MIN = log(DBL_MIN) + 1;
 struct volatility 
 {
   double h;        // variance
@@ -66,7 +66,7 @@ public:
   // here, the argument "name" is passed by reference and modified
   void constructor(std::string& name, int&, NumericVector&, NumericVector&, NumericVector&,
                    CharacterVector&, NumericVector&, NumericVector&) {
-    name.append("normal_");
+    name.append("norm_");
   }
   
   // empty
@@ -86,7 +86,15 @@ public:
   }
   
   // returns PDF evaluated at "x"
-  double pdf(const double& x) {return R::dnorm(x, 0, 1, 0);}    
+  double pdf(const double& x) {
+	 prep_kernel();
+	 volatility unit;
+	 unit.h = 1;
+	 unit.lnh = 0;
+	 double LLd =  kernel(unit, x);
+	 LLd = ((LLd < LND_MIN)? LND_MIN : LLd);
+	 return(exp(LLd));
+  }
   
   // returns CDF evaluated at "x"
   double cdf(const double& x) {return R::pnorm(x, 0, 1, 1, 0);}     
@@ -119,7 +127,7 @@ public:
   // arguments are passed by reference and are modified to include "nu" 
   void constructor(std::string& name, int& nb_coeffs, NumericVector& coeffs_mean, NumericVector& coeffs_sd,
                    NumericVector& Sigma0, CharacterVector& label, NumericVector& lower, NumericVector& upper) {
-    name.append("student_");
+    name.append("std_");
     nb_coeffs++;
     label.push_back("nu");                              // nu   
     coeffs_mean.push_back(10), coeffs_sd.push_back(10); // mean and standard deviation of prior distribution 
@@ -131,7 +139,7 @@ public:
   void loadparam(const NumericVector& theta, int& Ind) { 
     nu  = theta[Ind];
     P   = sqrt(nu / (nu-2));
-    cst = P * exp(lgamma(0.5*(nu+1)) - lgamma(0.5*nu)) / sqrt(nu * M_PI);
+    cst = P * exp(lgammal(0.5*(nu+1)) - lgammal(0.5*nu)) / sqrt(nu * M_PI);
     Ind++;
   }
   
@@ -140,12 +148,12 @@ public:
   
   // set M1 := E[|z|]
   void set_M1() {                     
-    M1 = sqrt((nu - 2) / M_PI) * exp(lgamma(0.5 * (nu - 1)) - lgamma(0.5 * nu));
+    M1 = sqrt((nu - 2) / M_PI) * exp(lgammal(0.5 * (nu - 1)) - lgammal(0.5 * nu));
   } 
   
   // set constant term of "kernel" 
   void prep_kernel() {
-    lncst = lgamma(0.5 * (nu + 1)) - lgamma(0.5 * nu) - 0.5 * log(M_PI) + 0.5 * nu * log(nu - 2);
+    lncst = lgammal(0.5 * (nu + 1)) - lgammal(0.5 * nu) - 0.5 * log(M_PI) + 0.5 * nu * log(nu - 2);
   }
   
   // returns loglikelihood of a single observation (must call "prep_kernel" first)
@@ -153,8 +161,15 @@ public:
     return lncst + 0.5*nu*vol.lnh - 0.5*(nu+1)*log(vol.h*(nu-2) + pow(yi, 2));
   }
   
-  // returns PDF evaluated at "x"
-  double pdf(const double& x) {return cst * pow(1 + pow(P*x, 2)/nu, -0.5*(nu+1));} 
+  double pdf(const double& x) {
+	 prep_kernel();
+	 volatility unit;
+	 unit.h = 1;
+	 unit.lnh = 0;
+	 double LLd =  kernel(unit, x);
+	 LLd = ((LLd < LND_MIN)? LND_MIN : LLd);
+	 return(exp(LLd));
+  }
   
   // returns CDF evaluated at "x"
   double cdf(const double& x) {return R::pt(x * P, nu, 1, 0);} 
@@ -199,8 +214,8 @@ public:
   // set "nu" (this function should always be called first)     
   void loadparam(const NumericVector& theta, int& Ind) {
     nu     = theta[Ind];
-    lambda = sqrt(pow(2, -2/nu) * exp(lgamma(1/nu)-lgamma(3/nu)));
-    cst    = nu / (lambda * pow(2, 1 + 1/nu) *exp(lgamma(1/nu)));
+    lambda = sqrt(pow(2, -2/nu) * exp(lgammal(1/nu)-lgammal(3/nu)));
+    cst    = nu / (lambda * pow(2, 1 + 1/nu) *exp(lgammal(1/nu)));
     Ind++;
   }
   
@@ -208,7 +223,7 @@ public:
   bool calc_r1() {return nu > nu_lb;}
   
   // set M1 := E[|z|]
-  void set_M1() {M1 = 0.5 * lambda * pow(8, 1/nu) * exp(lgamma(1/nu + 0.5)) / sqrt(M_PI);} 
+  void set_M1() {M1 = 0.5 * lambda * pow(8, 1/nu) * exp(lgammal(1/nu + 0.5)) / sqrt(M_PI);} 
   
   // set constant term of "kernel" 
   void prep_kernel() {lncst = log(cst);}
@@ -219,7 +234,15 @@ public:
   }
   
   // returns PDF evaluated at "x"
-  double pdf(const double& x) {return cst * exp(-0.5 * pow(fabs(x / lambda), nu));} 
+  double pdf(const double& x) {
+	 prep_kernel();
+	 volatility unit;
+	 unit.h = 1;
+	 unit.lnh = 0;
+	 double LLd =  kernel(unit, x);
+	 LLd = ((LLd < LND_MIN)? LND_MIN : LLd);
+	 return(exp(LLd));
+  }
   
   // returns CDF evaluated at "x"
   double cdf(const double& x) {
@@ -269,15 +292,22 @@ public:
   // setup for "calc_kernel" (nested call)
   void prep_kernel() {f1.prep_kernel();}
   
-  // returns PDF evaluated at "x" (nested call)
-  double calc_pdf(const double& x) {return f1.pdf(x);}
-  
-  // returns CDF evaluated at "x" (nested call)
   double calc_cdf(const double& x) {return f1.cdf(x);}
-  
+
+	
   // returns kernel of a single observation (must call "prep_kernel" first)
   double calc_kernel(const volatility& vol, const double& yi) {
     return f1.kernel(vol, yi);                     // if in A (log density);  // if not  
+  }
+  
+  double calc_pdf(const double& x) {
+	 prep_kernel();
+	 volatility unit;
+	 unit.h = 1;
+	 unit.lnh = 0;
+	 double LLd =  calc_kernel(unit, x);
+	 LLd = ((LLd < LND_MIN)? LND_MIN : LLd);
+	 return(exp(LLd));
   }
   
   void prep_moments1() {f1.set_M1();}         // prep-function for moments of order 1
@@ -384,11 +414,6 @@ public:
     lncst = log(2 * sig_xi * num);
   }
   
-  // returns PDF evaluated at "x"
-  double calc_pdf(const double& x) {
-    return 2*sig_xi*num * f1.pdf((sig_xi * x + mu_xi) * ((x < cutoff)? xi : 1/xi));
-  }
-  
   // returns CDF evaluated at "x"
   double calc_cdf(const double& x) {
     double tmp = sig_xi * x + mu_xi;
@@ -401,6 +426,16 @@ public:
     double sig = sqrt(vol.h);        
     double yi_xi = ((yi >= sig*cutoff) ? 1/xi : xi) * (sig_xi * yi + sig * mu_xi);
     return lncst + f1.kernel(vol, yi_xi);           
+  }
+  
+    double calc_pdf(const double& x) {
+	 prep_kernel();
+	 volatility unit;
+	 unit.h = 1;
+	 unit.lnh = 0;
+	 double LLd =  calc_kernel(unit, x);
+	 LLd = ((LLd < LND_MIN)? LND_MIN : LLd);
+	 return(exp(LLd));
   }
   
   // returns the S variable involved in the GAS(1,1) model 
@@ -497,13 +532,13 @@ public:
   
   // constructor
   sGARCH() {
-    ineq_lb     = 1e-4;
-    ineq_ub     = 0.9999;
+    ineq_lb     = 1e-6;
+    ineq_ub     = 0.99999999;
     label       = CharacterVector::create("alpha0", "alpha1", "beta" );
     coeffs_mean = NumericVector::create(   0.1,      0.1,      0.8   );
     coeffs_sd   = NumericVector::create(   2,        2,        2     );
     Sigma0      = NumericVector::create(   1,        1,        1     );
-    lower       = NumericVector::create(   1e-4,     1e-4,     1e-4  );
+    lower       = NumericVector::create(   1e-6,     1e-6,     1e-6  );
     upper       = NumericVector::create(   100,      0.9999,   0.9999);
     nb_coeffs   = label.size();
     nb_coeffs_model = 3;
@@ -573,8 +608,8 @@ public:
   
   // constructor
   gjrGARCH() {
-    ineq_lb     = 1e-4;
-    ineq_ub     = 0.9999;
+    ineq_lb     = 1e-6;
+    ineq_ub     = 0.99999999;
     label       = CharacterVector::create("alpha0", "alpha1", "alpha2", "beta" );
     coeffs_mean = NumericVector::create(   0.1,      0.05,     0.1,      0.8   );
     coeffs_sd   = NumericVector::create(   2,        2,        2,        2     );
@@ -650,8 +685,8 @@ public:
   
   // constructor
   eGARCH() {
-    ineq_lb     = -0.9999; 
-    ineq_ub     = 0.9999; 
+    ineq_lb     = -0.99999999; 
+    ineq_ub     = 0.99999999; 
     label       = CharacterVector::create("alpha0", "alpha1", "alpha2", "beta" );
     coeffs_mean = NumericVector::create(   0.01,     0.2,     -0.1,      0.8   ); 
     coeffs_sd   = NumericVector::create(   2,        2,        2,        2     );
@@ -728,8 +763,8 @@ public:
   
   // constructor
   tGARCH() {
-    ineq_lb     = 1e-4;
-    ineq_ub     = 0.9999;
+    ineq_lb     = 1e-6;
+    ineq_ub     = 0.99999999;
     label       = CharacterVector::create("alpha0", "alpha1", "alpha2", "beta" );
     coeffs_mean = NumericVector::create(   0.125,     0.05,     0.1,     0.8   );
     coeffs_sd   = NumericVector::create(   2,        2,        2,        2     );
@@ -815,8 +850,8 @@ public:
   
   // constructor
   GAS() {
-    ineq_lb     = 1e-4; 
-    ineq_ub     = 0.9999; 
+    ineq_lb     = 1e-6; 
+    ineq_ub     = 0.99999999; 
     label       = CharacterVector::create("alpha0", "alpha1", "beta");
     coeffs_mean = NumericVector::create(   0.1,      0.1,      0.9  );
     coeffs_sd   = NumericVector::create(   2,        2,        2    );

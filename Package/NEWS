@@ -1,3 +1,7 @@
+Changes in Version 0.18.3
+  o unconditional probabilities 
+Changes in Version 0.18.2
+  o fix EM starting value
 Changes in Version 0.18.1
   o added wrapper arround standardize distribution
 Changes in Version 0.18

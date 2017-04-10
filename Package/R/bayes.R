@@ -67,14 +67,30 @@
 #' @references Vihola, M. (2012). Robust Adaptive Metropolis Algorithm with Coerced Acceptance Rate. \emph{Statistics and Computing}, 22, pp. 997-1008.
 #' @import adaptMCMC
 #' @export
-fit.bayes <- function(spec, y, ctr = list()) {
+fit.bayes <- function(spec, y, ctr = list(), adjStartingValues = TRUE) {
   UseMethod("fit.bayes", spec)
 }
 
 #' @method fit.bayes MSGARCH_SPEC
 #' @export
-fit.bayes.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
+fit.bayes.MSGARCH_SPEC <- function(spec, y, ctr = list(), adjStartingValues = TRUE) {
+  
+  start = Sys.time()
+  
   y <- f.check.y(y)
+  
+  if ((adjStartingValues) && (spec$K > 1)) {
+    
+    new.theta0 <- try(StartingValueMSGARCH(y, spec), silent = TRUE)
+    
+    if (!is(new.theta0, "try-error")) {
+      old.theta0  <- spec$theta0 
+      spec$theta0 <- new.theta0
+    } else {
+      old.theta0 <- NULL
+    }
+  }
+  
   l.ctr <- f.process.ctr(ctr)
   if (is.null(l.ctr$theta0)) {
     l.ctr$theta0 <- spec$theta0
@@ -115,7 +131,10 @@ fit.bayes.MSGARCH_SPEC <- function(spec, y, ctr = list()) {
   accept <- 1 - mean(duplicated(outmh$samples))
   theta <- adaptMCMC::convert.to.coda(outmh)
   colnames(theta) <- spec$label
-  l.out <- list(theta = theta, accept = accept, y = y, spec = spec)
+  
+  elapsed.time = Sys.time() - start 
+  
+  l.out <- list(theta = theta, accept = accept, y = y, elapsed.time = elapsed.time, spec = spec)
   class(l.out) <- "MSGARCH_BAY_FIT"
   return(l.out)
 }

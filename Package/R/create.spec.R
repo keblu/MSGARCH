@@ -100,9 +100,9 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
   }
   skew_tag <- do.skew
   for (i in 1:length(do.skew)) {
-    if (is.null(do.skew[i]) || !isTRUE(do.skew[i])) {
+    if (is.null(do.skew[i]) || do.skew[i]==FALSE) {
       skew_tag[i] <- "sym"
-    } else if (isTRUE(do.skew[i])) {
+    } else if (do.skew[i]==TRUE) {
       skew_tag[i] <- "skew"
     } else {
       stop(paste0("\ncreate.spec-->error: do.skew #", i, "
@@ -129,7 +129,7 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
   if (is.null(do.mix)) {
     do.mix <- FALSE
   }
-  if (isTRUE(do.mix) || !isTRUE(do.mix)) {
+  if (do.mix == TRUE || do.mix == FALSE) {
   } else {
     stop("\ncreate.spec-->error: do.mix must be a TRUE or FALSE\n",
          call. = FALSE)
@@ -137,7 +137,7 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
   if (is.null(do.shape.ind)) {
     do.shape.ind <- FALSE
   }
-  if (isTRUE(do.shape.ind) || !isTRUE(do.shape.ind)) {
+  if (do.shape.ind == TRUE || do.shape.ind == FALSE) {
   } else {
     stop("\ncreate.spec-->error: do.shape.ind must be a TRUE or FALSE\n",
          call. = FALSE)
@@ -149,36 +149,38 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
   }
   # KB: use loop to ensure that spec is correctly created
   uncvol = NA
-  while (any(is.na(uncvol))){
+  boolean_unc_vol = TRUE
+  while (boolean_unc_vol){
     out <- suppressWarnings(expr = f.spec(models = models.list,
                                           do.mix = do.mix,
                                           do.shape.ind = do.shape.ind))
     
     class(out) <- "MSGARCH_SPEC"
     uncvol = MSGARCH::unc.vol(out, out$theta0)
+    boolean_unc_vol = !isTRUE(all.equal(current = rep(1,length(model)),target = as.vector(uncvol),check.attributes = FALSE))
   }
   
-  test.pred = NA
-  test.pit  = NA
-  test.uc   = NA
-  test.all  = is.na(c(test.pred, test.pit, test.uc))
-  test.k    = 1
-  max.k     = 10
-  y0 = c(-0.46, 0.42, 0.85, 0.83, 2.10, -0.47, 0.26, 0.52, -0.76, -1.51)
-  while (any(test.all)) {
-    out <- suppressWarnings(expr = f.spec(models = models.list,
-                                          do.mix = do.mix,
-                                          do.shape.ind = do.shape.ind))
-    class(out) <- "MSGARCH_SPEC"
-    test.pred = MSGARCH::pred(object = out, x = 0, theta = out$theta0, y = y0, log = FALSE, do.its = FALSE)
-    test.pit  = MSGARCH::pit(object = out, x = 0, theta = out$theta0, y = y0, do.norm = FALSE, do.its = FALSE)
-    test.uc   = MSGARCH::unc.vol(object = out, theta = out$theta0)
-    test.all  = is.na(c(test.pred, test.pit, test.uc))
-    test.k    = test.k + 1 
-    if (test.k > max.k) {
-      break
-    }
-  }
+  # test.pred = NA
+  # test.pit  = NA
+  # test.uc   = NA
+  # test.all  = is.na(c(test.pred, test.pit, test.uc))
+  # test.k    = 1
+  # max.k     = 50
+  # y0 = c(-0.46, 0.42, 0.85, 0.83, 2.10, -0.47, 0.26, 0.52, -0.76, -1.51)
+  # while (any(test.all)) {
+  #   out <- suppressWarnings(expr = f.spec(models = models.list,
+  #                                         do.mix = do.mix,
+  #                                         do.shape.ind = do.shape.ind))
+  #   class(out) <- "MSGARCH_SPEC"
+  #   test.pred = MSGARCH::pred(object = out, x = 0, theta = out$theta0, y = y0, log = FALSE, do.its = FALSE)
+  #   test.pit  = MSGARCH::pit(object = out, x = 0, theta = out$theta0, y = y0, do.norm = FALSE, do.its = FALSE)
+  #   test.uc   = MSGARCH::unc.vol(object = out, theta = out$theta0)
+  #   test.all  = is.na(c(test.pred, test.pit, test.uc))
+  #   test.k    = test.k + 1 
+  #   if (test.k > max.k) {
+  #     break
+  #   }
+  # }
   
   return(out)
 }

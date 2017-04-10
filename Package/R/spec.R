@@ -29,7 +29,7 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
     dist[i] <- stringr::str_sub(name[i], start = stringr::str_locate(name, "_")[i, 1] + 1, nchar(name[i]))
   }
   uniqueDist <- unique(dist)
-  if (isTRUE(do.shape.ind) && length(uniqueDist) > 1) {
+  if (do.shape.ind == TRUE && length(uniqueDist) > 1) {
     stop("The distribution of each regime must be the same if the distribution are not regime dependent")
   }
   n.params     <- mod$NbParams
@@ -51,7 +51,7 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
     rcpp.func$get_Pstate_Rcpp <- mod$f_get_Pstate
   } else {
     rcpp.func$get_Pstate_Rcpp <- function(theta, y, PLast) {
-      if (!isTRUE(PLast)) {
+      if (PLast == FALSE) {
         out <- matrix(1, nrow = length(y) + 1, ncol = 1)
       } else {
         out <- matrix(1, nrow = 1, ncol = 1)
@@ -77,7 +77,7 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
   for (i in 1:K) {
     mod$label[(loc[i] + 1):loc[i + 1]] <- paste0(mod$label[(loc[i] + 1):loc[i + 1]], "_", i)
   }
-  if (isTRUE(do.mix) && !isTRUE(do.shape.ind)) {
+  if (do.mix == TRUE && do.shape.ind == FALSE) {
     mod$lower <- as.vector(func$f.do.mix.reverse(mod$lower))
     newParamsLength <- length(mod$lower)
     mod$upper  <- as.vector(func$f.do.mix.reverse(mod$upper))
@@ -88,7 +88,7 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
       theta <- as.vector(f.theta.mixture(K, nb_total_params, theta))
       return(ineq_func.base(theta))
     }
-  } else if (isTRUE(do.mix) && isTRUE(do.shape.ind)) {
+  } else if (do.mix == TRUE && do.shape.ind == FALSE) {
     mod$lower <- as.vector(func$f.do.mix.reverse(mod$lower))
     mod$lower <- as.vector(func$f.do.shape.ind.reverse(mod$lower))
     newParamsLength <- length(mod$lower)
@@ -104,7 +104,7 @@ f.spec <- function(models, do.mix = FALSE, do.shape.ind = FALSE) {
       theta <- as.vector(f.theta.RegIndDist(K, n.params, n.params.vol, theta))
       return(ineq_func.base(theta))
     }
-  } else if (!isTRUE(do.mix) && isTRUE(do.shape.ind)) {
+  } else if (do.mix == FALSE && do.shape.ind == TRUE) {
     mod$lower <- as.vector(func$f.do.shape.ind.reverse(mod$lower))
     newParamsLength <- length(mod$lower)
     mod$upper  <- as.vector(func$f.do.shape.ind.reverse(mod$upper))

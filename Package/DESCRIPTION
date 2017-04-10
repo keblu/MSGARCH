@@ -1,14 +1,16 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 0.18.1
-Date: 2017-03-01
+Version: 0.18.4
+Date: 2017-04-10
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com"),
              person("Keven", "Bluteau", role = c("aut", "cre"),
              email = "Keven.Bluteau@unine.ch"),
              person("Kris", "Boudt", role = c("ctb"),
              email = "kris.boudt@vub.ac.be"),
+             person("Leopoldo", "Catania", role = c("aut"),
+             email = "Leopoldo.Catania@uniroma2.it"),
              person("Brian", "Peterson", role = c("ctb"),
              email = "brian@braverock.com"),
              person("Denis-Alexandre", "Trottier", role = c("aut"),
@@ -16,6 +18,7 @@ Authors@R: c(person("David", "Ardia", role = c("aut"),
 Author: David Ardia [aut],
     Keven Bluteau [aut, cre],
     Kris Boudt [ctb],
+    Leopoldo Catania [aut],
     Brian Peterson [ctb],
     Denis-Alexandre Trottier [aut]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>

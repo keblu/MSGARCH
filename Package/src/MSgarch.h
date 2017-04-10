@@ -270,6 +270,14 @@ inline void MSgarch::loadparam(const NumericVector& theta) {
     k++;
   }
   P = P_mat;
+  arma::mat Psolve = as<arma::mat>(P_mat) - arma::eye<arma::mat>(K,K);
+  for (int i = 0; i < K; i++){
+      Psolve(i,K-1) = 1;
+  }
+  arma::colvec y;
+  y.zeros(K);
+  y(K-1) = 1;
+  P0 = arma::solve(Psolve.t(),y);
 }
 
 //------------------------------ Prior calculation  ------------------------------//
