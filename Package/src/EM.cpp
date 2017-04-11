@@ -55,8 +55,6 @@ arma::cube array2cube_2( SEXP myArray ) {
 
 }
 
-const double log2pi = std::log(2.0 * M_PI);
-
 //[[Rcpp::export]]
 arma::vec getDelta(arma::mat gamma,int m){
   arma::mat I = eye(m,m);

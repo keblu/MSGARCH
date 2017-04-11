@@ -163,7 +163,7 @@ VarianceTargeting <- function(dSigma2, sModel, vTheta) {
 
 }
 
-StartingValueMSGARCH <- function(y, spec) {
+StartingValueMSGARCH <- function(y, spec, optim.fun = NULL) {
 
   K      = spec$K
   vSpec  = spec$name
@@ -264,7 +264,7 @@ StartingValueMSGARCH <- function(y, spec) {
 
     lSingleRegimeSpec[[k]]$theta0[1, "alpha0_1"] = dAlpha0
 
-    Fit = MSGARCH::fit.mle(spec = lSingleRegimeSpec[[k]], y = lY[[k]])
+    Fit = MSGARCH::fit.mle(optim.fun = optim.fun, spec = lSingleRegimeSpec[[k]], y = lY[[k]])
     lSingleRegimeCoef[[k]] = Fit$theta
 
     colnames(lSingleRegimeCoef[[k]]) = sapply(colnames(lSingleRegimeCoef[[k]]), function(x) {

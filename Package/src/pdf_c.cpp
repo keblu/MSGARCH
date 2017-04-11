@@ -2,12 +2,12 @@
 ## This code is part of the rugarch package of Ghalanos (2016)
 ## see https://cran.r-project.org/web/packages/rugarch/index.html
 #################################################################################*/
-#include <R.h>
+// #include <R.h>
 #include <RcppArmadillo.h>
- 
+
  using namespace Rcpp;
  using namespace arma;
- 
+
 /*
 * -----------------------------------------
 * Key Functions
@@ -97,13 +97,13 @@ double dstdstd(const double x, const double nu)
    pdf = g*dstdstd(z/xxi,nu)*sigma;
    return pdf;
  }
- 
+
  /*
  * -----------------------------------------
  * Skew Normal Distribution
  * -----------------------------------------
  */
- 
+
  double dsnormstd(const double x, const double xi)
  {
    double pdf;
@@ -119,14 +119,14 @@ double dstdstd(const double x, const double nu)
    pdf = g * dnormstd(z/xxi)*sigma;
    return pdf;
  }
- 
- 
+
+
  /*
  * -----------------------------------------
  * Generalized Error Distribution
  * -----------------------------------------
  */
- 
+
  double dgedstd(const double x, const double nu)
  {
    double lambda, g, pdf;
@@ -135,13 +135,13 @@ double dstdstd(const double x, const double nu)
    pdf = g*exp(-0.5*pow(fabs(x/lambda),nu));
    return pdf;
  }
- 
+
  /*
  * -----------------------------------------
  * Skew Generalized Error Distribution (Fernandez & Steel)
  * -----------------------------------------
  */
- 
+
  double dsgedstd(const double x, const double xi, const double nu)
  {
    double lambda, m1, mu, sigma, z, g, pdf, xxi;
@@ -163,19 +163,19 @@ double dstdstd(const double x, const double nu)
    pdf = g*dgedstd(z/xxi, nu)*sigma;
    return pdf;
  }
- 
- 
- /* 
+
+
+ /*
  * dZ is a standardized variable
  * xi, nu
  * skewness, shape
  */
- 
+
  double ddist_theta_param(double dZ, std::string sDist, bool bSkew, bool bLog,
                           double dXi = 1.0, double dNu = 7.0) {
-   
+
    double dPdf = 0.0;
-   
+
    if (bSkew) {
      if (sDist == "norm") {
        dPdf = dsnormstd(dZ, dXi);
@@ -197,33 +197,32 @@ double dstdstd(const double x, const double nu)
        dPdf = dgedstd(dZ, dNu);
      }
    }
-   
+
    if (dPdf < 1e-50) {
      dPdf = 1e-50;
    }
-   
+
    if (bLog) {
      dPdf = log(dPdf);
    }
-   
+
    return dPdf;
  }
- 
+
 //[[Rcpp::export]]
-double dUnivLike(arma::vec vZ, std::string sDist, bool bSkew, 
+double dUnivLike(arma::vec vZ, std::string sDist, bool bSkew,
                  double dXi = 1.0, double dNu = 7.0){
-  
+
   double dLLK = 0.0;
-  
+
   int iT = vZ.size();
   int i;
-  
+
   for (i = 0; i < iT; i++) {
     dLLK += ddist_theta_param(vZ(i), sDist, bSkew, true, dXi, dNu);
   }
-  
+
   return dLLK;
-  
+
 }
- 
- 
+

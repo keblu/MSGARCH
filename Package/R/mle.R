@@ -64,88 +64,62 @@
 #' @importFrom stats runif
 #' @import DEoptim nloptr dfoptim
 #' @export
-fit.mle <- function(spec, y, ctr = list(), adjStartingValues = TRUE) {
+fit.mle = function(optim.fun = optim.default, spec, y, ctr = list(), adjStartingValues = TRUE, ...) {
   UseMethod("fit.mle", spec)
 }
 
 #' @export
-fit.mle.MSGARCH_SPEC <- function(spec, y, ctr = list(), adjStartingValues = TRUE) {
-
+fit.mle.MSGARCH_SPEC = function(optim.fun = optim.default, spec, y, ctr = list(), adjStartingValues = TRUE, ...) {
+  
   start = Sys.time()
-
-  y <- f.check.y(y)
-  ctr <- f.process.ctr(ctr)
-
+  
+  y   = MSGARCH:::f.check.y(y)
+  ctr = MSGARCH:::f.process.ctr(ctr)
+  
   if ((adjStartingValues) & (spec$K > 1)) {
-
-    new.theta0 <- try(StartingValueMSGARCH(y, spec), silent = TRUE)
-
+    new.theta0 = try(MSGARCH:::StartingValueMSGARCH(y, spec, optim.fun), silent = TRUE)
     if (!is(new.theta0, "try-error")) {
-      old.theta0  <- spec$theta0
-      spec$theta0 <- new.theta0
+      old.theta0  = spec$theta0
+      spec$theta0 = new.theta0
     } else {
-      old.theta0 <- NULL
+      old.theta0 = NULL
     }
   }
-
   if (is.null(ctr$theta0)) {
-    ctr$theta0 <- spec$theta0
+    ctr$theta0 = spec$theta0
   }
-  if (isTRUE(ctr$do.enhance.theta0)) {
-    ctr$theta0 <- f.enhance.theta(spec = spec, theta = ctr$theta0, y = y)
-  }
-  theta0.init <- ctr$theta0
-  lower <- spec$lower
-  upper <- spec$upper
-  if (any(ctr$do.init || spec$do.init)) {
-    pop        = matrix(runif(length(lower)*10000, min = lower, max = upper), ncol = length(spec$theta0), byrow = TRUE)
-    pop_inv    = t(replicate(n = 10000, upper)) +  t(replicate(n = 10000, lower)) - pop
-    total_pop  = rbind(pop,pop_inv)
-    # DA fix naming to loglik
-    likelihood = MSGARCH::kernel(object = spec,theta = total_pop, y = y, log = TRUE)
-    ind        = sort(likelihood, decreasing = TRUE, index.return = TRUE)
-    initialpop = total_pop[ind$ix[1:ctr$NP], ]
-  }
-  f.kernel <- function(x, log = TRUE) {
+  
+  theta0 = ctr$theta0
+  lower  = spec$lower
+  upper  = spec$upper
+  
+  f.kernel = function(x, log = TRUE) {
     out = MSGARCH::kernel(spec, x, y = y, log = log)
     return(out)
   }
-  f.nll <- function(x) -f.kernel(x, log = TRUE)
-  if (any(ctr$do.init || spec$do.init)) {
-    ctr.deoptim <- DEoptim::DEoptim.control(NP = ctr$NP, itermax = ctr$itermax, trace = FALSE,
-                                            initialpop = initialpop)
-    str = "f.find.theta0 -> DEoptim initialization"
-    is.ok = tryCatch({
-      tmp = DEoptim::DEoptim(fn = f.nll, lower = lower, upper = upper, control = ctr.deoptim)
-      theta0.init = tmp$optim$bestmem
-      TRUE
-    }, warning = function(warn) {
-      f.error(str)
-    }, error = function(err) {
-      f.error(str)
-    })
-  }
-  theta <- f.find.theta0(f.kernel, theta0 = theta0.init, lower = lower, upper = upper,
-                        f.ineq = spec$rcpp.func$ineq_func, ineqlb = spec$ineqlb,
-                        inequb = spec$inequb)
-  log_kernel <- f.kernel(theta)
+  
+  f.nll = function(x) -f.kernel(x, log = TRUE)
+  
+  theta = optim.fun(f.nll, spec = spec, theta0 = theta0, ...)
+
+  log_kernel = f.kernel(theta)
+  
   if (log_kernel == -1e+10) {
-    str = "f.find.theta0 -> DEoptim initialization"
-    f.error(str)
-    ctr.deoptim <- DEoptim::DEoptim.control(NP = ctr$NP, itermax = ctr$itermax, trace = FALSE)
-    tmp         <- DEoptim::DEoptim(fn = f.nll, lower = lower, upper = upper, control = ctr.deoptim)
-    theta       <- tmp$optim$bestmem
-    log_kernel  <- f.kernel(theta)
+    str = "fit.mle -> Error during optimization"
+    MSGARCH:::f.error(str)
+    stop()
   }
-  theta       <- f.sort.theta(spec = spec, theta)
-  theta0.init <- f.sort.theta(spec = spec, theta0.init)
-  theta       <- matrix(theta, ncol = length(theta))
-  colnames(theta) <- colnames(spec$theta0)
-
+  
+  theta  = MSGARCH:::f.sort.theta(spec = spec, theta)
+  theta0 = MSGARCH:::f.sort.theta(spec = spec, theta0)
+  theta  = matrix(theta, ncol = length(theta))
+  colnames(theta) = colnames(spec$theta0)
+  
   elapsed.time = Sys.time() - start
-
-  out <- list( theta = theta, log_kernel = log_kernel, spec = spec, elapsed.time = elapsed.time,
-              is.init = any(ctr$do.init || spec$do.init), y = y,theta0.init = theta0.init)
-  class(out) <- "MSGARCH_MLE_FIT"
+  
+  out = list(theta = theta, log_kernel = log_kernel,
+              spec = spec, elapsed.time = elapsed.time,
+              y = y, theta0.init = theta0)
+  class(out) = "MSGARCH_MLE_FIT"
   return(out)
 }

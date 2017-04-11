@@ -44,7 +44,6 @@ print.MSGARCH_SPEC <- function(x, ...) {
 #' @export
 summary.MSGARCH_MLE_FIT <- function(object, ...) {
   print(object$spec)
-  print(paste0("DEoptim initialization: ", object$is.init))
   print(paste0("Fitted Parameters:"))
   print(object$theta)
   if(object$spec$K > 1){
