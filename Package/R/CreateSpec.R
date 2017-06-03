@@ -157,7 +157,10 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
     
     class(out) <- "MSGARCH_SPEC"
     uncvol = MSGARCH::unc.vol(out, out$theta0)
-    boolean_unc_vol = !isTRUE(all.equal(current = rep(1,length(model)),target = as.vector(uncvol),check.attributes = FALSE))
+    boolean_unc_vol = !all(uncvol == uncvol[1])
+    if(is.na(boolean_unc_vol)){
+      boolean_unc_vol = TRUE
+    }
   }
   
   # test.pred = NA
