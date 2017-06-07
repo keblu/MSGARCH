@@ -226,12 +226,12 @@ public:
   NumericVector f_pdf(const NumericVector&, const NumericVector& ,
                       const NumericVector&, const bool& );
 					  
-	NumericMatrix f_pdf_its(const NumericVector&, const NumericVector&,  const bool& );
+  arma::cube f_pdf_its(const NumericVector&, const NumericVector&,const NumericMatrix&,  const bool& );
   
   NumericVector f_cdf(const NumericVector&, const NumericVector& ,
                       const NumericVector&, const bool&);
   
-  NumericMatrix f_cdf_its(const NumericVector&, const NumericVector&,  const bool& );
+  arma::cube f_cdf_its(const NumericVector&, const NumericVector&, const NumericMatrix&,  const bool& );
   
   // model simulation
   Rcpp::List f_sim(const int&, const NumericVector&, const int&);
@@ -418,23 +418,33 @@ inline NumericVector MSgarch::f_pdf(const NumericVector& x, const NumericVector&
   return out;
 }
 
-inline NumericMatrix MSgarch::f_pdf_its(const NumericVector& theta, const NumericVector& y, const bool& is_log) {
+inline arma::cube MSgarch::f_pdf_its(const NumericVector& theta, const NumericVector& y, const NumericMatrix& x, const bool& is_log) {
   // computes volatility
   int s = 0;
   int ny = y.size();
+  int nx = x.nrow();
   double sig;
-  NumericMatrix tmp(ny - 1,K);
+  arma::cube tmp(nx, ny, K);
   loadparam(theta);                  // load parameters  
   prep_ineq_vol();                   // prepare functions related to volatility
   volatilityVector vol  = set_vol(y[0]);   // initialize volatility
   
+    for(many::iterator it = specs.begin(); it != specs.end(); ++it) { 
+      sig = sqrt(vol[s].h);
+	  for(int ix = 1; ix < nx;ix++){
+		tmp(ix,0,s) = (*it)->spec_calc_pdf(x(ix,0)/sig) / sig; //
+	  }
+      s++;
+    }
 
   for (int i = 1; i < ny; i++) { 
     s = 0;
     increment_vol(vol, y[i-1]);
     for(many::iterator it = specs.begin(); it != specs.end(); ++it) { 
       sig = sqrt(vol[s].h);
-      tmp(i-1,s) = (*it)->spec_calc_pdf(y[i]/sig) / sig; //
+      for(int ix = 0; ix < nx; ix++){
+		tmp(ix,i,s) = (*it)->spec_calc_pdf(x(ix,i)/sig) / sig; //
+	  }
       s++;
     }
   }
@@ -479,22 +489,31 @@ inline NumericVector MSgarch::f_cdf(const NumericVector& x, const NumericVector&
   return out;
 }
 
-inline NumericMatrix MSgarch::f_cdf_its(const NumericVector& theta, const NumericVector& y,  const bool& is_log) {
+inline arma::cube MSgarch::f_cdf_its(const NumericVector& theta, const NumericVector& y, const NumericMatrix& x,  const bool& is_log) {
   // computes volatility
   int s = 0;
   int ny = y.size();
   double sig;
-  NumericMatrix tmp(ny-1,K);
+  int nx = x.nrow();
+  arma::cube tmp(nx, ny, K);
   loadparam(theta);                  // load parameters  
   prep_ineq_vol();                   // prepare functions related to volatility
   volatilityVector vol  = set_vol(y[0]);   // initialize volatility
-  
+    for(many::iterator it = specs.begin(); it != specs.end(); ++it) { 
+      sig = sqrt(vol[s].h);
+	  for(int ix = 1; ix < nx;ix++){
+		tmp(ix,0,s) = (*it)->spec_calc_cdf(x(ix,0)/sig); //
+	  }
+      s++;
+    }
   for (int i = 1; i < ny; i++) { 
     s = 0;
     increment_vol(vol, y[i-1]);
     for(many::iterator it = specs.begin(); it != specs.end(); ++it) { 
       sig = sqrt(vol[s].h);
-      tmp(i-1,s) = (*it)->spec_calc_cdf(y[i]/sig); //
+	  for(int ix = 0; ix < nx;ix++){
+		tmp(ix,i,s) = (*it)->spec_calc_cdf(x(ix,i)/sig); //
+	  }
       s++;
     }
   }

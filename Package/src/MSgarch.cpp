@@ -5,8 +5,7 @@
 //================================= MSgarch =================================//
 //===========================================================================//
 //===========================================================================//
-RCPP_MODULE(MSgarch){   
-  
+RCPP_MODULE(MSgarch){ 
   class_<MSgarch>("MSgarch")  
   .constructor<List>()
   .field( "name",        &MSgarch ::name )
@@ -31,6 +30,5 @@ RCPP_MODULE(MSgarch){
   .method( "f_cdf_its",  &MSgarch ::f_cdf_its)
   .method( "f_rnd",      &MSgarch ::f_rnd )
   .method( "f_unc_vol",  &MSgarch ::f_unc_vol)
-  
   ;
 }

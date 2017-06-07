@@ -79,9 +79,9 @@ public:
     prior calc_prior(const NumericVector&);
     NumericVector f_sim(const int&, const NumericVector&, const int&);
     NumericVector f_pdf(const NumericVector&, const NumericVector&, const NumericVector&, const bool&);
-    NumericVector f_pdf_its( const NumericVector&, const NumericVector&, const bool&);
+    arma::cube f_pdf_its( const NumericVector&, const NumericVector&,const NumericMatrix&, const bool&);
     NumericVector f_cdf(const NumericVector&, const NumericVector&, const NumericVector&, const bool&);
-    NumericVector f_cdf_its( const NumericVector&, const NumericVector&, const bool&);
+    arma::cube  f_cdf_its( const NumericVector&, const NumericVector&,const NumericMatrix&, const bool&);
     NumericVector f_rnd(const int&, const NumericVector&, const NumericVector&);
     NumericVector f_unc_vol(NumericMatrix&, const NumericVector&);
     NumericMatrix calc_ht(NumericMatrix&, const NumericVector&);
@@ -219,22 +219,28 @@ NumericVector SingleRegime<Model>::f_pdf(const NumericVector& x, const NumericVe
 }
 
 template <typename Model>
-NumericVector SingleRegime<Model>::f_pdf_its(const NumericVector& theta,
-                                         const NumericVector& y, const bool& is_log) {
+arma::cube SingleRegime<Model>::f_pdf_its(const NumericVector& theta,
+                                         const NumericVector& y,const NumericMatrix& x, const bool& is_log) {
   // computes volatility
   double sig;
   spec.loadparam(theta);                  // load parameters
   spec.prep_ineq_vol();                   // prepare functions related to volatility
   int ny = y.size();
-  
+  int nx = x.nrow();
+  arma::cube out(nx,ny,1);
   volatility vol  = spec.set_vol(y[0]);   // initialize volatility
-  NumericVector out(ny - 1);
+  sig = sqrt(vol.h);
+  for(int ix = 0; ix < nx; ix++){
+	out(ix,0,0) = spec_calc_pdf(x(ix,0)/sig) / sig; //
+  }
+  
   for (int i = 1; i < ny; i++) { 
     spec.increment_vol(vol, y[i-1]);
-      sig = sqrt(vol.h);
-      out[i-1] = spec.calc_pdf(y[i]/sig) / sig; //
-      out[i-1] = ((is_log)?  log(out[i-1]) : out[i-1]);
-    }
+    sig = sqrt(vol.h);
+	for(int ix = 0; ix < nx; ix++){
+		out(ix,i,0) = spec_calc_pdf(x(ix,i)/sig) / sig; //
+	}
+  }
   
   return out;
 }
@@ -264,22 +270,28 @@ NumericVector SingleRegime<Model>::f_cdf(const NumericVector& x, const NumericVe
 }
 
 template <typename Model>
-NumericVector SingleRegime<Model>::f_cdf_its(const NumericVector& theta,
-                                             const NumericVector& y, const bool& is_log) {
+arma::cube SingleRegime<Model>::f_cdf_its(const NumericVector& theta,
+                                             const NumericVector& y, const NumericMatrix& x, const bool& is_log) {
   // computes volatility
   double sig;
   spec.loadparam(theta);                  // load parameters
   spec.prep_ineq_vol();                   // prepare functions related to volatility
   int ny = y.size();
+  int nx = x.nrow();
+  arma::cube out(nx,ny,1);
   
   volatility vol  = spec.set_vol(y[0]);   // initialize volatility
-  NumericVector out(ny-1);
+  sig = sqrt(vol.h);
+  for(int ix = 0; ix < nx; ix++){
+	out(ix,0,0) = spec.calc_cdf(x(ix,0)/sig); //
+  }
   
   for (int i = 1; i < ny; i++) { 
     spec.increment_vol(vol, y[i-1]);
     sig = sqrt(vol.h);
-    out[i-1] = spec.calc_cdf(y[i]/sig); //
-    out[i-1] = ((is_log)?  log(out[i-1]) : out[i-1]);
+	for(int ix = 0; ix < nx; ix++){
+		out(ix,i,0) = spec.calc_cdf(x(ix,i)/sig); //
+	}
   }
   
   return out;
@@ -299,7 +311,7 @@ NumericVector SingleRegime<Model>::f_rnd(const int& n, const NumericVector& thet
 }
 
 template <typename Model>
-NumericVector SingleRegime<Model>::f_simAhead(const NumericVector& y, const int& n, const NumericVector& theta, const NumericVector& P0_) {
+NumericVector SingleRegime<Model>::f_simAhead(const NumericVector& y,const int& n,  const NumericVector& theta, const NumericVector& P0_) {
   // setup
 	int nb_obs = y.size();                 // total number of observations to simulate
 	NumericVector y_sim(n);  
@@ -309,6 +321,7 @@ NumericVector SingleRegime<Model>::f_simAhead(const NumericVector& y, const int&
 	for (int t = 1; t < nb_obs; t++) {                 
        spec.increment_vol(vol, y[t-1]);                  // increment all volatilities
     }
+	
 	NumericVector z = spec.rndgen(n);                // random innovation from initial state
 	y_sim[0] = z[0] * sqrt(vol.h);           // first draw
 	  

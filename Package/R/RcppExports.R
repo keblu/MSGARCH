@@ -2,30 +2,30 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 getDelta <- function(gamma, m) {
-    .Call('MSGARCH_getDelta', PACKAGE = 'MSGARCH', gamma, m)
+    .Call(MSGARCH_getDelta, gamma, m)
 }
 
 Viterbi <- function(mLLK, mGamma, iK) {
-    .Call('MSGARCH_Viterbi', PACKAGE = 'MSGARCH', mLLK, mGamma, iK)
+    .Call(MSGARCH_Viterbi, mLLK, mGamma, iK)
 }
 
 EM_HMM <- function(vY, K, maxIter = 1e3L, tol = 1e-8, constraintZero = TRUE) {
-    .Call('MSGARCH_EM_HMM', PACKAGE = 'MSGARCH', vY, K, maxIter, tol, constraintZero)
+    .Call(MSGARCH_EM_HMM, vY, K, maxIter, tol, constraintZero)
 }
 
 EM_MM <- function(vY, K, maxIter = 1e3L, tol = 1e-8, constraintZero = TRUE) {
-    .Call('MSGARCH_EM_MM', PACKAGE = 'MSGARCH', vY, K, maxIter, tol, constraintZero)
+    .Call(MSGARCH_EM_MM, vY, K, maxIter, tol, constraintZero)
 }
 
 MapParameters_univ <- function(vTheta_tilde, Dist, bSkew) {
-    .Call('MSGARCH_MapParameters_univ', PACKAGE = 'MSGARCH', vTheta_tilde, Dist, bSkew)
+    .Call(MSGARCH_MapParameters_univ, vTheta_tilde, Dist, bSkew)
 }
 
 UnmapParameters_univ <- function(vTheta, Dist, bSkew) {
-    .Call('MSGARCH_UnmapParameters_univ', PACKAGE = 'MSGARCH', vTheta, Dist, bSkew)
+    .Call(MSGARCH_UnmapParameters_univ, vTheta, Dist, bSkew)
 }
 
 dUnivLike <- function(vZ, sDist, bSkew, dXi = 1.0, dNu = 7.0) {
-    .Call('MSGARCH_dUnivLike', PACKAGE = 'MSGARCH', vZ, sDist, bSkew, dXi, dNu)
+    .Call(MSGARCH_dUnivLike, vZ, sDist, bSkew, dXi, dNu)
 }
 

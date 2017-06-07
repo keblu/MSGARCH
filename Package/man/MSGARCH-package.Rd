@@ -52,6 +52,7 @@ Useful links:
 Authors:
 \itemize{
   \item David Ardia \email{david.ardia.ch@gmail.com}
+  \item Leopoldo Catania \email{Leopoldo.Catania@uniroma2.it}
   \item Denis-Alexandre Trottier \email{denis-alexandre.trottier.1@ulaval.ca}
 }
 

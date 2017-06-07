@@ -5,7 +5,7 @@
 \title{Value-at-Risk And Expected-shortfall.}
 \usage{
 risk(object, theta, y, level = c(0.95, 0.99), ES = TRUE, do.its = FALSE,
-  ctr = list(n.mesh = 500, tol = 1e-04, itermax = 5))
+  ctr = list(n.mesh = 1000))
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}

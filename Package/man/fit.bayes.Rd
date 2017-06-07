@@ -4,7 +4,7 @@
 \alias{fit.bayes}
 \title{Bayesian estimation.}
 \usage{
-fit.bayes(spec, y, ctr = list())
+fit.bayes(spec, y, ctr = list(), adjStartingValues = TRUE)
 }
 \arguments{
 \item{spec}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}.}

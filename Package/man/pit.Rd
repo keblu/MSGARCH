@@ -23,23 +23,23 @@ the same length as the default parameters of the specification.}
 \item{do.its}{Boolean indicating if the in-sample pit is returned. (Default: \code{do.its = FALSE})}
 }
 \value{
-A list of class \code{MSGARCH_PIT} containing three components:
+A list of class \code{MSGARCH_PIT} containing two components:
 \itemize{
 \item \code{pit}:\cr If \code{do.its = FALSE}: probability integral transform of the points \code{x} at \code{t = T + 1} or Normal variate derived from the probability integral transform of \code{x} (vector of size N).\cr
                   If \code{do.its = TRUE}: In-sample  probability integral transform or Normal variate derived from the probability integral transform of \code{y} (vector of size T or matrix of size M x T). 
-\item \code{x}:\cr If \code{do.its = FALSE}: Vector (of size N) of at points evaluated at \code{t = T + 1}.\cr
-                If \code{do.its = TRUE}: Vector (of size T) of observations.  
 \item \code{do.its}: Orinigal user inputed \code{do.its} for reference.
 }
-The class \code{MSGARCH_PIT} contains the \code{plot} method only if \code{do.its = FALSE}.
 }
 \description{
 Method returning the predictive probability integral transform (PIT) in-sample or of a vector of points  consider as one step ahead draws (\code{t = T + 1}).
 }
 \details{
 If a matrix of MCMC posterior draws estimates is given, the Bayesian probability integral transform is calculated.
-If \code{do.its = FALSE}, the points \code{x} are evaluated as \code{t = T + 1} realizations and the method uses the variance estimate at \code{t = T + 1}.
-If \code{do.its = TRUE}, \code{y} is evaluated using their respective variance estimate at each time \code{t}.
+
+If a matrix of parameter estimates is given, each parameter estimate (each row) is evaluated individually. 
+If \code{do.its = FALSE}, the vector \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
+If \code{do.its = TRUE} and  each column of  \code{x} is evaluated a their respective time \code{t} indicated by their column index.
+Finally if \code{x = NULL} the vector \code{y} is evaluated using their respective variance estimate at each time \code{t}.
 The \code{do.norm} argument transforms the PIT value into Normal variates so that normality test can be done.
 }
 \examples{

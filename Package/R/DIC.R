@@ -46,10 +46,12 @@ f.DIC <- function(spec, theta, y) {
   if (is.vector(x = theta)) {
     theta <- matrix(data = theta, nrow = 1)
   }
-  LL <- rowSums(MSGARCH::pdf(object = spec, theta = theta, y = y,
-                          log = TRUE, do.its = TRUE)$pdf, na.rm = TRUE)
+  LL = vector(mode = "numeric",length = nrow(theta))
+  for(i in 1:nrow(theta)){
+      LL[i]  <- sum(MSGARCH:::pred(object = spec, theta = theta[i,], y = y,
+                                 log = TRUE, do.its = TRUE)$pred)
+  }
   D.bar     <- -2 * mean(x = LL)
-  theta.bar <- colMeans(x = theta)
   pV        <- var(x = -2 * LL) / 2
   out       <- list(DIC = pV + D.bar, IC = 2 * pV + D.bar, pV = pV, D.bar = D.bar)
   return(out)

@@ -150,6 +150,7 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
   # KB: use loop to ensure that spec is correctly created
   uncvol = NA
   boolean_unc_vol = TRUE
+  iter = 0 
   while (boolean_unc_vol){
     out <- suppressWarnings(expr = f.spec(models = models.list,
                                           do.mix = do.mix,
@@ -157,9 +158,14 @@ create.spec <- function(model = c("sGARCH", "sGARCH"),
     
     class(out) <- "MSGARCH_SPEC"
     uncvol = MSGARCH::unc.vol(out, out$theta0)
+    uncvol = uncvol[is.na(stringr::str_locate(out$name,"tGARCH")[,1])] #tGARCH does not start with uncvol 1, depends on the distributions tail
     boolean_unc_vol = !all(uncvol == uncvol[1])
     if(is.na(boolean_unc_vol)){
       boolean_unc_vol = TRUE
+    }
+    iter = iter + 1
+    if(iter == 10){
+      break()
     }
   }
   

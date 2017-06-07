@@ -44,14 +44,14 @@ simahead <- function(object, n, m, theta, y) {
 
 #' @export
 simahead.MSGARCH_SPEC <- function(object, n, m, theta = NULL, y = NULL) {
-  y <- MSGARCH:::f.check.y(y)
+  y <- f.check.y(y)
   if (nrow(theta) == 1) {
     P_0 = matrix(MSGARCH::Pstate(object, theta = theta, y =y)[(length(y)+1),,], ncol = object$K)
     P_0 = matrix(rep(P_0,m),ncol =object$K, byrow = TRUE)
     theta <-  MSGARCH:::f.check.theta(object, theta)
     theta <- matrix(theta[rep(1, m), ], ncol = ncol(theta))
   } else {
-    P_0 = matrix(MSGARCH::Pstate(object, theta = theta, y =y)[(length(y)+1),,1:object$K],ncol = object$K, byrow = TRUE)
+    P_0 = matrix(MSGARCH::Pstate(object, theta = theta, y =y)[(length(y)+1),,1:object$K], ncol = object$K)
     theta <-  MSGARCH:::f.check.theta(object, theta)
     m = nrow(theta)
   }

@@ -766,7 +766,7 @@ public:
     ineq_lb     = 1e-6;
     ineq_ub     = 0.99999999;
     label       = CharacterVector::create("alpha0", "alpha1", "alpha2", "beta" );
-    coeffs_mean = NumericVector::create(   0.125,     0.05,     0.1,     0.8   );
+    coeffs_mean = NumericVector::create(   0.125,     0.05,  0.01,     0.8   );
     coeffs_sd   = NumericVector::create(   2,        2,        2,        2     );
     Sigma0      = NumericVector::create(   1,        1,        1,        1     );
     lower       = NumericVector::create(   1e-4,     1e-6,     1e-4,     1e-4  );

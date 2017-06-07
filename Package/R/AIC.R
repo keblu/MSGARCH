@@ -40,8 +40,8 @@ f.AIC <- function(spec, theta, y) {
     theta <- matrix(data = theta, nrow = 1)
   }
   theta <- matrix(data = colMeans(x = theta), nrow = 1)
-  LL    <- sum(MSGARCH::pdf(object = spec, theta = theta, y = y, log = TRUE,
-                            do.its = TRUE)$pdf, na.rm = TRUE)
+  LL    <- sum(MSGARCH::pred(object = spec, theta = theta, y = y, log = TRUE,
+                            do.its = TRUE)$pred, na.rm = TRUE)
   k <- dim(x = theta)[2]
   aic <- 2 * k - 2 * LL
   return(aic)

@@ -49,98 +49,45 @@
 #' @importFrom stats integrate sd                    
 #' @export
 risk <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE, 
-                 do.its = FALSE, ctr = list(n.mesh = 500, tol = 1e-04, itermax = 5)) {
+                 do.its = FALSE, ctr = list(n.mesh = 1000)) {
   UseMethod("risk", object)
 }
 
 #' @export
 risk.MSGARCH_SPEC <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE,
-                              do.its = FALSE, ctr = list(n.mesh = 500, tol = 1e-04, itermax = 5)) {
-  if (isTRUE(do.its)) {
-    y <- c(mean(y), y)
-  }
-  y   <- f.check.y(y)
+                              do.its = FALSE, ctr = list(n.mesh = 1000)) {
+  
+  y   <- MSGARCH:::f.check.y(y)
   out <- list()
   ny  <- nrow(y)
-  if (!isTRUE(do.its)) {
-    start <- ny
-    step  <- -(ny - 1)
-    end   <- ny
-  } else {
-    start <- 2
-    step  <- -1
-    end   <- ny - 1
-  }
   p       <- 1 - level
   np      <- length(p)
   xmin    <- min(y) - sd(y)
   xmax    <- 0
-  itermax <- ctr$itermax
-  tol     <- ctr$tol
-  tmp.VaR <- NULL
-  out$VaR <- matrix(data = NA, nrow = end - start + 1, ncol = np)
-  if (isTRUE(ES)) {
-    out$ES <- matrix(data = NA, nrow = end - start + 1, ncol = np)
+  
+  # gross approximation for VaR
+  x <- seq(from = xmin, to = xmax, length.out = ctr$n.mesh)
+  pdf_x = MSGARCH::pred(object = object, theta = theta, x = x, y = y, do.its = do.its, log = FALSE)$pred
+  cumul <- (apply(pdf_x, 2, cumsum)) * (x[2] - x[1])
+  out = list()
+  out$VaR <- matrix(NA, nrow = ncol(pdf_x), ncol = np)
+  for(n in 1:ncol(pdf_x)){
+    for (i in 1:np) {
+      out$VaR[n,i] <- x[which.min(abs(cumul[,n] - p[i]))]
+    }
   }
-  for (v in start:end) {
-    f.pdf <- function(x) {
-      out <- MSGARCH::pred(object, x, theta, y[1:v], log = FALSE, do.its = FALSE)$pred
-      return(out)
-    }
-    # gross approximation for VaR
-    x <- seq(from = xmin, to = xmax, length.out = ctr$n.mesh)
-    cumul <- cumsum(f.pdf(x) * (x[2] - x[1]))
-    for (i in 1:np) {
-      tmp.VaR[i] <- x[which.min(abs(cumul - p[i]))]
-    }
-    # add precision by Newton-Raphson
-    for (i in 1:np) {
-      p_i <- p[i]
-      calc.step <- function(V) {
-        lPDF <- MSGARCH::pred(object, x = V, theta = theta, y = y[1:v], log = TRUE, do.its = FALSE)$pred
-        CDF  <- MSGARCH::pit(object, x = V, theta = theta, y = y[1:v], do.norm = FALSE, do.its = FALSE)$pit
-        err  <- p_i - CDF
-        step <- err * exp(-lPDF)
-        out  <- list(step = step, err = abs(err))
-        return(out)
-      }
-      # Starting values
-      VaR <- tmp.VaR[i]
-      # VaR calculation
-      newStep <- calc.step(VaR)
-      delta   <- newStep$step
-      VaR     <- VaR + delta
-      covERR  <- newStep$err
-      for (j in 1:itermax) {
-        if (covERR < tol) {
-          break
-        }
-        newStep <- calc.step(VaR)
-        delta   <- newStep$step
-        VaR     <- VaR + delta
-        covERR  <- newStep$err
-      }
-      out$VaR[v + step, i] <- VaR
-    }
-    if (isTRUE(ES)) {
+  
+  if(ES == TRUE) {
+    out$ES <- matrix(NA, nrow = ncol(pdf_x), ncol = np)
+    for(n in 1:ncol(pdf_x)){
       for (i in 1:np) {
-        f.condMean <- function(x) {
-          out <- x * MSGARCH::pred(object, x, theta, y[1:v], log = FALSE, do.its = FALSE)$pred
-          return(out)
-        }
-        out$ES[v + step, i] <- integrate(f.condMean, lower = -Inf, upper = out$VaR[v + step, i], 
-                                         stop.on.error = FALSE)$value / p[i]
+        out$ES[n,i] = sum(pdf_x[x <= out$VaR[n,i],n] * (x[2] - x[1])/p[i] * x[x <=  out$VaR[n,i]])
       }
     }
   }
-  out$y <- y[2:length(y)]
+  out$y <- y
   colnames(out$VaR) <- level
-  if (isTRUE(do.its)) {
-    out$VaR <- rbind(NA, out$VaR)
-    if (isTRUE(ES)) {
-      out$ES <- rbind(NA, out$ES)
-    }
-  }
+  
   if (isTRUE(ES)) {
     colnames(out$ES) <- level
   }
@@ -150,14 +97,14 @@ risk.MSGARCH_SPEC <- function(object, theta, y, level = c(0.95, 0.99), ES = TRUE
 
 #' @export
 risk.MSGARCH_MLE_FIT <- function(object, theta = NULL, y = NULL, level = c(0.95, 0.99),
-                                   ES = TRUE, do.its = FALSE, ctr = list(n.mesh = 500, tol = 1e-04, itermax = 5)) {
+                                 ES = TRUE, do.its = FALSE, ctr = list(n.mesh = 1000)) {
   return(risk.MSGARCH_SPEC(object = object$spec, theta = object$theta, y = object$y,
-                             level = level, ES = ES, do.its = do.its, ctr = ctr))
+                           level = level, ES = ES, do.its = do.its, ctr = ctr))
 }
 
 #' @export
 risk.MSGARCH_BAY_FIT <- function(object, theta = NULL, y = NULL, level = c(0.95, 0.99),
-                                   ES = TRUE, do.its = FALSE, ctr = list(n.mesh = 500, tol = 1e-04, itermax = 5)) {
+                                 ES = TRUE, do.its = FALSE, ctr = list(n.mesh = 1000)) {
   return(risk.MSGARCH_SPEC(object = object$spec, theta = object$theta, y = object$y,
-                             level = level, ES = ES, do.its = do.its, ctr = ctr))
+                           level = level, ES = ES, do.its = do.its, ctr = ctr))
 }

@@ -4,7 +4,8 @@
 \alias{fit.mle}
 \title{ML estimation.}
 \usage{
-fit.mle(spec, y, ctr = list())
+fit.mle(optim.fun = optim.default, spec, y, ctr = list(),
+  adjStartingValues = TRUE, ...)
 }
 \arguments{
 \item{spec}{Model specification created with \code{\link{create.spec}}.}
@@ -66,7 +67,7 @@ data("sp500")
 sp500 = sp500[1:1000]
 
 # create model specification
-spec = MSGARCH::create.spec() 
+spec = MSGARCH::create.spec()
 
 # fit the model on the data with ML estimation using DEoptim intialization
 set.seed(123)
