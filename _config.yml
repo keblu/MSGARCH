@@ -1,2 +1,5 @@
 theme: jekyll-theme-slate
 encoding: UTF-8
+Exclude: Package
+Exclude: bin
+Exclude: test
