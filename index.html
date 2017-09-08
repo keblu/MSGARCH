@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <meta name="description" content="MSGARCH : MSGARCH GSOC project">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/MSGARCH/assets/css/style.css?v=7a8bbfefff1135ee9ff99be43501c7b228c12ef3">
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>MSGARCH | MSGARCH GSOC project</title>
+<meta property="og:title" content="MSGARCH" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="MSGARCH GSOC project" />
+<meta property="og:description" content="MSGARCH GSOC project" />
+<link rel="canonical" href="http://keblu.github.io/MSGARCH/" />
+<meta property="og:url" content="http://keblu.github.io/MSGARCH/" />
+<meta property="og:site_name" content="MSGARCH" />
+<script type="application/ld+json">
+{"name":"MSGARCH","description":"MSGARCH GSOC project","author":null,"@type":"WebSite","url":"http://keblu.github.io/MSGARCH/","image":null,"publisher":null,"headline":"MSGARCH","dateModified":null,"datePublished":null,"sameAs":null,"mainEntityOfPage":null,"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/keblu/MSGARCH">View on GitHub</a>
+
+          <h1 id="project_title">MSGARCH</h1>
+          <h2 id="project_tagline">MSGARCH GSOC project</h2>
+
+          
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1 id="msgarch">MSGARCH</h1>
+<p>Markov-switching GARCH models in R</p>
+
+<p><a href="https://cran.r-project.org/package=MSGARCH"><img src="http://www.r-pkg.org/badges/version/MSGARCH" alt="CRAN" /></a> <a href="http://www.r-pkg.org/pkg/MSGARCH"><img src="http://cranlogs.r-pkg.org/badges/MSGARCH?color=brightgreen" alt="Downloads" /></a><a href="http://www.r-pkg.org/pkg/MSGARCH"><img src="http://cranlogs.r-pkg.org/badges/grand-total/MSGARCH?color=brightgreen" alt="Downloads" /></a>
+<a href="https://github.com/keblu/MSGARCH/pulls"><img src="http://githubbadges.herokuapp.com/keblu/MSGARCH/pulls.svg?style=flat" alt="Pending Pull-Requests" /></a>
+<a href="https://github.com/keblu/MSGARCH/issues"><img src="http://githubbadges.herokuapp.com/keblu/MSGARCH/issues.svg" alt="Github Issues" /></a></p>
+
+<h2 id="introduction">Introduction</h2>
+<p>Markov-switching GARCH models have become popular to model the structural break in the conditional variance dynamics of financial time series. The R package <code class="highlighter-rouge">MSGARCH</code> (<a href="https://ssrn.com/abstract=2845809">Ardia et al., 2016</a>, Ardia et al., 2017) implements Markov-switching GARCH-type models very effficiently by using C object-oriented programming techniques. It allows the user to perform simulations as well as Maximum Likelihood and Bayesian estimation of a very large class of Markov-switching GARCH-type models. Risk management tools such as Value-at-Risk and Expected-Shortfall calculations are available. See <a href="https://ssrn.com/abstract=2845809">Ardia et al. (2016)</a> for further details. A large-scale empirical study is presented in <a href="https://ssrn.com/abstract=2918413">Ardia et al. (2017)</a>.</p>
+
+<h2 id="contents">Contents</h2>
+<ul>
+  <li>MSGARCH-manual.pdf: This document is the documentation for the MSGARCH package.</li>
+  <li>Package: This folder contains the latest developpement version of the package.</li>
+  <li>bin: This folder contains the previous stable version of the package.</li>
+  <li>test: Test folder with an R file containing all the examples from the documentation for test purpose.</li>
+</ul>
+
+<h2 id="installation">Installation</h2>
+
+<p>The latest stable version of <code class="highlighter-rouge">MSGARCH</code> is available on CRAN (https://CRAN.R-project.org/package=MSGARCH) and can be installed via:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  R &gt; install.packages("MSGARCH")
+</code></pre>
+</div>
+
+<p>To install the latest development  version of <code class="highlighter-rouge">MSGARCH</code> (which may contain bugs!) use these lines:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  R &gt; install.packages("devtools")
+  R &gt; require("devtools")
+  R &gt; devtools::install_github("keblu/MSGARCH", subdir="Package")
+</code></pre>
+</div>
+
+<h2 id="references">References</h2>
+
+<p>Please cite <code class="highlighter-rouge">MSGARCH</code> in publications:</p>
+
+<p>Ardia, D., Bluteau, K., Boudt, K., Trottier, D.-A. (2016).<br />
+<em>Markov-switching GARCH models in R: The MSGARCH package</em>.<br />
+Working paper.<br />
+https://ssrn.com/abstract=2845809</p>
+
+<p>Ardia, D., Bluteau, K., Boudt, K., Catania, L. (2017).  <br />
+<em>Forecasting performance of Markov-switching GARCH models: A large-scale empirical study</em>.  <br />
+Working paper.  <br />
+https://ssrn.com/abstract=2918413</p>
+
+<p>Ardia, D., Bluteau, K., Boudt, K., Peterson, B., Trottier, D.-A. (2017).  <br />
+<em>MSGARCH package</em></p>
+
+<h2 id="acknowledgements">Acknowledgements</h2>
+
+<p>The authors acknowledge Google for financial support via the Google Summer of Code 2016
+project “MSGARCH”, the International Institute of Forecasters (IIF, https://forecasters.org), Industrielle-Alliance, 
+FQRSC (Grant # 2015-NP-179931) and Fonds de Donations at the University of Neuchâtel, Switzerland.</p>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        
+        <p class="copyright">MSGARCH maintained by <a href="https://github.com/keblu">keblu</a></p>
+        
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>
