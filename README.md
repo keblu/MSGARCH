@@ -51,4 +51,4 @@ _MSGARCH package_
 
 ## Acknowledgements
 
-The authors are grateful to Peter Carl, Dirk Eddelbuettel, Richard Gerlach, Lennart Hoogerheide, Brian Peterson, Enrico Schumann, and participants at the R/Finance 2017 conference (Chicago), the 37th International Symposium on Forecasting (Cairns), and UseR 2017 (Brussels). We acknowledge Industrielle{Alliance, International Institute of Forecasters, Google Summer of Code 2016 & 2017, FQRSC (Grant # 2015-NP-179931) and Fonds des Donations at the University of Neuch^atel for their financial support.
+The authors are grateful to Peter Carl, Dirk Eddelbuettel, Richard Gerlach, Lennart Hoogerheide, Brian Peterson, Enrico Schumann, and participants at the R/Finance 2017 conference (Chicago), the 37th International Symposium on Forecasting (Cairns), and UseR 2017 (Brussels). We acknowledge Industrielle{Alliance, International Institute of Forecasters, Google Summer of Code 2016 & 2017, FQRSC (Grant # 2015-NP-179931) and Fonds des Donations at the University of Neuchâtel for their financial support.
