@@ -36,7 +36,7 @@ Major changes in the package make it such that code relying on the `MSGARCH` pac
 
 Please cite `MSGARCH` in publications:
 
-Ardia, D., Bluteau, K., Boudt, K., Trottier, D.-A. (2017).  
+Ardia, D., Bluteau, Catania, L., K., Boudt, K., Trottier, D.-A. (2017).  
 _Markov-switching GARCH models in R: The MSGARCH package_.  
 Working paper.  
 https://ssrn.com/abstract=2845809
@@ -46,7 +46,7 @@ _Forecasting performance of Markov-switching GARCH models: A large-scale empiric
 Working paper.    
 https://ssrn.com/abstract=2918413  
 
-Ardia, D., Bluteau, K., Boudt, K., Peterson, B., Trottier, D.-A. (2017).    
+Ardia, D., Bluteau, K., Boudt, K., Catania, L., Peterson, B., Trottier, D.-A. (2017).    
 _MSGARCH package_  
 
 ## Acknowledgements
