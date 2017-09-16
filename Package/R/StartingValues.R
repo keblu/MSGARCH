@@ -1,300 +1,292 @@
-
-DistParNames <- function(sDist, bSkew) {
+f_DistParNames <- function(sDist, bSkew) {
 
   if (bSkew) {
     if (sDist == "norm") {
-      vNames = c("xi")
+      vNames <- c("xi")
     }
     if (sDist == "std") {
-      vNames = c("nu", "xi")
+      vNames <- c("nu", "xi")
     }
     if (sDist == "ged") {
-      vNames = c("nu", "xi")
+      vNames <- c("nu", "xi")
     }
   } else {
     if (sDist == "std") {
-      vNames = c("nu")
+      vNames <- c("nu")
     }
     if (sDist == "ged") {
-      vNames = c("nu")
+      vNames <- c("nu")
     }
   }
   return(vNames)
 }
 
-SwitchDistLabels <- function(vLabels) {
+f_ModelParNames <- function(sModel) {
 
-  vSwithLabels = vLabels
+  if (sModel == "sARCH") {
+    vNames <- c("alpha0", "alpha1")
+  }
+  if (sModel == "sGARCH") {
+    vNames <- c("alpha0", "alpha1", "beta")
+  }
+  if (sModel %in% c("eGARCH", "gjrGARCH", "tGARCH")) {
+    vNames <- c("alpha0", "alpha1", "alpha2", "beta")
+  }
+
+  return(vNames)
+}
+
+f_SwitchDistLabels <- function(vLabels) {
+
+  vSwithLabels <- vLabels
 
   for (i in 1:length(vLabels)) {
-    sLabel = vLabels[i]
+    sLabel <- vLabels[i]
     if (sLabel == "normal") {
-      vSwithLabels[i] = "norm"
+      vSwithLabels[i] <- "norm"
     }
     if (sLabel == "student") {
-      vSwithLabels[i] = "std"
+      vSwithLabels[i] <- "std"
     }
   }
 
   return(vSwithLabels)
 }
 
-StaticStarting_Uni <- function(sDist, bSkew) {
+f_StaticStarting_Uni <- function(sDist, bSkew) {
 
   if (bSkew) {
     if (sDist == "norm") {
-      vTheta = c(xi = 1.0)
+      vpar <- c(xi = 1)
     } else {
-      vTheta = c(nu = 7.0, xi = 1.0)
+      vpar <- c(nu = 7, xi = 1)
     }
   } else {
-    vTheta = c(nu = 7.0)
+    vpar <- c(nu = 7)
   }
 
-  vTheta_tilde = as.numeric(UnmapParameters_univ(vTheta, sDist, bSkew))
+  vpar_tilde <- as.numeric(UnmapParameters_univ(vpar, sDist, bSkew))
 
-  return(vTheta_tilde)
+  return(vpar_tilde)
 }
 
-ddist_ThetaParam <- function(dZ, vTheta, sDist, bSkew, bLog) {
+f_Fit_StaticDist <- function(vZ, sDist, bSkew) {
 
-  dPDF = 0.0
+  vpar_tilde <- f_StaticStarting_Uni(sDist, bSkew)
 
-  if (!bSkew) {
-    if (sDist == "norm") {
-      dPDF = ddist(dZ, "norm", log = bLog)
-    } else {
-      dPDF = ddist(dZ, sDist, shape = vTheta[1], log = bLog)
-    }
-  } else {
-    if (sDist == "norm") {
-      dPDF = ddist(dZ, "norm", skew = vTheta[1], log = bLog)
-    } else {
-      dPDF = ddist(dZ, sDist, shape = vTheta[1], skew = vTheta[2], log = bLog)
-    }
-  }
+  iT <- length(vZ)
 
-  if (bLog) {
-    if (dPDF < -1e50) {
-      dPDF = -1e50
-    }
-  } else {
-    if (dPDF < 1e-50) {
-      dPDF = 1e-50
-    }
-  }
+  vNames <- f_DistParNames(sDist, bSkew)
 
-  return(dPDF)
+  optimizer <- optim(vpar_tilde, function(vpar_tilde, vZ, iT, sDist, bSkew, vNames) {
 
-}
+    vpar <- as.numeric(MapParameters_univ(vpar_tilde, sDist, bSkew))
+    names(vpar) <- vNames
 
-pdist_ThetaParam <- function(dQ, vTheta, sDist, bSkew, bLog) {
-
-  dP = 0.0
-
-  if (!bSkew) {
-    if (sDist == "norm") {
-      dP = pdist(dQ, "norm")
-    } else {
-      dP = pdist(dQ, sDist, shape = vTheta[1])
-    }
-  } else {
-    if (sDist == "norm") {
-      dP = pdist(dQ, "norm", skew = vTheta[1])
-    } else {
-      dP = pdist(dQ, sDist, shape = vTheta[1], skew = vTheta[2])
-    }
-  }
-
-    if (dP < 1e-50) {
-      dP = 1e-50
-    }
-
-  return(dP)
-
-}
-
-Fit_StaticDist <- function(vZ, sDist, bSkew) {
-
-  vTheta_tilde = StaticStarting_Uni(sDist, bSkew)
-
-  iT = length(vZ)
-
-  vNames = DistParNames(sDist, bSkew)
-
-  optimizer = optim(vTheta_tilde, function(vTheta_tilde, vZ, iT, sDist, bSkew, vNames){
-
-    vTheta = as.numeric(MapParameters_univ(vTheta_tilde, sDist, bSkew))
-    names(vTheta) = vNames
-
-    dLLK = dUnivLike(vZ, sDist, bSkew, dXi = vTheta["xi"], dNu = vTheta["nu"])
+    dLLK <- dUnivLike(vZ, sDist, bSkew, dXi = vpar["xi"], dNu = vpar["nu"])
 
     return(-dLLK)
 
   }, vZ = vZ, iT = iT, sDist = sDist, bSkew = bSkew, vNames = vNames, method = "BFGS")
 
-  vTheta =  as.numeric(MapParameters_univ(optimizer$par, sDist, bSkew))
+  vpar <- as.numeric(MapParameters_univ(optimizer$par, sDist, bSkew))
 
-  names(vTheta) = DistParNames(sDist, bSkew)
+  names(vpar) <- f_DistParNames(sDist, bSkew)
 
-  return(vTheta)
+  if (sDist == "std") {
+    if (vpar["nu"] > 10) {
+      vpar["nu"] = 10
+    }
+  }
+
+  return(vpar)
 
 }
 
-VarianceTargeting <- function(dSigma2, sModel, vTheta) {
+f_VarianceTargeting <- function(dSigma2, sModel, vpar) {
 
+  if (sModel == "sARCH") {
+    dAlpha0 <- dSigma2 * (1 - vpar["alpha1_1"])
+  }
   if (sModel == "sGARCH") {
-    dAlpha0 = dSigma2 * (1.0 - vTheta[1, "alpha1_1"] - vTheta[1, "beta_1"])
+    dAlpha0 <- dSigma2 * (1 - vpar["alpha1_1"] - vpar["beta_1"])
   }
 
   if (sModel == "gjrGARCH") {
-    dAlpha0 = dSigma2 * (1.0 - vTheta[1, "alpha1_1"] - 0.5 * vTheta[1, "alpha2_1"] - vTheta[1, "beta_1"])
+    dAlpha0 <- dSigma2 * (1 - vpar["alpha1_1"] - 0.5 * vpar["alpha2_1"] - vpar["beta_1"])
   }
 
   if (sModel == "eGARCH") {
-    dAlpha0 = log(dSigma2) * (1.0 - vTheta[1, "beta_1"])
+    dAlpha0 <- log(dSigma2) * (1 - vpar["beta_1"])
   }
 
   if (sModel == "tGARCH") {
-    dAlpha0 = dSigma2 * (1.0 + (vTheta[1, "alpha1_1"] + vTheta[1, "alpha2_1"]) * 0.5 - vTheta[1, "beta_1"])
+    dAlpha0 <- dSigma2 * (1 + (vpar["alpha1_1"] + vpar["alpha2_1"]) * 0.5 - vpar["beta_1"])
   }
 
   return(dAlpha0)
 
 }
 
-StartingValueMSGARCH <- function(y, spec, optim.fun = NULL) {
+f_StartingValueMSGARCH <- function(y, spec, ctr = NULL) {
+  spec = f_check_spec(spec)
+  K <- spec$K
+  vSpec <- spec$name
+  vModel <- sapply(vSpec, function(x) unlist(strsplit(x, split = "_"))[1L])
+  vDist.or <- sapply(vSpec, function(x) unlist(strsplit(x, split = "_"))[2L])
+  vSkew <- sapply(vDist.or, FUN = function(x) any(c("snorm", "sstd", "sged") == x))
+  vDist <- vDist.or
+  vDist[vSkew] <- substring(vDist[vSkew], 2)
+  names(vSpec) <- NULL
+  names(vModel) <- NULL
+  names(vDist) <- NULL
+  names(vSkew) <- NULL
 
-  K      = spec$K
-  vSpec  = spec$name
-  vModel = sapply(vSpec, function(x) unlist(strsplit(x, split = "_"))[1])
-  vDist  = SwitchDistLabels(sapply(vSpec, function(x) unlist(strsplit(x, split = "_"))[2]))
-  vSkew   = sapply(vSpec, function(x) unlist(strsplit(x, split = "_"))[3]) == "skew"
-
-  names(vSpec)  = NULL
-  names(vModel) = NULL
-  names(vDist)  = NULL
-  names(vSkew)  = NULL
-
-  do.mix = spec$is.mix
-  do.shape.ind = spec$is.shape.ind
+  do.mix <- spec$is.mix
 
   ## Do EM
   if (do.mix) {
-    EM_Fit = EM_MM(y, K, constraintZero = TRUE)
-    vDecoding = EM_Fit$vDecoding + 1
+    EM_Fit <- EM_MM(y, K, constraintZero = TRUE)
+    vDecoding <- EM_Fit$vDecoding + 1L
   } else {
-    EM_Fit = EM_HMM(y, K, constraintZero = TRUE)
-    vDecoding = EM_Fit$vDecoding + 1
+    EM_Fit <- EM_HMM(y, K, constraintZero = TRUE)
+    vDecoding <- EM_Fit$vDecoding + 1L
   }
 
   ## local decoding
-  lY = list()
+  lY <- list()
   for (k in 1:K) {
-    vDec_foo = which(vDecoding == k)
-    if (length(vDec_foo) > 300) {
-      lY[[k]] = y[vDec_foo]
+    vDec_foo <- which(vDecoding == k)
+    if (length(vDec_foo) > 100L) {
+      lY[[k]] <- y[vDec_foo]
     } else {
-      lY[[k]] = y[vDec_foo]
+      lY[[k]] <- y
     }
   }
 
   ## initialize transition probability matrix
   if (do.mix) {
-    vP = matrix(EM_Fit$vP[1:(K - 1)], nrow = 1)
+    vP <- EM_Fit$vP[1:(K - 1L)]
+    names(vP) <- paste("P", 1:(K - 1), sep = "_")
   } else {
-    StartingGamma = t(EM_Fit$mGamma)
-    vP = matrix(c(StartingGamma[-K, ]), nrow = 1)
+    StartingGamma <- EM_Fit$mGamma
+    vP <- c(t(StartingGamma[, -K]))
+    names(vP) <- tail(spec$label, K * (K - 1))
   }
-  colnames(vP) = rep("P", length(vP))
+
 
   ## Initialize unconditional volatilties
-  vSigma2 = EM_Fit$vSigma2
+  vSigma2 <- EM_Fit$vSigma2
 
   ## initiale shape parameters
-  lShape = list()
+  lShape <- list()
 
-  if (do.shape.ind) {
 
-    vZ = (y - mean(y))/sd(y)
+  for (k in 1:K) {
 
-    lShape = Fit_StaticDist(vZ, vDist[1], FALSE)
+    lShape[[k]] <- NULL
 
-  } else {
+    if (vDist[k] != "norm") {
 
-    for (k in 1:K) {
-
-      lShape[[k]] = NULL
-
-      if (vDist[k] != "norm") {
-
-        vZ = (lY[[k]] - mean(lY[[k]]))/sd(lY[[k]])
-        lShape[[k]] = Fit_StaticDist(vZ, vDist[k], FALSE)
-
-      }
+      vZ <- (lY[[k]] - mean(lY[[k]]))/sd(lY[[k]])
+      lShape[[k]] <- f_Fit_StaticDist(vZ, vDist[k], FALSE)
     }
   }
 
   ## initialize shape and skew
+  lSingleRegimeSpec <- list()
+  lSingleRegimeCoef <- list()
 
-  lSingleRegimeSpec = list()
-  lSingleRegimeCoef = list()
+  ## Fixed Parameters
+  lFixed_SR <- f_recover_fixedpar_SR(spec)
 
   for (k in 1:K) {
+    lSingleRegimeSpec[[k]] <- CreateSpec(variance.spec = list(model = vModel[k]),
+                                         distribution.spec = list(distribution = vDist.or[k]),
+                                         constraint.spec = list(fixed = lFixed_SR[[k]]))
 
-    if (do.shape.ind) {
-
-      lSingleRegimeSpec[[k]] = create.spec(model = vModel[k], distribution = "norm",
-                                           do.skew = FALSE, do.mix = FALSE,
-                                           do.shape.ind = FALSE)
-
-    } else {
-
-      lSingleRegimeSpec[[k]] = create.spec(model = vModel[k], distribution = vDist[k],
-                                           do.skew = vSkew[k], do.mix = FALSE,
-                                           do.shape.ind = FALSE)
-
-      if (vDist[k] != "norm") {
-        lSingleRegimeSpec[[k]]$theta0[1, "nu_1"] = lShape[[k]]
-      }
-
+    if (vDist[k] != "norm") {
+      lSingleRegimeSpec[[k]]$par0["nu_1"] <- lShape[[k]]
     }
 
-    dAlpha0 = VarianceTargeting(vSigma2[k], vModel[k], lSingleRegimeSpec[[k]]$theta0)
+    dAlpha0 <- f_VarianceTargeting(vSigma2[k], vModel[k], lSingleRegimeSpec[[k]]$par0)
 
-    lSingleRegimeSpec[[k]]$theta0[1, "alpha0_1"] = dAlpha0
+    lSingleRegimeSpec[[k]]$par0["alpha0_1"] <- dAlpha0
+    Fit <- MSGARCH::FitML(spec = lSingleRegimeSpec[[k]], data = lY[[k]], ctr = ctr)
 
-    Fit = MSGARCH::fit.mle(optim.fun = optim.fun, spec = lSingleRegimeSpec[[k]], y = lY[[k]])
-    lSingleRegimeCoef[[k]] = Fit$theta
+    lSingleRegimeCoef[[k]] <- Fit$par
 
-    colnames(lSingleRegimeCoef[[k]]) = sapply(colnames(lSingleRegimeCoef[[k]]), function(x) {
-      unlist(strsplit(x, split = "_"))[1]
+    names(lSingleRegimeCoef[[k]]) <- sapply(names(lSingleRegimeCoef[[k]]), function(x) {
+      unlist(strsplit(x, split = "_"))[1L]
     })
 
-    colnames(lSingleRegimeCoef[[k]]) = paste(colnames(lSingleRegimeCoef[[k]]), k, sep = "_")
+    names(lSingleRegimeCoef[[k]]) <- paste(names(lSingleRegimeCoef[[k]]), k, sep = "_")
 
   }
 
-  vTheta0 = do.call(cbind, lSingleRegimeCoef)
+  vpar0 <- do.call(c, lSingleRegimeCoef)
 
-  if (do.shape.ind) {
+  vpar0 <- c(vpar0, vP)
 
-    if (vDist[1] != "norm") {
-      vTheta0 = cbind(vTheta0, nu_1 = lShape)
-      rownames(vTheta0) = NULL
-    }
-
-    if (vSkew[1]) {
-      vTheta0 = cbind(vTheta0, xi_1 = 1.0)
-      rownames(vTheta0) = NULL
-    }
-
-  }
-
-  vTheta0 = cbind(vTheta0, vP)
-
-  return(vTheta0)
-
+  return(vpar0)
 }
 
+f_StargingValues <- function(y, spec, ctr = NULL) {
+  spec <- f_check_spec(spec)
+  K <- spec$K
+  if (K > 1L) {
 
+    vPn <- f_StartingValueMSGARCH(y, spec, ctr)
+    if (is(vPn, "try-error")) {
+      vPn <- spec$par0
+    }
+
+    ### Regime Constant Parameters ###
+    if (isTRUE(spec$regime.const.pars.bool)) {
+      vPn <- f_remove_regimeconstpar(vPn, spec$regime.const.pars, K)
+    }
+
+    vPw <- f_unmapPar(vPn, spec, ctr$do.plm)
+
+    dLLK <- f_nll(vPw, y, spec, ctr$do.plm)
+
+    if (dLLK == 1e+10) {
+
+      vPn <- spec$par0
+
+      ### Fixed Parameters ###
+      if (isTRUE(spec$fixed.pars.bool)) {
+        vPn <- f_substitute_fixedpar(vPn, spec$fixed.pars)
+      }
+
+      ### Regime Constant Parameters ###
+      if (isTRUE(spec$regime.const.pars.bool)) {
+        vPn <- f_remove_regimeconstpar(vPn, spec$regime.const.pars, K)
+      }
+      vPw <- f_unmapPar(vPn, spec, ctr$do.plm)
+
+    }
+
+  } else {
+
+    vPn <- spec$par0
+
+    ### Fixed Parameters ###
+    if (isTRUE(spec$fixed.pars.bool)) {
+      vPn <- f_substitute_fixedpar(vPn, spec$fixed.pars)
+    }
+
+    sModel <- unlist(strsplit(spec$name, split = "_"))[1]
+
+    vPn["alpha0_1"] <- f_VarianceTargeting(var(c(y)), sModel, vPn)
+
+    if (isTRUE(spec$fixed.pars.bool)) {
+      vPn <- f_remove_fixedpar(vPn, spec$fixed.pars)
+    }
+    vPw <- f_unmapPar(vPn, spec, ctr$do.plm)
+
+  }
+
+  return(vPw)
+
+}

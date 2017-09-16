@@ -1,135 +1,177 @@
-#' Predictive function.
-#' @description Method returning the predictive probability density in-sample or of a vector of points  consider as one step ahead draws (\code{t = T + 1}).
-#' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{create.spec}}
-#' or fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT}
-#' created with \code{\link{fit.bayes}}.
-#' @param x Vector (of size N).
-#' @param theta Vector (of size d) or matrix (of size M x d) of parameter estimates (not required when using a fit object) where d must have
-#'  the same length as the default parameters of the specification.
-#' @param y  Vector (of size T) of observations (not required when using a fit object).
-#' @param log  Boolean indicating if the log-density is returned. (Default: \code{log = FALSE})
-#' @param do.its  Boolean indicating if the in-sample predictive is returned. (Default: \code{do.its = FALSE})
-#' @details If a matrix of parameter estimates is given, each parameter estimate (each row) is evaluated individually. 
-#' If \code{do.its = FALSE}, the vector \code{x} are evaluated as \code{t = T + 1} realization and the method uses the variance estimate at \code{t = T + 1}.
-#' If \code{do.its = TRUE} and  each column of  \code{x} is evaluated a their respective time \code{t} indicated by their column index.
-#' Finally if \code{x = NULL} the vector \code{y} is evaluated using their respective variance estimate at each time \code{t}.
-#' @examples 
-#'require("MSGARCH")
-#'# load data
-#'data("sp500")
-#'sp500 = sp500[1:1000]
+#' @title Predictive density.
+#' @description Method returning the predictive probability density.
+#' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{CreateSpec}}
+#' or fit object of type \code{MSGARCH_ML_FIT} created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
+#' created with \code{\link{FitMCMC}}.
+#' @param x Vector (of size n). Used when \code{do.its = FALSE}.
+#' @param par Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter
+#' estimates where d must have the same length as the default parameters of the specification.
+#' @param data  Vector (of size T) of observations.
+#' @param new.data  Vector (of size T*) of new observations. (Default \code{new.data = NULL})
+#' @param log  Logical indicating if the log-density is returned. (Default: \code{log = FALSE})
+#' @param do.its  Logical indicating if the in-sample predictive is returned. (Default: \code{do.its = FALSE})
+#' @param n.ahead  Scalar indicating the number of step-ahead evaluation.
+#' Valid only when \code{do.its = FALSE}. (Default: \code{n.ahead = 1L})
+#' @param ctr A list of control parameters:
+#'        \itemize{
+#'        \item \code{n.sim} (integer >= 0) :
+#'        Number indicating the number of simulation done for the evaluation
+#'        of the density at \code{n.ahead} > 1. (Default: \code{n.sim = 10000L})
+#'        }
+#' @param ... Not used. Other arguments to \code{Pred}.
+#' @return A vector or matrix of class \code{MSGARCH_PRED}.\cr
+#' If \code{do.its = FALSE}: (Log-)predictive of
+#' the points \code{x} at \code{t = T + T* + 1, ... ,t = T + T* + n.ahead} (matrix of
+#' size \code{n.ahead} x n).\cr
+#' If \code{do.its = TRUE}: In-sample predictive of \code{data} if \code{x = NULL}
+#' (vector of size T + T*) or in-sample predictive of \code{x} (matrix of size (T + T*) x n).
+#' @details If a matrix of MCMC posterior draws is given, the Bayesian
+#' predictive probability density  is calculated.
+#' Two or more step-ahead predictive probability density are estimated via simulation of \code{n.sim} paths up to
+#'  \code{t = T + T* +  n.ahead}. The predictive distribution are then inferred from these
+#'  simulations via a Gaussian Kernel density.
+#' If \code{do.its = FALSE}, the vector \code{x} are evaluated as \code{t = T + T* + 1, ... ,t = T + T* + n.ahead}
+#' realization.\cr
+#' If \code{do.its = TRUE} and  \code{x} is evaluated
+#' at each time \code{t} up top time \code{t = T + T*}.\cr
+#' Finally, if \code{x = NULL} the vector \code{data} is evaluated for sample evaluation of the predictive denisty ((log-)likelihood of each sample points).
+#' @examples
+#' # load data
+#' data("SMI", package = "MSGARCH")
 #'
-#'# create model specification
-#'spec = MSGARCH::create.spec() 
+#' # create model specification
+#' # MS(2)-GARCH(1,1)-Normal (default)
+#' spec <- CreateSpec()
 #'
-#'# fit the model on the data with ML estimation using DEoptim intialization
-#' set.seed(123)
-#'fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
-#'                            
-#'# run pred method in-sample     
-#'pred.its = MSGARCH::pred(object = fit, log = TRUE, do.its = TRUE)  
+#' # fit the model on the data by ML
+#' fit <- FitML(spec = spec, data = SMI)
 #'
-#'sum(pred.its$pred, na.rm = TRUE)
-#'                                              
-#'# create mesh
-#'x = seq(-3,3,0.01)
+#'# run Pred method in-sample
+#' pred.its <- Pred(object = fit, log = TRUE, do.its = TRUE)
 #'
-#'# run pred method on mesh at T + 1
-#'pred = MSGARCH::pred(object = fit, x = x, log = TRUE, do.its = FALSE)
+#' # create a mesh
+#' x <- seq(-3,3,0.01)
 #'
-#'plot(pred)
-#' @return A list of class \code{MSGARCH_PRED} containing two components:
-#' \itemize{
-#' \item \code{pred}:\cr If \code{do.its = FALSE}: (Log-)Predictive of of the points \code{x} at \code{t = T + 1} (vector of size N). \cr
-#'                   If \code{do.its = TRUE}: In-sample Predictive of \code{y} (vector of size T or matrix of size M x T). 
-#' \item \code{do.its}: Original user inputed \code{do.its} for reference.
-#' }
+#' # run pred method on mesh at T + 1
+#' pred.x <- Pred(object = fit, x = x, log = TRUE, do.its = FALSE)
 #' @export
-pred <- function(object, x, theta, y, log = FALSE, do.its = FALSE) {
-  UseMethod("pred", object)
+Pred <- function(object, ...) {
+  UseMethod(generic = "Pred", object)
 }
 
+#' @rdname Pred
 #' @export
-pred.MSGARCH_SPEC <- function(object, x = NULL, theta = NULL, y = NULL, log = FALSE, do.its = FALSE) {
-  y <- MSGARCH:::f.check.y(y)
-  if (is.vector(theta)) {
-    theta <- matrix(theta, nrow = 1)
+Pred.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
+                              log = FALSE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
+  object <- f_check_spec(object)
+  data   <- f_check_y(data)
+  if (is.vector(par)) {
+    par <- matrix(par, nrow = 1L)
   }
-  theta_check <- MSGARCH:::f.check.theta(object, theta)
-  if (isTRUE(do.its)) {
-    if(is.null(x)){
-      x = matrix(data = y,ncol = length(y))
+  if (nrow(par) == 1) {
+    ctr     <- f_process_ctr(ctr)
+    n.sim <- ctr$n.sim
+  } else {
+    if(is.null(ctr$n.sim)){
+      n.sim = 1
     } else {
-      x = matrix(x)
-      if(ncol(x) == 1){
-        x = matrix(x,ncol = length(y), nrow = nrow(x))
+      n.sim = ctr$n.sim
+    }
+  }
+  ctr    <- f_process_ctr(ctr)
+  x.is.null  <-  FALSE
+  if (is.null(x)) {
+    x.is.null  <-  TRUE
+  } 
+  draw <- NULL
+  par_check <- f_check_par(object, par)
+  if (isTRUE(do.its)) {
+    if (is.null(x)) {
+      x <- matrix(data = data, ncol = length(data))
+    } else {
+      x <- matrix(x)
+      if (ncol(x) == 1L) {
+        x <- matrix(x, ncol = length(data), nrow = nrow(x))
       } else {
-          stop("x have more than 1 column: x must be a vector, NULL, or a matrix of size N x 1")
+        stop("x have more than 1 column: x must be a vector, NULL, or a matrix of size n x 1")
       }
     }
-    tmp <- matrix(data = 0, nrow = nrow(x), ncol = length(y))
-    for (i in 1:nrow(theta)) {
-      if (object$K == 1) {
-        tmp2 <- object$rcpp.func$pdf_Rcpp_its(theta_check[i,], y, x, FALSE)
-        tmp  <- tmp + tmp2[,,1]
+    tmp <- matrix(data = 0, nrow = nrow(x), ncol = length(data))
+    for (i in 1:nrow(par)) {
+      if (object$K == 1L) {
+        tmp2 <- object$rcpp.func$pdf_Rcpp_its(par_check[i, ], data, x, FALSE)
+        tmp <- tmp + tmp2[, , 1]
       } else {
-        Pstate <- MSGARCH::Pstate(object = object, theta = theta[i, ], y = y)
-        Pstate.tmp <- matrix(data = NA, nrow = dim(Pstate)[1], ncol = dim(Pstate)[3])
-        for (j in 1:dim(Pstate)[3]) {
+        Pstate <- State(object = object, par = par[i, ], data = data)$PredProb
+        Pstate.tmp <- matrix(data = NA, nrow = dim(Pstate)[1L], ncol = dim(Pstate)[3L])
+        for (j in 1:dim(Pstate)[3L]) {
           Pstate.tmp[, j] <- Pstate[, , j]
         }
-        tmp2 <- object$rcpp.func$pdf_Rcpp_its(theta_check[i,], y, x, FALSE)
-        for(k in 1:object$K){
-          tmp = tmp + tmp2[,,k] * matrix(Pstate.tmp[1:(nrow(Pstate.tmp) - 1), k],ncol  = length(y), nrow = nrow(x),byrow = TRUE)
+        tmp2 <- object$rcpp.func$pdf_Rcpp_its(par_check[i, ], data, x, FALSE)
+        for (k in 1:object$K) {
+          tmp <- tmp + tmp2[, , k] * matrix(Pstate.tmp[1:(nrow(Pstate.tmp) - 1L), k],
+                                            ncol = length(data), nrow = nrow(x), byrow = TRUE)
         }
       }
     }
-    tmp = tmp/nrow(theta)
+    tmp <- tmp/nrow(par)
+    colnames(tmp) <-  paste0("t=",1:length(data))
   } else {
-    if(is.null(x)){
+    if (is.null(x)) {
       stop("x is NULL: x must be a vector or a matrix of size N x 1")
     }
-    x = matrix(x)
-    if(ncol(x) !=1){
+    x <- matrix(x)
+    if (ncol(x) != 1L) {
       stop("x have more than 1 column: x must be a vector or a matrix of size N x 1")
     }
-    tmp <- matrix(data = 0, nrow = nrow(x), ncol = 1)
-    for (i in 1:nrow(theta)) {
-      # DA we need to check the inputs
-      str = "PDF FAIL IN CPP"
-      is.ok = tryCatch({
-        tmp <- tmp + object$rcpp.func$pdf_Rcpp(x, theta_check[i,], y, FALSE)
-        TRUE
-      }, warning = function(warn) {
-        MSGARCH:::f.error(str)
-        browser()
-      }, error = function(err) {
-        MSGARCH:::f.error(str)
-        browser()
-      })
+    tmp <- matrix(data = 0, nrow = nrow(x), ncol = n.ahead)
+    for (i in 1:nrow(par)) {
+      tmp[, 1] <- tmp[, 1] + object$rcpp.func$pdf_Rcpp(x, par_check[i, ], data, FALSE)
     }
-    tmp = tmp/nrow(theta)
+    tmp <- tmp/nrow(par)
+    if (n.ahead > 1) {
+      draw <- Sim(object = object, data = data, n.ahead = n.ahead, n.sim = n.sim, par = par)$draw
+      for (j in 2:n.ahead) {
+        tmp[, j] <- f_pdf_kernel(y = draw[j, ], x = x)
+      }
+    }
+    colnames(tmp) <- paste0("h=",1:n.ahead)
+  }
+  
+  if (!isTRUE(ctr$do.return.draw)) {
+    draw <- NULL
   }
   if (log) {
-    tmp <- log(tmp)
+    tmp2 <- log(tmp)
+    colnames(tmp2) <- colnames(tmp)
+    rownames(tmp2) <- rownames(tmp)
+    tmp <- tmp2
   }
-  out <- list()
-  out$pred    <- tmp
-  out$do.its <- do.its
+  if(isTRUE(x.is.null)){
+    out <- tmp[1,]
+  } else {
+    out   <- t(tmp)
+  }
   class(out) <- "MSGARCH_PRED"
   return(out)
 }
 
+#' @rdname Pred
 #' @export
-pred.MSGARCH_MLE_FIT <- function(object, x = NULL, theta = NULL, y = NULL, log = FALSE,
-                                do.its = FALSE) {
-  return(MSGARCH::pred(object = object$spec, x = x, theta = object$theta, y = object$y,
-                       log = log, do.its = do.its))
+Pred.MSGARCH_ML_FIT <- function(object, x = NULL, new.data = NULL,
+                                log = FALSE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
+  data <- c(object$data, new.data)
+  out  <- Pred(object = object$spec, x = x, par = object$par, data = data,
+               log = log, do.its = do.its, n.ahead = n.ahead, ctr = ctr)
+  return(out)
 }
 
+#' @rdname Pred
 #' @export
-pred.MSGARCH_BAY_FIT <- function(object, x = NULL, theta = NULL, y = NULL, log = FALSE,
-                                do.its = FALSE) {
-  return(MSGARCH::pred(object = object$spec, x = x, theta = object$theta, y = object$y,
-                       log = log, do.its = do.its))
+Pred.MSGARCH_MCMC_FIT <- function(object, x = NULL, new.data = NULL,
+                                  log = FALSE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
+  data <- c(object$data, new.data)
+  out  <- Pred(object = object$spec, x = x, par = object$par, data = data,
+               log = log, do.its = do.its, n.ahead = n.ahead, ctr = ctr)
+  return(out)
 }

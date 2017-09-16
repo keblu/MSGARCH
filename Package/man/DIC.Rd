@@ -2,50 +2,50 @@
 % Please edit documentation in R/DIC.R
 \name{DIC}
 \alias{DIC}
-\title{Compute Deviance Information Criterion (DIC).}
+\alias{DIC.MSGARCH_MCMC_FIT}
+\title{Deviance Information Criterion (DIC).}
 \usage{
 DIC(fit)
+
+\method{DIC}{MSGARCH_MCMC_FIT}(fit)
 }
 \arguments{
-\item{fit}{Fit object of type \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}.}
+\item{fit}{Fit object of type \code{MSGARCH_MCMC_FIT} created
+with \code{\link{FitMCMC}}.}
 }
 \value{
-A list containing four variables:
+A list with the following elements:
        \itemize{
-       \item \code{DIC} : Deviance Information Criterion.
-       \item \code{IC}  : Bayesian Predictive Information Criterion (IC = 2 * pV + D.bar).
-       \item \code{pV}  : Effective number of parameters (pV = var(D)/2)
-       \item \code{D.bar}: Expected value of the deviance over the posterior
+       \item \code{DIC}: Deviance Information Criterion.
+       \item \code{IC}: Bayesian Predictive Information Criterion (IC = 2 * pV + D.bar).
+       \item \code{pV}: Effective number of parameters (pV = var(D)/2).
+       \item \code{D.bar}: Expected value of the deviance over the posterior.
        }
 }
 \description{
-Compute Deviance Information Criterion (DIC).
+Method which computes the Deviance Information Criterion (DIC) from a fit object of type
+\code{MSGARCH_MCMC_FIT} created with \code{\link{FitMCMC}}.
 }
 \details{
-Compute the Deviance information criterion of Spiegelhalter, David J., et al. (2002). We define the deviance as: \deqn{D(\theta) = -2LLH(\mathbf{y}|\theta),} where \eqn{\mathbf{y}} are the data, \eqn{\theta} 
- are the parameters, and LLH() is the log-likelihood function.
- The expectation \deqn{\bar{D} = {\mathbf{E}}^{\theta}[D(\theta)],} where \eqn{{\mathbf{E}}^{\theta}} is the expectation over all theta in a MCMC chain,
- is a measure of how well the model fits the data. The larger this expectation is, the worse is the fit. The effective number of parameters of the model can be defined as
-\deqn{p_{V} = {\frac{1}{2}}\widehat{var}\left(D(\theta)\right),} where \eqn{\widehat{var}} is the the population variance estimator.
-  The larger the effective number of parameters is, the easier it is for the model to fit the data, and so the deviance needs to be penalized.
- Finally DIC is defined as: \deqn{\mathit{DIC} = p_{V}+\bar{D}.}
+Computes the Deviance information criterion of Spiegelhalter et al. (2002).
 }
 \examples{
-require("MSGARCH")
 # load data
-data("sp500")
-sp500 = sp500[1:1000]
+data("SMI", package = "MSGARCH")
 
 # create model specification
-spec = MSGARCH::create.spec()
+# MS(2)-GARCH(1,1)-Normal (default)
+spec <- CreateSpec()
 
-# fit the model by Bayesian estimation 
-set.seed(123)                                                           
-fit = MSGARCH::fit.bayes(spec = spec, y = sp500)
+# fit the model on data by MCMC
+set.seed(123)
+fit <- FitMCMC(spec = spec, data = SMI, ctr = list(n.burn = 500L, n.mcmc = 500L))
 
 # compute DIC
-DIC = MSGARCH::DIC(fit)
+DIC(fit)
 }
 \references{
-Spiegelhalter, David J., et al. (2002). Bayesian measures of model complexity and fit. \emph{Journal of the Royal Statistical Society: Series B (Statistical Methodology)}
+Spiegelhalter, David J., et al. (2002).
+Bayesian measures of model complexity and fit.
+\emph{Journal of the Royal Statistical Society: Series B}, 64, 583-639
 }

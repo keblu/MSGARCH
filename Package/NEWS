@@ -1,3 +1,40 @@
+Changes in Version 1.00.1
+  o Vignette updated
+Changes in Version 1.00.0
+  o Vignette finalized
+  o Packages new release
+  o Several fixes and improvements
+Changes in Version 0.21.1
+  o Vignette updated
+Changes in Version 0.21.0
+  o Update vignetet
+  o Fix sorting
+Changes in Version 0.20.7
+  o Update vignette
+  o Update doc
+  o Simplification of various outputs
+Changes in Version 0.20.6
+  o S3 names changes
+  o improvements and fixes
+Changes in Version 0.20.5
+  o Several small fixes
+Changes in Version 0.20.1
+  o Doc improved
+  o Ineq removed
+  o Prior std to 10
+Changes in Version 0.19.7
+  o Fixes by KB
+  o Merging of R files
+Changes in Version 0.19.5
+  o New naming
+  o GAS removed
+  o Sigma0 removed
+Changes in Version 0.19.4
+  o New input parameters with control lists
+Changes in Version 0.19.2
+  o Fix bug related to object instantiation. No more random error on specification creation.
+Changes in Version 0.19.1
+  o Fix bug in MCMC estimation n-step ahead simulation
 Changes in Version 0.19
   o Remove pdf and cdf since they were the same as pred and pit
   o Change how pdf and cdf function works: See example run_test_v0.19.R

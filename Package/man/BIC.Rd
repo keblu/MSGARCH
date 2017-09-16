@@ -2,38 +2,48 @@
 % Please edit documentation in R/BIC.R
 \name{BIC}
 \alias{BIC}
-\title{Compute Bayesian information criterion (BIC).}
+\alias{BIC.MSGARCH_ML_FIT}
+\alias{BIC.MSGARCH_MCMC_FIT}
+\title{Bayesian information criterion (BIC).}
 \usage{
 BIC(fit)
+
+\method{BIC}{MSGARCH_ML_FIT}(fit)
+
+\method{BIC}{MSGARCH_MCMC_FIT}(fit)
 }
 \arguments{
-\item{fit}{Fit object of type \code{MSGARCH_MLE_FIT} created with \code{\link{fit.mle}} or \code{MSGARCH_BAY_FIT} created with \code{\link{fit.bayes}}}
+\item{fit}{Fit object of type \code{MSGARCH_ML_FIT} created with \code{\link{FitML}}
+or \code{MSGARCH_MCMC_FIT} created with \code{\link{FitMCMC}}}
 }
 \value{
 BIC value.
 }
 \description{
-Compute Bayesian information criterion (BIC).
+Method which computes the Bayesian information criterion (BIC) from a fit object of type
+\code{MSGARCH_ML_FIT} created with \code{\link{FitML}}
+or \code{MSGARCH_MCMC_FIT} created with \code{\link{FitMCMC}}.
 }
 \details{
-Compute Bayesian information criterion (BIC) based on the work of Schwarz (Schwarz, 1978).
-If a matrix of MCMC posterior draws estimates is given, the BIC on the posterior mean is calculated.
+Computes the Bayesian information criterion (BIC) based on the work of Schwarz (Schwarz, 1978).
+If a matrix of MCMC posterior draws is given, the BIC on the posterior mean is calculated.
 }
 \examples{
-require("MSGARCH")
 # load data
-data("sp500")
-sp500 = sp500[1:1000]
+data("SMI", package = "MSGARCH")
 
 # create model specification
-spec = MSGARCH::create.spec() 
+# MS(2)-GARCH(1,1)-Normal (default)
+spec <- CreateSpec()
 
-# fit the model by MLE                                                             
-fit = MSGARCH::fit.mle(spec = spec, y = sp500, ctr = list(do.init = FALSE))
+# fit the model on data by ML
+fit <- FitML(spec = spec, data = SMI)
 
 # compute BIC
-BIC = MSGARCH::BIC(fit)
+BIC(fit)
 }
 \references{
-Schwarz, G. (1978). Estimating the dimension of a model. \emph{Annals of Statistics}, 6, pp. 461-464.
+Schwarz, G. (1978).
+Estimating the dimension of a model.
+\emph{Annals of Statistics}, 6, 461-464.
 }

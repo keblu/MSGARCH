@@ -1,20 +1,173 @@
-#Error function
-f.error <- function(message) {
+# Get Gamma par names
+f_GammaParNames <- function(K) {
+  vNames = character(K * (K - 1))
+  iC = 1
+  for (i in 1:(K - 1)) {
+    for (j in 1:K) {
+      vNames[iC] = paste("P", j, i, sep = "_")
+      iC = iC + 1
+    }
+  }
+  return(vNames)
+}
+
+# Get models from spec
+f_getModel <- function(spec) {
+  name = spec$name
+  vModels = sapply(name, function(x) unlist(strsplit(x, split = "_"))[1])
+  names(vModels) = NULL
+  return(vModels)
+}
+
+# Get conditional distributions from spec
+f_getDist <- function(spec) {
+  name = spec$name
+  vDist <- sapply(name, function(x) unlist(strsplit(x, split = "_"))[2L])
+  vSkew <- sapply(vDist, FUN = function(x) any(c("snorm", "sstd", "sged") == x))
+  vDist[vSkew] <- substring(vDist[vSkew], 2)
+  names(vDist) = NULL
+  return(vDist)
+}
+
+# Check variance spec
+f_check_variance_spec <- function(variance.spec) {
+
+  if (!is(variance.spec, "list")) {
+    stop("variance.spec has to be a list.")
+  }
+  if (is.null(variance.spec$model)) {
+    variance.spec$model = c("sGARCH", "sGARCH")
+  } else {
+    if (!is(variance.spec$model, "character")) {
+      stop("variance.spec$model has to be a character vector
+           with the variance specifications.")
+    }
+  }
+  if (is.null(variance.spec$do.mix)) {
+    variance.spec$do.mix = FALSE
+  } else {
+    if (!is(variance.spec$do.mix, "logical")) {
+      stop("variance.spec$do.mix has to be a logical.")
+    }
+  }
+  return(variance.spec)
+}
+
+# Check variance spec
+f_check_distribution_spec <- function(distribution.spec, K) {
+  if (!is(distribution.spec, "list")) {
+    stop("distribution.spec has to be a list.")
+  }
+  if (is.null(distribution.spec$distribution)) {
+    distribution.spec$distribution = rep("norm", K)
+  } else {
+    if (!is(distribution.spec$distribution, "character")) {
+      stop("distribution.spec$distribution has to be a character
+           vector with the distribution specifications.")
+    }
+  }
+  if (is.null(distribution.spec$do.skew)) {
+    distribution.spec$do.skew = rep(FALSE, K)
+  } else {
+    if (!is(distribution.spec$do.skew, "logical")) {
+      stop("distribution.spec$do.skew has to be a vector of logicals.")
+    }
+  }
+  if (is.null(distribution.spec$do.shape.ind)) {
+    distribution.spec$do.shape.ind = FALSE
+  } else {
+    if (!is(distribution.spec$do.shape.ind, "logical")) {
+      stop("distribution.spec$do.shape.ind has to be a logical.")
+    }
+  }
+  return(distribution.spec)
+}
+
+# Check markov spec
+f_check_markov_spec <- function(markov.spec) {
+  if (!is(markov.spec, "list")) {
+    stop("markov.spec has to be a list.")
+  }
+  if (is.null(markov.spec$do.mix)) {
+    markov.spec$do.mix = FALSE
+  } else {
+    if (!is(markov.spec$do.mix, "logical")) {
+      stop("markov.spec$do.mix has to be a logical.")
+    }
+  }
+  return(markov.spec)
+}
+
+# Error function
+f_error <- function(message) {
   cat(paste0("try/catch ", message, "\n"))
   return(FALSE)
 }
 
-#Default parameters
-f.process.ctr <- function(ctr = list()) {
-  
-  con <- list(theta0 = NULL, N.mcmc = 1000, N.burn = 500, N.thin = 1,
-              do.enhance.theta0 = FALSE, acc.rate = 0.4, adapt = TRUE)
+# Inverse generalize logit map to constraint
+f_map <- function(x, lower, upper) {
+  if (is.vector(x)) {
+    x <- matrix(data = x, nrow = 1L, ncol = length(x), dimnames = list(NULL, names(x)))
+  }
+  x_map <- matrix(data = NA, nrow = nrow(x), ncol = ncol(x))
+
+  if (is.matrix(x)) {
+    colnames(x_map) <- colnames(x)
+  }
+  for (i in 1:nrow(x)) {
+    x_map[i, ] <- lower + (upper - lower)/(1 + exp(-x[i, ]))
+  }
+  return(x_map)
+}
+
+# Generalize logit map to real line
+f_unmap <- function(x, lower, upper) {
+  if (is.vector(x)) {
+    x <- matrix(data = x, nrow = 1L, ncol = length(x), dimnames = list(NULL, names(x)))
+  }
+  x_unmap <- matrix(data = NA, nrow = nrow(x), ncol = ncol(x))
+
+  if (is.matrix(x)) {
+    colnames(x_unmap) <- colnames(x)
+  }
+  for (i in 1:nrow(x)) {
+    x_unmap[i, ] <- log((x[i, ] - lower)/(upper - x[i, ]))
+  }
+  return(x_unmap)
+}
+
+# Inverse generalize logit gradient
+f_map_deriv <- function(x, lower, upper) {
+  if (is.vector(x)) {
+    x <- matrix(data = x, nrow = 1L, ncol = length(x))
+  }
+  x_map_deriv <- matrix(data = NA, nrow = nrow(x), ncol = ncol(x))
+  for (i in 1:nrow(x)) {
+    x_map_deriv[i, ] <- -x[i, ] + log(upper - lower) - 2 * log(1 + exp(-x[i, ]))
+  }
+  return(exp(x_map_deriv))
+}
+
+# Default parameters
+f_process_ctr <- function(ctr = list(), type = 1) {
+  if (type == 1) {
+    con <- list(par0 = NULL, n.mcmc = 10000L,
+                OptimFUN = f_OptimFUNDefault,
+                SamplerFUN = f_SamplerFUNDefault,
+                n.burn = 5000L, n.thin = 10L,  do.se = TRUE, do.plm = FALSE,
+                n.sim = 10000L, n.mesh = 1000L)
+  } else if (type == 2) {
+    con <- list(n.sim = 250L, n.burn = 5000L, n.ahead = 1000L)
+  }
   con[names(ctr)] <- ctr
   return(con)
 }
 
-#Function that checks if the passed y is one of the good format
-f.check.y <- function(y) {
+# Function that checks if the passed y is one of the good format
+f_check_y <- function(y) {
+  if (zoo::is.zoo(y)) {
+    y = zoo::coredata(y)
+  }
   if (is.null(y)) {
     stop("y is NULL")
   }
@@ -24,191 +177,240 @@ f.check.y <- function(y) {
   if (all(is.nan(y))) {
     stop("nan dectected in y")
   }
-  if (!is.null(dim(y))) {
-    if (any(dim(y) == 1)) {
-      y <- as.vector(as.matrix(y))
-    } else {
-      stop("y is not a vector")
-    }
-  }
-  y <- as.vector(y)
-  y <- as.matrix(y)
   return(y)
 }
 
-#Function that checks if the passed theta are of the good format
-f.check.theta <- function(spec, theta) {
-  if (is.null(theta)) {
-    stop("theta is NULL")
+# Function that checks if the passed par are of the good format
+f_check_par <- function(spec, par) {
+  if (is.null(par)) {
+    stop("par is NULL")
   }
-  if (!is.numeric(theta)) {
-    stop("theta must be a numeric")
+  if (!is.numeric(par)) {
+    stop("par must be a numeric")
   }
-  if (all(is.nan(theta))) {
-    stop("nan dectected in theta")
+  if (all(is.nan(par))) {
+    stop("nan dectected in par")
   }
-  len.theta <- length(spec$theta0)
-  if (is.vector(theta)) {
-    theta <- matrix(theta, nrow = 1)
+  len.par <- length(spec$par0)
+  if (is.vector(par)) {
+    par <- matrix(par, nrow = 1L)
   }
-  if (is.data.frame(theta)) {
-    theta <- data.matrix(theta)
+  if (is.data.frame(par)) {
+    par <- data.matrix(par)
   }
-  if (dim(theta)[2] != len.theta) {
-    stop(paste0("Each parameter estimate in theta must be of length ", len.theta))
-  }
-  if (isTRUE(spec$is.shape.ind)) {
-    theta <- spec$func$f.do.shape.ind(theta)
+  if (dim(par)[2L] != len.par) {
+    stop(paste0("Each parameter estimate in par must be of length ", len.par))
   }
   if (isTRUE(spec$is.mix)) {
-    theta <- spec$func$f.do.mix(theta)
+    par <- spec$func$f.do.mix(par)
   }
-  return(theta)
+  colnames(par) = spec$label[1:ncol(par)]
+  return(par)
 }
-# 
-#Function that sorts the theta according to the unconditional variance (Used for Bayesian estimation)
-f.sort.theta <- function(spec, theta) {
-  thetaUncVol <- theta
+
+# Function that sorts the par according to the unconditional variance (Used for Bayesian estimation)
+f_sort_par <- function(spec, par) {
+  parUncVol <- par
   if (isTRUE(spec$is.shape.ind)) {
-    theta <- spec$func$f.do.shape.ind(theta = theta)
+    par <- spec$func$f.do.shape.ind(par = par)
   }
   Nbparams <- spec$n.params
   Nmodel <- length(Nbparams)
-  if (Nmodel == 1) {
-    return(theta)
+  if (Nmodel == 1L) {
+    return(par)
   }
   name <- spec$name
   unique.spec <- unique(name, FALSE)
   params_loc  <- c(0, cumsum(Nbparams))
-  tmp <- theta
+  tmp <- par
   pos <- 1:Nmodel
-  for (i in 1:length(unique.spec)) {
-    postmp       <- pos
-    idx          <- name == unique.spec[i]
-    posidx       <- pos[idx]
-    Nmodelidx    <- length(posidx)
-    idx_loc      <- params_loc[c(idx)]
-    idx_params   <- spec$n.params[c(idx)][1]
-    unc.vol      <- MSGARCH::unc.vol(object = spec, thetaUncVol)
-    unc.vol.idx  <- unc.vol[idx]
-    unc.vol.sort <- sort(unc.vol.idx, index.return = TRUE)
-    new.pos.index = 1
-    for (j in 1:Nmodelidx) {
-      new.pos <- which(unc.vol == unc.vol.sort$x[j])
-      if(length(new.pos) > 1){
-        new.pos <- new.pos[new.pos.index]
-        new.pos.index <- new.pos.index + 1
+  unc.vol.all <- spec$rcpp.func$unc_vol_Rcpp(parUncVol, c(0,0))
+  for (f in 1:nrow(par)) {
+    for (i in 1:length(unique.spec)) {
+      postmp <- pos
+      idx    <- name == unique.spec[i]
+      posidx       <- pos[idx]
+      Nmodelidx    <- length(posidx)
+      idx_loc      <- params_loc[c(idx)]
+      idx_params   <- spec$n.params[c(idx)][1]
+      unc.vol      <- unc.vol.all[f,]
+      unc.vol.idx  <- unc.vol[idx]
+      unc.vol.sort <- sort(unc.vol.idx, index.return = TRUE)
+      if (all(unc.vol.idx == unc.vol.sort$x)) {
+        next()
       }
-      postmp[posidx[j]] <- new.pos
+      new.pos.index = 1
+      for (j in 1:Nmodelidx) {
+        new.pos <- which(unc.vol[j] == unc.vol.sort$x)
+        if (length(new.pos) > 1L) {
+          new.pos <- new.pos[new.pos.index]
+          new.pos.index <- new.pos.index + 1L
+        }
+
+        postmp[posidx[j]] <- new.pos
+      }
+      for (j in 1:Nmodelidx) {
+        ind <- unc.vol.sort$ix[j]
+        tmp[f, (idx_loc[j] + 1L):(idx_loc[j] + idx_params)] <- par[f,(idx_loc[ind] + 1L):(idx_loc[ind] + idx_params)]
+      }
     }
-    for (j in 1:Nmodelidx) {
-      ind <- unc.vol.sort$ix[j]
-      tmp[(idx_loc[j] + 1):(idx_loc[j] + idx_params)] <- theta[(idx_loc[ind] + 1):(idx_loc[ind] + idx_params)]
+    if (all(pos == postmp)) {
+      next()
     }
-  }
-  if (!isTRUE(spec$is.mix)) {
-    p <- matrix(nrow = Nmodel, ncol = Nmodel)
-    for (i in 0:(Nmodel-1)) {
-      
-      p[1:(Nmodel-1),i+1] <- theta[(params_loc[Nmodel + 1] + Nmodel*i+1-i):(params_loc[Nmodel + 1] + Nmodel*i+Nmodel-1-i)]
-      
-    }
-    p[Nmodel, ] <- 1 - colSums(matrix(p[1:(Nmodel-1), ], ncol = Nmodel))
-    tmpp <- p
-    for (i in 1:(Nmodel)) {
+    if (!isTRUE(spec$is.mix)) {
+      p <- matrix(nrow = Nmodel, ncol = Nmodel)
+      for (i in 0:(Nmodel - 1L)) {
+        p[1:(Nmodel - 1), i + 1L] <- par[f,(params_loc[Nmodel + 1L] + Nmodel * i + 1 - i):(params_loc[Nmodel + 1L] + Nmodel * i + Nmodel - 1L - i)]
+
+      }
+      p[Nmodel, ] <- 1 - colSums(matrix(p[1:(Nmodel - 1L), ], ncol = Nmodel))
+      tmpp <- p
+      for (i in 1:(Nmodel)) {
+        for (j in 1:(Nmodel)) {
+          tmpp[i, j] <- p[postmp[i], postmp[j]]
+        }
+      }
+      new.p <- as.vector(tmpp[1:(Nmodel - 1L), ])
+      tmp[f, (params_loc[Nmodel + 1] + 1):ncol(tmp)] <- new.p
+    } else {
+      p <- rep(0, Nmodel)
+      for (i in 1:(Nmodel - 1L)) {
+        p[i] <- tmp[f, (params_loc[Nmodel + 1L] + i)]
+      }
+      p[Nmodel] <- 1 - sum(p)
+      tmpp <- p
       for (j in 1:(Nmodel)) {
-        tmpp[i, j] <- p[postmp[i], postmp[j]]
+        tmpp[j] <- p[postmp[j]]
       }
+      new.p <- tmpp[1:(Nmodel - 1L)]
+      tmp[f, (params_loc[Nmodel + 1L] + 1L):ncol(tmp)] <- new.p
     }
-    new.p <- as.vector(tmpp[1:(Nmodel - 1), ])
-    tmp[(params_loc[Nmodel + 1] + 1):length(tmp)] <- new.p
-  } else {
-    p <- rep(0, Nmodel)
-    for (i in 1:(Nmodel - 1)) {
-      p[i] <- tmp[(params_loc[Nmodel + 1] + i)]
-    }
-    p[Nmodel] <- 1 - sum(p)
-    tmpp <- p
-    for (j in 1:(Nmodel)) {
-      tmpp[j] <- p[postmp[j]]
-    }
-    new.p <- tmpp[1:(Nmodel - 1)]
-    tmp[(params_loc[Nmodel + 1] + 1):length(tmp)] <- new.p
-  }
-  if (isTRUE(spec$is.shape.ind)) {
-    tmp <- spec$func$f.do.shape.ind.reverse(tmp)
   }
   return(tmp)
 }
 
-#Function that enhance theta0 according to the variance of moving windows of y 
-#' @importFrom stats optim 
-f.enhance.theta <- function(spec, theta, y) {
-  
-  if (is.vector(theta)) {
-    # DA needed for the Rcpp framework
-    theta = matrix(theta, nrow = 1)
+# Get gamma !!! DA we should put this function elsewhere
+f_getGamma <- function(par, K) {
+  vP <- c(tail(par[1L, ], K * (K - 1L)), rep(0, K))
+  mGamma <- matrix(vP, K, K)
+  mGamma[, K] <- 1 - apply(mGamma[, -K, drop = FALSE], 1L, sum)
+  return(mGamma)
+}
+
+
+f_par_mixture <- function(K, nb_params, par) {
+  if (is.vector(par)) {
+    par <- matrix(par, nrow = 1L)
   }
-  
-  K   <- spec$K
-  l.y <- length(y)
-  sep <- seq(from = 1, to = l.y, length.out = 11)
-  vol <- NULL
-  if (spec$K == 1) {
-    vol <- sqrt(var(y))
+  n_total_params <- ncol(par)
+  n_par <- nrow(par)
+  new_par <- matrix(nrow = n_par, ncol = nb_params + K * (K - 1L))
+  for (i in 1:nrow(par)) {
+    p_vector <- par[i, (nb_params + 1L):n_total_params]
+    new_p <- rep(p_vector, K)
+    new_par[i, ] <- c(par[i, 1:nb_params], new_p)
   }
-  for (i in 1:(length(sep) - 1)) {
-    vol[i] <- sqrt(var(y[sep[i]:sep[i + 1]]))
+  return(new_par)
+}
+
+f_par_mixture_reverse <- function(K, nb_params, par) {
+  if (is.vector(par)) {
+    par <- matrix(par, nrow = 1L)
   }
-  vol.goal <- quantile(vol, prob = seq(0.1, 0.9, length.out = K))
-  if (isTRUE(spec$is.shape.ind)) {
-    pos <- c(1, cumsum(spec$n.params.vol) + 1)
-    pos[length(pos)] = pos[length(pos)] + 1
+  n_total_params <- ncol(par)
+  n_par <- nrow(par)
+  new_par <- matrix(nrow = n_par, ncol = nb_params + K - 1L)
+  for (i in 1:n_par) {
+    p_vector <- par[i, (nb_params + 1L):n_total_params]
+    new_par[i, 1:nb_params] <- par[i, 1:nb_params]
+    idx <- 1L
+    for (j in 1:(K - 1L)) {
+      new_par[i, (nb_params + j)] <- p_vector[idx]
+      idx <- idx + K
+    }
+  }
+  return(new_par)
+}
+
+f_match <- function(x, target) {
+  return(toupper(substr(x, 1, 3)) == target)
+}
+
+f_check_spec <- function(spec) {
+  is.OK = tryCatch({
+    spec$rcpp.func$get_sd()
+    TRUE
+  }, error = function(e) {
+    FALSE
+  })
+  if (!isTRUE(is.OK)) {
+    spec.new = f_spec(models = spec$name, do.mix = spec$is.mix)
+    prior.mean = spec$rcpp.func$get_mean()
+    prior.sd = spec$rcpp.func$get_sd()
+    names(prior.mean) = names(prior.sd) = spec$label[1:length(prior.mean)]
+    prior.mean[names(spec$prior.mean)] = spec$prior.mean
+    prior.sd[names(spec$prior.sd)] = spec$prior.sd
+    spec$rcpp.func = spec.new$rcpp.func
+    spec$rcpp.func$set_mean(spec$prior.mean)
+    spec$rcpp.func$set_sd(spec$prior.sd)
+  }
+  return(spec)
+}
+
+f_rename_par <- function(vPar, spec) {
+  vNames <- spec$label
+
+  if (isTRUE(spec$regime.const.pars.bool)) {
+    for (i in 1:length(spec$regime.const.pars)) {
+      vNames <- vNames[vNames != paste0(spec$regime.const.pars[i], "_" ,2:spec$K)]
+    }
+  }
+
+  if (isTRUE(spec$fixed.pars.bool)) {
+    names(vPar) <- vNames[!vNames %in% names(spec$fixed.pars)]
   } else {
-    pos <- c(1, cumsum(spec$n.params) + 1)
+    names(vPar) <- vNames
   }
-  is.ok = NULL
-  for (i in 1:K) {
-    f.fun <- function(x) {
-      theta.try <- theta
-      theta.try[, pos[i]] <- x
-      unc.vol <- MSGARCH::unc.vol(object = spec, theta.try)
-      #out = unc.vol[i] - vol.goal[i]
-      out = (unc.vol[i] - vol.goal[i])^2
-      return(out)
-    }
-    # DA replace the unitroot which fails sometimes in cluster by optimization 
-    #theta[, pos[i]] <- uniroot(f.fun, lower = spec$lower[pos[i]], upper = spec$upper[pos[i]])$root
-    theta.hat = spec$theta0[pos[i]]
-    
-    str = "f.enhance.theta -> fail in optimization"
-    is.ok[i] = tryCatch({
-      tmp = stats::optim(par = theta.hat, fn = f.fun, method = "Brent",
-                  lower = spec$lower[pos[i]]+0.001, upper = spec$upper[pos[i]]-0.001)
-      if (tmp$convergence == 0) {
-        theta.hat = tmp$par
-      }
-      TRUE
-    }, warning = function(warn) {
-      f.error(str)
-    }, error = function(err) {
-      f.error(str)
-    })
+  return(vPar)
+}
+
+#' @importFrom stats ecdf
+f_cdf_empirical = function(y, x) {
+  return((stats::ecdf(y))(x))
+}
+
+#' @importFrom stats density
+f_pdf_kernel = function(y, x) {
+  d <- density(x = y)
+  h = d$bw
+  x.length = length(x)
+  out = vector(mode = "numeric", length = x.length)
+  for (i in 1:x.length) {
+    out[i] = sum(dnorm(x[i], mean = y, sd = h))/length(y)
   }
-   if (any(!isTRUE(is.ok))){
-     theta = spec$theta0
-   }
-  
-  if (spec$K > 1) {
-    if (!spec$is.mix) {
-      pos <- pos[length(pos)]
-      theta[pos:length(theta)] <- (1 - 0.8) / (K - 1)
-      for (i in 1:(K - 1)) {
-        theta[pos] <- 0.8
-        pos <- pos + K 
-      }
-    }
+  return(out)
+}
+
+f_rbindrep = function(mat, n) {
+  matFull = NULL
+  for (i in 1:n) {
+    matFull = rbind(matFull, mat)
   }
-  
-  return(theta)
+  return(matFull)
+}
+
+f_check_parameterPriorMean <- function(prior.mean, vParNames) {
+  if (any(!names(prior.mean) %in% vParNames)) {
+    vWrongPars <- names(prior.mean)[!names(prior.mean) %in% vParNames]
+    stop(cat(paste("Wrong name in prior.mean:", vWrongPars)))
+  }
+  return(prior.mean)
+}
+
+f_check_parameterPriorSd <- function(prior.sd, vParNames) {
+  if (any(!names(prior.sd) %in% vParNames)) {
+    vWrongPars <- names(prior.sd)[!names(prior.sd) %in% vParNames]
+    stop(cat(paste("Wrong name in prior.sd:", vWrongPars)))
+  }
+  return(prior.sd)
 }

@@ -1,7 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^Contributing.md$
-^README CRAN.md$
 ^README.md$
-paper/
 bin/

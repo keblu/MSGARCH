@@ -1,297 +1,235 @@
 #' @export
 print.MSGARCH_SPEC <- function(x, ...) {
   spec <- x
-  if (spec$K == 1) {
-    type <- "Single-Regime"
-    print(paste0("Specification Type: ", type))
-    print(paste0("Specification Name: ", paste(spec$name, collapse = " ")))
-    print(paste0("Number of parameters in variance model: ", paste(spec$n.params.vol,
-                                                                   collapse = " ")))
-    print(paste0("Number of parameters in distribution: ", paste(spec$n.params -
-                                                                   spec$n.params.vol, collapse = " ")))
-    spec$theta0 <- matrix(spec$theta0, ncol = length(spec$theta0))
-    colnames(spec$theta0) <- spec$label
-    print(paste0("Default parameters:"))
-    print(spec$theta0)
+  spec <- f_check_spec(spec)
+  if (spec$K == 1L) {
+    type <- "Single-regime"
+    cat(paste0("Specification type: ", type,"\n"))
+    cat(paste0("Specification name: ", paste(spec$name, collapse = " "),"\n"))
+    cat(paste0("Number of parameters in variance model: ", paste(spec$n.params.vol, collapse = " "),"\n"))
+    cat(paste0("Number of parameters in distribution: ", paste(spec$n.params - spec$n.params.vol, collapse = " "),"\n"))
+    cat(paste("------------------------------------------\n"))
+    out = list(type = type, spec.name = paste(spec$name, collapse = " "),
+               n.params.var = paste(spec$n.params.vol, collapse = " "),
+               n.params.dist = paste(spec$n.params - spec$n.params.vol, collapse = " "),
+               prior.mean = spec$prior.mean, prior.sd = spec$prior.sd,
+               fixed.pars = spec$fixed.pars,
+               regime.const.pars = spec$regime.const.pars)
   } else {
     if (isTRUE(spec$is.mix)) {
       type <- "Mixture"
     } else {
-      type <- "Markov-Switching"
+      type <- "Markov-switching"
     }
-    if (isTRUE(spec$is.shape.ind)) {
-      type2 <- " with Regime-Independent distribution"
+    cat(paste0("Specification type: ", type,"\n"))
+    cat(paste0("Specification name: ", paste(spec$name, collapse = " "),"\n"))
+    cat(paste0("Number of parameters in each variance model: ", paste(spec$n.params.vol, collapse = " "),"\n"))
+    cat(paste0("Number of parameters in each distribution: ", paste(spec$n.params - spec$n.params.vol, collapse = " "),"\n"))
+    
+    if (isTRUE(spec$fixed.pars.bool)) {
+      cat(paste("------------------------------------------\n"))
+      cat(paste0("Fixed parameters:","\n"))
+      cat(unlist(spec$fixed.pars),"\n")
     } else {
-      type2 <- ""
+      cat(paste("------------------------------------------\n"))
+      cat(paste0("Fixed parameters:","\n"))
+      cat("None\n")
     }
-    print(paste0("Specification Type: ", type, type2))
-    print(paste0("Specification Name: ", paste(spec$name, collapse = " ")))
-    print(paste0("Number of parameters in each variance model: ", paste(spec$n.params.vol,
-                                                                        collapse = " ")))
-    if (isTRUE(spec$is.shape.ind)) {
-      print(paste0("Number of parameters in distribution: ", paste(spec$n.params[1] -
-                                                                     spec$n.params.vol[1], collapse = " ")))
+    
+    if (isTRUE(spec$regime.const.pars.bool)) {
+      cat(paste("------------------------------------------\n"))
+      cat(paste0("Across regime constrained parameters:","\n"))
+      cat(unlist(spec$regime.const.pars),"\n")
     } else {
-      print(paste0("Number of parameters in each distribution: ", paste(spec$n.params -
-                                                                          spec$n.params.vol, collapse = " ")))
+      cat(paste("------------------------------------------\n"))
+      cat(paste0("Across regime constrained parameters:","\n"))
+      cat("None\n")
     }
-    spec$theta0 <- matrix(spec$theta0, ncol = length(spec$theta0))
-    colnames(spec$theta0) <- spec$label
-    print(paste0("Default parameters:"))
-    print(spec$theta0)
+    
+    cat(paste("------------------------------------------\n"))
+    out = list(type = paste0("Specification type: ", type),
+               spec.name = paste0("Specification name: ",
+                                  paste(spec$name, collapse = " ")),
+               n.params.var = paste(spec$n.params.vol, collapse = " "),
+               n.params.dist = paste(spec$n.params[1] - spec$n.params.vol[1], collapse = " "),
+               prior.mean = spec$prior.mean, prior.sd = spec$prior.sd)
   }
-}
-#' @export
-summary.MSGARCH_MLE_FIT <- function(object, ...) {
-  print(object$spec)
-  print(paste0("Fitted Parameters:"))
-  print(object$theta)
-  if(object$spec$K > 1){
-    if(!object$spec$is.mix){
-      print(paste0("Transition matrix:"))
-      print(transmat(object))
-      stable_prob = transmat(object, n = 100) %*% matrix(rep(1/object$spec$K,object$spec$K), ncol = 1)
-    } else {
-      stable_prob = t(transmat(object))
-    }
-    print(paste0("Stable probabilities:"))
-    rownames(stable_prob) = paste0("State ", 1:object$spec$K)
-    colnames(stable_prob) = "Stable probabilities"
-    print(stable_prob)
-  }
-  print("Unconditional volatility:")
-  print(MSGARCH::unc.vol(object = object))
-  cat("Log-kernel: ", object$log_kernel,"\n")
-  AIC = MSGARCH::AIC(object)
-  cat("AIC: ", AIC,"\n")
-  BIC = MSGARCH::BIC(object)
-  cat("BIC: ", BIC)
-}
-#' @export
-summary.MSGARCH_BAY_FIT <- function(object, ...) {
-  print(object$spec)
-  print(paste0("Bayesian posterior mean:"))
-  theta_mean = colMeans(object$theta)
-  print(theta_mean)
-  print(paste0("Posterior variance-covariance matrix"))
-  print(var(object$theta))
-  if(object$spec$K > 1){
-    if(!object$spec$is.mix){
-      print(paste0("Posterior mean transition matrix:"))
-      print(transmat(object = object$spec,theta = theta_mean))
-      stable_prob = transmat(object = object$spec, theta = theta_mean, n = 100) %*% matrix(rep(1/object$spec$K,object$spec$K), ncol = 1)
-    } else {
-      stable_prob = t(transmat(object = object$spec, theta = theta_mean))
-    }
-    print(paste0("Posterior mean stable probabilities:"))
-    rownames(stable_prob) = paste0("State ", 1:object$spec$K)
-    colnames(stable_prob) = "Stable probabilities"
-    print(stable_prob)
-  }
-  print("Posterior mean unconditional volatility:")
-  print(MSGARCH::unc.vol(object = object$spec, theta = theta_mean))
-  cat("Acceptance rate: ",object$accept,"\n")
-  AIC = MSGARCH::AIC(object)
-  cat("AIC: ", AIC,"\n")
-  BIC = MSGARCH::BIC(object)
-  cat("BIC: ", BIC,"\n")
-  DIC = MSGARCH::DIC(object)$DIC
-  cat("DIC: ", DIC)
+  return(invisible(out))
 }
 
 #' @export
 summary.MSGARCH_SPEC <- function(object, ...) {
-  spec <- object
-  if (spec$K == 1) {
-    type <- "Single-Regime"
-    print(paste0("Specification Type: ", type))
-    print(paste0("Specification Name: ", paste(spec$name, collapse = " ")))
-    print(paste0("Number of parameters in variance model: ", paste(spec$n.params.vol,
-                                                                   collapse = " ")))
-    print(paste0("Number of parameters in distribution: ", paste(spec$n.params -
-                                                                   spec$n.params.vol, collapse = " ")))
-    spec$theta0 <- matrix(spec$theta0, ncol = length(spec$theta0))
-    colnames(spec$theta0) <- spec$label
-    print(paste0("Default parameters:"))
-    print(spec$theta0)
-  } else {
-    if (isTRUE(spec$is.mix)) {
-      type <- "Mixture "
-    } else {
-      type <- "Markov-Switching "
-    }
-    if (isTRUE(spec$is.shape.ind)) {
-      type2 <- " with Regime-Independent distribution"
-    } else {
-      type2 <- ""
-    }
-    print(paste0("Specification Type: ", type, type2))
-    print(paste0("Specification Name: ", paste(spec$name, collapse = " ")))
-    print(paste0("Number of parameters in each variance model: ", paste(spec$n.params.vol,
-                                                                        collapse = " ")))
-    if (isTRUE(spec$is.shape.ind)) {
-      print(paste0("Number of parameters in distribution: ", paste(spec$n.params[1] -
-                                                                     spec$n.params.vol[1], collapse = " ")))
-    } else {
-      print(paste0("Number of parameters in each distribution: ", paste(spec$n.params -
-                                                                          spec$n.params.vol, collapse = " ")))
-    }
-    spec$theta0 <- matrix(spec$theta0, ncol = length(spec$theta0))
-    colnames(spec$theta0) <- spec$label
-    print(paste0("Default parameters:"))
-    print(spec$theta0)
-  }
+  out <- print(object)
+  return(invisible(out))
 }
 
-#'@import zoo
-#'@importFrom graphics matplot
-#'@export
-plot.MSGARCH_SIM <- function(x, ...) {
-  sim <- x
-  matplot(t(sim$draws), type = "l", ylab = "draws", main = "Simulated draws")
-  states = as.numeric(rownames(table(sim$state)))
-  for(i in 1:length(states)){
-    v = readline(prompt = "Pause. Press <Enter> to continue...")
-    percent_sim <- zoo::zoo(colSums(sim$state == states[i])/nrow(sim$state))
-    plot(percent_sim, plot.type = "single", ylab = "%", main = paste0("Percentage of simulation done in state ", i))
+#' @export
+summary.MSGARCH_ML_FIT <- function(object, ...) {
+  object$spec <- f_check_spec(object$spec)
+  spec <- summary(object$spec)
+  cat(paste0("Fitted parameters:","\n"))
+  if (is.null(object$Inference)) {
+    estimate <- as.matrix(object$par)
+    colnames(estimate) <- "Estimate"
+    estimate.print <- estimate
+  } else {
+    estimate <- object$Inference$MatCoef
+    estimate.print <- data.frame(estimate)
+    colnames(estimate.print) <- colnames(estimate)
+    estimate.print[, 1:3] <- round(estimate.print[1:3], 4)
+    p.val.below <- estimate.print[, 4] < 1e-16
+    p.val.below[is.na(p.val.below)] <- FALSE
+    estimate.print[, 4] <- format(estimate.print[, 4], scientific = TRUE, digits = 4)
+    estimate.print[p.val.below, 4] <- "<1e-16"
   }
+  print(estimate.print)
+  cat(paste("------------------------------------------\n"))
+  if (object$spec$K > 1L) {
+    if (!object$spec$is.mix) {
+      cat(paste0("Transition matrix:","\n"))
+      trans.mat <- TransMat(object)
+      print(round(trans.mat, 4))
+      cat(paste("------------------------------------------\n"))
+      stable.prob <- t(TransMat(object, n.ahead = 10000)[1, , drop = FALSE])
+    } else {
+      stable.prob <- t(TransMat(object))
+    }
+    cat(paste0("Stable probabilities:","\n"))
+    stable.prob <-  as.vector(stable.prob)
+    names(stable.prob) <- paste0("State ", 1:object$spec$K)
+    print(round(stable.prob, 4))
+    cat(paste("------------------------------------------\n"))
+    #cat("Unconditional volatility:\n")
+    #unc.vol = UncVol(object = object)
+    #cat("In each regime:\n")
+    #print(round(unc.vol$SR, 4))
+    #cat("Overall process:\n")
+    #cat(paste0(" ", round(unc.vol$MS, 4),"\n"))
+  } else {
+    #cat("Unconditional volatility:\n")
+    #unc.vol = UncVol(object = object)
+    #print(round(unc.vol$SR, 4))
+  }
+  cat(paste0("LL: ", round(object$loglik, 4), "\n"))
+  aic <- AIC(object)
+  cat(paste0("AIC: ", round(aic, 4), "\n"))
+  bic <- BIC(object)
+  cat(paste0("BIC: ", round(bic, 4)))
+  cat(paste("\n------------------------------------------\n"))
+  if (isTRUE(object$spec$is.mix)) {
+    out <- list(spec = spec, estimate = estimate,
+                stable.prob = stable.prob,
+                LL = object$loglik, AIC = aic, BIC = bic)
+  } else {
+    if (object$spec$K > 1) {
+      out <- list(spec = spec, estimate = estimate,
+                  trans.mat = trans.mat,
+                  stable.prob = stable.prob,
+                  LL = object$loglik, AIC = aic, BIC = bic)
+    } else {
+      out <- list(spec = spec, estimate = estimate,
+                  LL = object$loglik, AIC = aic, BIC = bic)
+    }
+  }
+  return(invisible(out))
 }
 
-
-#'@import zoo fanplot
-#'@importFrom graphics plot axis.Date
-#'@export
-plot.MSGARCH_PSTATE <- function(x, ...) {
-  Pstate <- x
-  input_list <- list(...)
-  if(dim(Pstate)[2] > 1){
-    plot.func = function(x, main, input_list, ...){
-      if(!input_list$no_date){
-        plot(NULL, xlim=range(zoo::index(x)), xaxt = "n", ylim = range(tmp),
-             ylab = "Probability", main = main, xlab = "Date")
-        axis.Date(side = 1, x = zoo::index(x))
-        fanplot::fan(x, type = "interval",med.col = "blue", med.ln = TRUE)
-      } else{
-        plot(NULL, xlim=range(zoo::index(x)), ylim = range(tmp),
-             ylab = "Probability", main = main)
-        fanplot::fan(t(x), type = "interval",med.col = "blue", med.ln = TRUE)
-      }
-    }
-  } else {
-    plot.func = function(x, main,input_list, ...){
-      plot(x, plot.type = "single", ylab = "Probability", xlab = "Date", main = main)
-    } 
-  }
-  for (i in 1:dim(Pstate)[3]) {
-    if(is.null(input_list$date)){
-      tmp <- zoo::zoo(Pstate[, ,i])
-      input_list$no_date = TRUE
-    } else {
-      if(ncol(Pstate)== 1){
-        tmp <- zoo::zoo(Pstate[, ,i], order.by = input_list$date)
-      } else{
-        tmp <- zoo::zoo(t(Pstate[, ,i]), order.by = input_list$date)
-      }
-      input_list$no_date = FALSE
-    }
-    plot.func(tmp, main = paste0("Filtered probability to be in State ", i), input_list)
-    v = readline(prompt = "Pause. Press <Enter> to continue...")
-  }
+print.MSGARCH_ML_FIT <- function(x, ...) {
+  out <- summary(x, ...)
+  return(invisible(out))
 }
 
-#'@import zoo fanplot
-#'@importFrom graphics plot axis.Date
-#'@export
-plot.MSGARCH_HT <- function(x, ...) {
-  ht <- x
-  input_list <- list(...)
-  if(dim(ht)[2] > 1){
-    plot.func = function(x, main, input_list, ...){
-      if(!input_list$no_date){
-        plot(NULL, xlim=range(zoo::index(x)), xaxt = "n", ylim = range(tmp),
-             ylab = "Volatility", main = main, xlab = "Date")
-        axis.Date(side = 1, x = zoo::index(x))
-        fanplot::fan(x, type = "interval",med.col = "blue", med.ln = TRUE)
-      } else{
-        plot(NULL, xlim=range(zoo::index(x)), ylim = range(tmp),
-             ylab = "Volatility", main = main)
-        fanplot::fan(t(x), type = "interval",med.col = "blue", med.ln = TRUE)
-      }
-    }
-  } else {
-    plot.func = function(x, main,input_list, ...){
-      plot(x, plot.type = "single", ylab = "Volatility", xlab = "Date", main = main)
-    } 
-  }
-  if (is.matrix(ht)) {
-    if(is.null(input_list$date)){
-      tmp <- zoo::zoo(ht)
-      input_list$no_date = TRUE
+#' @export
+summary.MSGARCH_MCMC_FIT <- function(object, ...) {
+  object$spec <- f_check_spec(object$spec)
+  spec <- summary(object$spec)
+  cat(paste0("Posterior sample (size: ", nrow(object$par), ")","\n"))
+  summ <- summary(object$par)$stat[colnames(object$ctr$par0),]
+  summ <- cbind(summ,summ[,3]^2 / summ[,4]^2)
+  colnames(summ)[c(3,4,5)] <- c("SE","TSSE","RNE")
+  print(round(summ, digits = 4))
+  cat(paste("------------------------------------------\n"))
+  if (object$spec$K > 1) {
+    if (!object$spec$is.mix) {
+      cat(paste0("Posterior mean transition matrix:","\n"))
+      post.trans.mat = TransMat(object = object$spec, par = colMeans(object$par))
+      print(round(post.trans.mat, 4))
+      cat(paste("------------------------------------------\n"))
+      post.stable.prob <- t(TransMat(object = object$spec,
+                                     par = colMeans(object$par), n.ahead = 10000)[1, , drop = FALSE])
     } else {
-      if(ncol(ht)== 1){
-        tmp <- zoo::zoo(ht, order.by = input_list$date)
-      } else{
-        tmp <- zoo::zoo(t(ht), order.by = input_list$date)
-      }
-      input_list$no_date = FALSE
+      post.stable.prob <- t(TransMat(object = object$spec, par =  colMeans(object$par)))
     }
-    plot.func(tmp, main = paste0("Conditional volatility"),input_list)
+    cat(paste0("Posterior mean stable probabilities:","\n"))
+    post.stable.prob <- as.vector(post.stable.prob)
+    names(post.stable.prob) <- paste0("State ", 1:object$spec$K)
+    print(round(post.stable.prob, 4))
+    # cat(paste("------------------------------------------\n"))
+    #  cat("Posterior mean unconditional volatility:\n")
+    #  post.unc.vol = UncVol(object = object$spec, par = post.mean)
+    #  cat("In each regime:\n")
+    #  print(round(post.unc.vol$SR, 4))
+    #  cat("Overall process:\n")
+    #  cat(paste0(" ", round(post.unc.vol$MS, 4),"\n"))
   } else {
-    for (i in 1:dim(ht)[3]) {
-      if(is.null(input_list$date)){
-        tmp <- zoo::zoo(ht[, ,i])
-        input_list$no_date = TRUE
-      } else {
-        if(ncol(ht)== 1){
-          tmp <- zoo::zoo(ht[, ,i], order.by = input_list$date)
-        } else{
-          tmp <- zoo::zoo(t(ht[, ,i]), order.by = input_list$date)
-        }
-        input_list$no_date = FALSE
-      }
-      plot.func(tmp, main = paste0("Conditional volatility of state ", i),input_list)
-      v = readline(prompt = "Pause. Press <Enter> to continue...")
+    # cat("Posterior mean unconditional volatility:\n")
+    #  post.unc.vol = UncVol(object = object, par = post.mean)
+    #  print(round(post.unc.vol$SR, 4))
+  }
+  cat(paste("------------------------------------------\n"))
+  cat(paste0("Acceptance rate MCMC sampler: ", round(100 * object$accept, 1), "%\n"))
+  cat(paste0("n.mcmc: ", object$ctr$n.mcmc, "\n"))
+  cat(paste0("n.burn: ", object$ctr$n.burn, "\n"))
+  cat(paste0("n.thin: ", object$ctr$n.thin, "\n"))
+  cat(paste("------------------------------------------\n"))
+  aic <- AIC(object)
+  cat(paste0("AIC: ", round(aic, 4), "\n"))
+  bic <- BIC(object)
+  cat(paste0("BIC: ", round(bic, 4), "\n"))
+  dic <- DIC(object)$DIC
+  cat(paste0("DIC: ", round(dic, 4)))
+  cat(paste("\n------------------------------------------\n"))
+  if (isTRUE(object$spec$is.mix)) {
+    out <- list(spec = spec, summary = summ, post.stable.prob = post.stable.prob,
+                accept.rate = object$accept,
+                AIC = aic, BIC = bic, DIC = dic)
+  } else {
+    if (object$spec$K > 1) {
+      out <- list(spec = spec, summary = summ, post.trans.mat = post.trans.mat,
+                  post.stable.prob = post.stable.prob,
+                  accept.rate = object$accept, AIC = aic, BIC = bic, DIC = dic)
+    } else {
+      out <- list(spec = spec, summary = summ, accept.rate = object$accept,
+                  AIC = aic, BIC = bic, DIC = dic)
     }
   }
+  return(invisible(out))
 }
 
-#'@import ggplot2
-#'@importFrom graphics legend plot
-#'@importFrom grDevices rainbow
-#'@export
-plot.MSGARCH_RISK <- function(x, ...) {
-  risk <- x
-  input_list <- list(...)
-  ts_rainbow <- rainbow(ncol(risk$VaR))
-  if(is.null(input_list$date)){
-    tmp.VaR <- zoo::zoo(risk$VaR)
-    input_list$no_date = TRUE
-  } else {
-    if(ncol(risk$VaR)== 1){
-      tmp.VaR <- zoo::zoo(risk$VaR, order.by = input_list$date)
-    } else{
-      tmp.VaR <- zoo::zoo(risk$VaR, order.by = input_list$date)
-    }
-    input_list$no_date = FALSE
-  }
-  plot(tmp.VaR, plot.type = "single", col = ts_rainbow, ylab = "Return",
-       xlab = "T", main = paste0("Value-At-Risk"))
-  legend("bottomright", legend = colnames(risk$VaR), col = ts_rainbow, lty = 1)
-  if (!is.null(risk$ES)) {
-    if(is.null(input_list$date)){
-      tmp.ES <- zoo::zoo(risk$ES)
-      input_list$no_date = TRUE
-    } else {
-      if(ncol(risk$ES)== 1){
-        tmp.ES <- zoo::zoo(risk$ES, order.by = input_list$date)
-      } else{
-        tmp.ES <- zoo::zoo(risk$ES, order.by = input_list$date)
-      }
-      input_list$no_date = FALSE
-    }
-    v = readline(prompt = "Pause. Press <Enter> to continue...")
-    plot(tmp.ES, plot.type = "single", col = ts_rainbow, ylab = "Return",
-         xlab = "T", main = paste0("Expected-shortfall"))
-    legend("bottomright", legend = colnames(risk$ES), lty = 1, col = ts_rainbow)
-  }
+print.MSGARCH_MCMC_FIT <- function(x, ...) {
+  out <- summary(x, ...)
+  return(invisible(out))
+}
+
+#' @export
+print.MSGARCH_FORECAST <- function(x, ...){
+  x$draw = unclass(x$draw)
+  x$vol = unclass(x$vol)
+  print(unclass(x))
+}
+#' @export
+print.MSGARCH_CONDVOL <- function(x, ...){
+  print(unclass(x))
+}
+#' @export
+print.MSGARCH_RISK <- function(x, ...){
+  print(unclass(x))
+}
+#' @export
+print.MSGARCH_PSTATE <- function(x, ...){
+  print(unclass(x))
+}
+#' @export
+print.MSGARCH_SIM <- function(x, ...){
+  print(unclass(x))
 }
