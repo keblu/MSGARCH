@@ -25,9 +25,9 @@ To install the latest development  version of `MSGARCH` (which may contain bugs!
       R > require("devtools")
       R > devtools::install_github("keblu/MSGARCH", subdir="Package")
 
-## Detail
+## Details
 
-Major changes in the package make it such that code relying on the `MSGARCH` package previous to version 1.0 won't be compatible with the current and future version of the `MSGARCH` package. We however encourage the user to update the package to the latest version since many enhancement and bug fix has been implemented.
+Major changes in the package make it such that code relying on the `MSGARCH` package previous to version 1.0 won't be compatible with the current and future version of the `MSGARCH` package. We however encourage the user to update the package to the latest version since many enhancement and bug fix has been implemented. Please refer to [Ardia et al., 2017](https://ssrn.com/abstract=2845809) for more information.
 
 ## References
 
