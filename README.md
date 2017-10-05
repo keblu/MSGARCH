@@ -1,4 +1,4 @@
-# MSGARCH
+﻿# MSGARCH
 
 Markov-switching GARCH models in R
 
@@ -42,7 +42,7 @@ Working paper.
 https://ssrn.com/abstract=2845809
 
 Ardia, D., Bluteau, K., Boudt, K., Catania, L. (2017).    
-_Forecasting performance of Markov-switching GARCH models: A large-scale empirical study_.    
+_Forecasting risk with Markov-switching GARCH models: A large-scale performance study_.    
 Working paper.    
 https://ssrn.com/abstract=2918413  
 
