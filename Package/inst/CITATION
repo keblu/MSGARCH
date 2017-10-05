@@ -24,10 +24,10 @@ citEntry(entry = "manual",
 citEntry(entry = "Misc",
   author = personList(person("David","Ardia"), person("Keven","Bluteau"), person("Kris","Boudt"), person("Leopoldo","Catania"), person("Denis-Alexandre","Trottier")),
   title = "Markov-Switching {GARCH} Models in {R}: {T}he {MSGARCH} Package",
-  year = "2016",
+  year = "2017",
   note = "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2845809",
   textVersion = paste(
-                "Ardia, David and Bluteau, Keven and Boudt, Kris and Catania, Leopoldo and Trottier, Denis-Alexandre (2016).",
+                "Ardia, David and Bluteau, Keven and Boudt, Kris and Catania, Leopoldo and Trottier, Denis-Alexandre (2017).",
                 "Markov-Switching GARCH Models in R: The MSGARCH Package.",
                 "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2845809/")
 )

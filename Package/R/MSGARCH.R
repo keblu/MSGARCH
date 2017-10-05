@@ -64,7 +64,7 @@ NULL
 #'@title DEM/GBP exchange rate log-returns
 #'@description
 #'The \code{vector} \code{dem2gbp} contains daily observations of the Deutschmark vs British Pound foreign exchange
-#'rate log-returns. This data set has been promoted as an informal benchmark for GARCH
+#'rate log-returns. This dataset has been promoted as an informal benchmark for GARCH
 #'time-series software validation. See McCullough and Renfro (1999), and Brooks, Burke, and Persand
 #'(2001) for details. The nominal returns are expressed in percent as in Bollerslev and Ghysels
 #'(1996). The sample period is from January 3, 1984, to December 31, 1991, for a total of 1974
