@@ -39,7 +39,7 @@ f_mapJacob <- function(vPw, spec) {
   vJ <- -vPw + log(vUpper - vLower) - 2 * log(1 + exp(-vPw))
   vJ <- exp(vJ)
 
-  mJ <- diag(vJ)
+  mJ <- diag(as.vector(vJ))
 
   return(mJ)
 }

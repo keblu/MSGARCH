@@ -72,7 +72,6 @@ export(UncVol)
 export(ExtractStateFit)
 
 import(Rcpp)
-import(adaptMCMC)
 import(expm)
 import(fanplot)
 import(zoo)

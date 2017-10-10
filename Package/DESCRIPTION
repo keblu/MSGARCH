@@ -22,12 +22,12 @@ Author: David Ardia [aut],
     Brian Peterson [ctb],
     Denis-Alexandre Trottier [aut]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
-Description: The MSGARCH package offers methods to fit (by Maximum Likelihood or MCMC/Bayesian), simulate, and forecast various 
+Description: Fit (by Maximum Likelihood or MCMC/Bayesian), simulate, and forecast various 
   Markov-Switching GARCH models as described in Ardia et al. (2017) <https://ssrn.com/abstract=2845809>.
 License: GPL (>= 2)
 BugReports: https://github.com/keblu/MSGARCH/issues
 URL: https://github.com/keblu/MSGARCH
-Imports: Rcpp, adaptMCMC, coda, methods,
+Imports: Rcpp, coda, methods,
          zoo, expm, fanplot, MASS, numDeriv
 LinkingTo: Rcpp, RcppArmadillo
 Suggests:  mcmc, testthat

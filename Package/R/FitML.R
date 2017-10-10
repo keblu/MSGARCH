@@ -78,6 +78,7 @@
 #' summary(fit)
 #'
 #' # custom optimizer example
+#' \dontrun{
 #'f_custom_optim <- function(vPw, f_nll, spec, data, do.plm){
 #'  out <- stats::optim(vPw, f_nll, spec = spec, data = data,
 #'                      do.plm = do.plm, method = "Nelder-Mead")
@@ -87,6 +88,7 @@
 #' set.seed(123)
 #' fit <- FitML(spec, data = SMI, ctr = list(OptimFUN = f_custom_optim))
 #' summary(fit)
+#' }
 #' @importFrom stats runif
 #' @export
 FitML <- function(spec, data, ctr = list()) {

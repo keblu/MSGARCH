@@ -6,6 +6,21 @@
 
 using namespace Rcpp;
 
+// f_RCPP_adaptMCMC
+arma::mat f_RCPP_adaptMCMC(const arma::rowvec theta0, Rcpp::Function func, double acc_rate, arma::mat sigma, int n_mcmc);
+RcppExport SEXP _MSGARCH_f_RCPP_adaptMCMC(SEXP theta0SEXP, SEXP funcSEXP, SEXP acc_rateSEXP, SEXP sigmaSEXP, SEXP n_mcmcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::rowvec >::type theta0(theta0SEXP);
+    Rcpp::traits::input_parameter< Rcpp::Function >::type func(funcSEXP);
+    Rcpp::traits::input_parameter< double >::type acc_rate(acc_rateSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< int >::type n_mcmc(n_mcmcSEXP);
+    rcpp_result_gen = Rcpp::wrap(f_RCPP_adaptMCMC(theta0, func, acc_rate, sigma, n_mcmc));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Decoding_HMM
 List Decoding_HMM(const arma::mat& allprobs, const arma::mat& mGamma, const int& T, const int& K);
 RcppExport SEXP _MSGARCH_Decoding_HMM(SEXP allprobsSEXP, SEXP mGammaSEXP, SEXP TSEXP, SEXP KSEXP) {
@@ -152,6 +167,7 @@ RcppExport SEXP _rcpp_module_boot_Student();
 RcppExport SEXP _rcpp_module_boot_tGARCH();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_MSGARCH_f_RCPP_adaptMCMC", (DL_FUNC) &_MSGARCH_f_RCPP_adaptMCMC, 5},
     {"_MSGARCH_Decoding_HMM", (DL_FUNC) &_MSGARCH_Decoding_HMM, 4},
     {"_MSGARCH_getDelta", (DL_FUNC) &_MSGARCH_getDelta, 2},
     {"_MSGARCH_Viterbi", (DL_FUNC) &_MSGARCH_Viterbi, 3},

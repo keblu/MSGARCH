@@ -1,8 +1,11 @@
 #' @import adaptMCMC
 f_SamplerFUNDefault <- function(f_posterior, data, spec, par0, ctr) {
-  out <- list()
-  out <- adaptMCMC::MCMC(p = f_posterior, data = data, spec = spec, 
-                         n = ctr$n.burn + ctr$n.mcmc, init = par0, adapt = TRUE,
-                         acc.rate = 0.23)$samples
-  return(out)
+  p.log <- function(vPw) {
+    return(f_posterior(vPw = vPw, data = data, spec = spec, PriorFun = TRUE))
+  }
+  draw <- f_RCPP_adaptMCMC(theta0 = par0, acc_rate = 0.25, 
+                           sigma = diag(length(par0)), 
+                           func = p.log, n_mcmc = ctr$n.burn + ctr$n.mcmc)
+  colnames(draw) = names(par0)
+  return(draw)
 }

@@ -61,8 +61,8 @@ a \code{MSGARCH_SPEC} object on a set of observations.
 }
 \details{
 The total number of draws is equal to \code{n.mcmc / n.thin}.
-The MCMC/Bayesian estimation relies on the package \pkg{adaptMCMC} (Andreas, 2012) which
-implements the adaptive sampler of Vihola (2012).
+The MCMC/Bayesian estimation relies on an \pkg{Rcpp} implementation of the adaptive sampler of Vihola (2012). 
+The implementation is based on the R package \pkg{adaptMCMC} (Andreas, 2012).
 Starting values when \code{par0} is not provided are chosen automatically
 before sampling (see Ardia et al. (2016) for more details).\cr
 \code{SamplerFUN} allows for a custom sampler to be used. The function
@@ -84,8 +84,7 @@ spec <- CreateSpec()
 
 # fit the model on the data by MCMC
 set.seed(123)
-fit <- FitMCMC(spec = spec, data = SMI, ctr = list(n.burn = 500L, n.mcmc = 500L, n.thin = 1L,
-                                              do.adapt = TRUE, acc.rate = 0.4))
+fit <- FitMCMC(spec = spec, data = SMI, ctr = list(n.burn = 500L, n.mcmc = 500L, n.thin = 1L))
 summary(fit)
 
 # custom sampler example
@@ -98,8 +97,8 @@ f_MCMC <- function(f_posterior, data, spec, par0, ctr){
 }
 
 set.seed(123)
-fit <- FitMCMC(spec, data = SMI, ctr  = list(SamplerFun = f_MCMC,
-                                             n.burn = 500L, n.mcmc = 500L))
+fit <- FitMCMC(spec, data = SMI, ctr  = list(SamplerFUN = f_MCMC,
+                                             n.burn = 500L, n.mcmc = 500L, n.thin = 1L))
 summary(fit)
 }
 }
