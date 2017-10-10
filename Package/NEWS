@@ -1,6 +1,8 @@
 Changes in Version 1.2
   o Small improvements
-  o Replace adaptMCMC for an Rcpp implementation of the adaptive sampler
+  o Robustification of Hessian
+  o Robustification of MCMC
+  o Speedup examples
 Changes in Version 1.1
   o New release on CRAN
 Changes in Version 1.00.1
