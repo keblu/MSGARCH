@@ -9,6 +9,8 @@
 ### !!! R version 3.4.1 (2017-06-30)
 ### !!! Platform: x86_64-w64-mingw32/x64 (64-bit)
 
+### !!! RESULTS ARE PLATFORM DEPENDENT (similar up to the 8th digits) !!!
+
 #################################################################################
 ### LOAD THE PACKAGE
 
@@ -63,16 +65,16 @@ cat("\n\n")
 cat("SECTION 3.2\n")
 cat("-----------\n\n")
 
-data("SMI", package = "MSGARCH")
+data("dem2gbp", package = "MSGARCH")
 ms2.garch.n <- CreateSpec(variance.spec = list(model = c("sGARCH")),
                           distribution.spec = list(distribution = c("norm")),
                           switch.spec = list(K = 2))
 
-fit.ml <- FitML(spec = ms2.garch.n, data = SMI)
+fit.ml <- FitML(spec = ms2.garch.n, data = dem2gbp)
 summary(fit.ml)
 
 set.seed(1234)
-fit.mcmc <- FitMCMC(spec = ms2.garch.n, data = SMI)
+fit.mcmc <- FitMCMC(spec = ms2.garch.n, data = dem2gbp)
 summary(fit.mcmc)
 
 ######################################################
@@ -125,9 +127,6 @@ nam <- paste0("PART_II_R", tmp$R.version$major, ".",
 sink(file = paste0("sink_", nam, ".txt"), append = FALSE, split = TRUE) # output printed in txt
 print(tmp)
 
-## !!! RESULTS ARE CONDITIONAL ON THIS SEED !!!
-set.seed(1234) 
-
 ## load SMI
 data("SMI", package = "MSGARCH")
 
@@ -147,6 +146,7 @@ BIC(fit.ml)
 summary(fit.ml)
 
 ## Unconditional vol
+set.seed(1234) 
 sqrt(250) * sapply(ExtractStateFit(fit.ml), UncVol)
 
 ## Smoothed probabilities in regime 2 and volatility
@@ -189,6 +189,8 @@ ucvol.bay   <- lapply(ucvol.draws, mean)
 ucvol.mle   <- f_ucvol(fit.ml$par)
 unlist(ucvol.mle)
 unlist(ucvol.bay)
+
+sapply(ucvol.draws, function(x) quantile(x, probs = c(0.025, 0.975)))
 
 ## Compute skewness and quantiles of unconditional volatility
 sapply(ucvol.draws, quantile, probs = c(0.025, 0.975))
@@ -255,7 +257,6 @@ par.mle <- fit.ml$par[sel]
 par.bay <- apply(tmp, 2, mean)
 xlim <- range(c(tmp[,1], par.mle[1]))
 ylim <- range(c(tmp[,2], par.mle[2]))
-
 pdf(file = "figure3.pdf", height = 13, width = 13, compress = TRUE)
 par(mfrow = c(1, 1))
 plot(tmp, pch = 20, las = 1, lwd = 2, cex = 2, xlim = xlim, ylim = ylim,
