@@ -1,3 +1,5 @@
+library("MSGARCH")
+
 ####################### FITML #########################
 #Loop over all model and all distribution and fit by ML the 
 #SMI up to 4 regime with similar conditional variance process and distribution
