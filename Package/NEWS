@@ -1,7 +1,7 @@
 Changes in Version 1.2
   o Small improvements
   o Robustification of Hessian
-  o Robustification of MCMC
+  o Robustification of MCMC with Rcpp
   o Speedup examples
 Changes in Version 1.1
   o New release on CRAN
