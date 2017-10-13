@@ -1,4 +1,4 @@
-﻿# MSGARCH
+# MSGARCH
 
 Markov-switching GARCH models in R
 
@@ -8,7 +8,7 @@ Markov-switching GARCH models in R
 
 ## Introduction
 
-Markov-switching GARCH models have become popular to model the structural break in the conditional variance dynamics of financial time series. The R package `MSGARCH` ([Ardia et al., 2017](https://ssrn.com/abstract=2845809), Ardia et al., 2017) implements Markov-switching GARCH-type models very effficiently by using C object-oriented programming techniques. It allows the user to perform simulations as well as Maximum Likelihood and Bayesian estimation of a very large class of Markov-switching GARCH-type models. Risk management tools such as Value-at-Risk and Expected-Shortfall calculations are available. See [Ardia et al. (2017)](https://ssrn.com/abstract=2845809) for further details. A large-scale empirical study is presented in [Ardia et al. (2017)](https://ssrn.com/abstract=2918413).
+Markov-switching GARCH models have become popular methods to account for regime changes in the conditional variance dynamics of time series. The R package `MSGARCH` ([Ardia et al., 2017](https://ssrn.com/abstract=2845809), Ardia et al., 2017) implements Markov-switching GARCH-type models very effficiently by using C++ object-oriented programming techniques. It allows the user to perform simulations as well as Maximum Likelihood and MCMC/Bayesian estimations of a very large class of Markov-switching GARCH-type models. The package also provides methods to make single-step and multi-step ahead forecasts of the complete conditional density of the variable of interest. Risk management tools to estimate conditional volatility, Value-at-Risk and Expected Shortfall are also available. See [Ardia et al. (2017)](https://ssrn.com/abstract=2845809) for further details. A large-scale empirical study is presented in [Ardia et al. (2017)](https://ssrn.com/abstract=2918413).
 
 ## Contents
 
@@ -30,7 +30,7 @@ To install the latest development  version of `MSGARCH` (which may contain bugs!
 
 ## Details
 
-Major changes in the package make it such that code relying on the `MSGARCH` package previous to version 1.0 won't be compatible with the current and future version of the `MSGARCH` package. We however encourage the user to update the package to the latest version since many enhancement and bug fix has been implemented. Please refer to [Ardia et al., 2017](https://ssrn.com/abstract=2845809) for more information.
+Major changes in the package make it such that code relying on the `MSGARCH` package previous to version 1.0 will not be compatible with the current and future version of the `MSGARCH` package. We however encourage the user to update the package to the latest version since many enhancement and bug fix has been implemented. Please refer to [Ardia et al., 2017](https://ssrn.com/abstract=2845809) for more information.
 
 ## References
 

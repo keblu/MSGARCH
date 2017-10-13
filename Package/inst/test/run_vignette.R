@@ -231,11 +231,8 @@ dev.off()
 ######################
 
 pdf(file = "figure2.pdf", height = 13, width = 16, compress = TRUE)
-#op <- par(mfrow = c(2,1),
-#          oma = c(1,1,0,0) + 0.0,
-#          mar = c(2,2,2,2) + 0.0)
 par(mfrow = c(2, 1))
-plot(as.vector(SMI), las = 1, type = 'p', pch = 20, col = 'black',
+plot(as.vector(SMI), las = 1, type = 'l', pch = 21, col = 'black',
      cex = 1.5, axes = FALSE, ann = FALSE)
 par(new = TRUE)
 ylabel <- expression(paste("Pr(", s[t], " = 2 | ", hat(psi), ", ", I[t], ")"))
@@ -245,7 +242,6 @@ title(main = "Smoothed probabilities", cex.main = 1.5)
 plot(zoo::zoo(vol, order.by = zoo::index(SMI)), lty = 1, plot.type = "single",
      col = "black", las = 1, ylab = "", xlab = "Date", lwd = 3, cex.axis = 1.5, cex.lab = 1.5)
 title(main = "Volatility (%)", cex.main = 1.5)
-par(op)
 dev.off()
 
 ######################
