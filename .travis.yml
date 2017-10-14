@@ -1,3 +1,5 @@
+before_install:
+ - cd Package
 language: r
 cache: packages
 r_check_args: '--as-cran --no-build-vignettes'
