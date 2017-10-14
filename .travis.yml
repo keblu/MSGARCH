@@ -2,11 +2,6 @@ language: r
 sudo: false
 cache: packages
 
-install: travis_wait 30 mvn install
- 
-env:
-  - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
-
 addons:
   apt:
     packages:
@@ -15,13 +10,11 @@ addons:
 before_install:
   - cd Package
 
-global:
-   - _R_CRAN_CHECK_INCOMING_=true
-   - _R_CHECK_CRAN_INCOMING_USE_ASPELL_=true
-   - _R_CHECK_CRAN_INCOMING_USE_ASPELL_=true
-
-r_check_args: '--use-valgrind'
-
+script:
+  - |
+    R CMD build .
+    travis_wait 40 R CMD check --no-build-vignettes --no-manual --use-valgrind -- as-cran MSGARCH*tar.gz
+   
 r:
   - devel
   - release
