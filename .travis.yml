@@ -13,7 +13,8 @@ before_install:
 script:
   - |
     R CMD build .
-    travis_wait 40 R CMD check --no-build-vignettes --no-manual -- as-cran MSGARCH*tar.gz
+    travis_wait 40 R CMD check --no-build-vignettes --no-manual --as-cran MSGARCH*tar.gz
+  - R CMD install MSGARCH*tar.gz
   - cd tests
   - R -d valgrind "-f testthat.R --restore --save --no-readline --vanilla"
   
