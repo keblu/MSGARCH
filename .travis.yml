@@ -2,6 +2,8 @@ language: r
 sudo: false
 cache: packages
 
+install: travis_wait 30 mvn install
+ 
 env:
   - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
 
