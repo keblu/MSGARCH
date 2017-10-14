@@ -18,6 +18,8 @@ global:
    - _R_CHECK_CRAN_INCOMING_USE_ASPELL_=true
    - _R_CHECK_CRAN_INCOMING_USE_ASPELL_=true
 
+r_check_args: '--use-valgrind'
+
 r:
   - devel
   - release
