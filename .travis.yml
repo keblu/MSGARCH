@@ -1,18 +1,23 @@
-before_install:
- - cd Package
 language: r
+sudo: false
 cache: packages
-r_check_args: '--as-cran --no-build-vignettes'
-r_build_args: '--no-build-vignettes --no-manual'
+
+env:
+  - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
+
 addons:
   apt:
     packages:
       - valgrind
-env:
-  - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
- global:
+
+before_install:
+  - cd Package
+
+global:
    - _R_CRAN_CHECK_INCOMING_=true
    - _R_CHECK_CRAN_INCOMING_USE_ASPELL_=true
+   - _R_CHECK_CRAN_INCOMING_USE_ASPELL_=true
+
 r:
   - devel
   - release
