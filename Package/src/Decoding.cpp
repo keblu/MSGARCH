@@ -29,7 +29,7 @@ List FFBS(const arma::mat& allprobs, const arma::vec& delta,
   for (i = 0; i < K; i++) {
     foo(i) = 1.0 / K;
   }
-  lscale = log(K);
+  lscale = log((double)K);
   for (i = T - 2; i >= 0; i--) {
     foo = mGamma * (allprobs.row(i + 1).t() % foo);
     lbeta.col(i) = log(foo) + lscale;
