@@ -211,9 +211,6 @@ f_check_par <- function(spec, par) {
 # Function that sorts the par according to the unconditional variance (Used for Bayesian estimation)
 f_sort_par <- function(spec, par) {
   parUncVol <- par
-  if (isTRUE(spec$is.shape.ind)) {
-    par <- spec$func$f.do.shape.ind(par = par)
-  }
   Nbparams <- spec$n.params
   Nmodel <- length(Nbparams)
   if (Nmodel == 1L) {
@@ -224,7 +221,7 @@ f_sort_par <- function(spec, par) {
   params_loc  <- c(0, cumsum(Nbparams))
   tmp <- par
   pos <- 1:Nmodel
-  unc.vol.all <- spec$rcpp.func$unc_vol_Rcpp(parUncVol, c(0,0))
+  unc.vol.all <- spec$rcpp.func$unc_vol_Rcpp(parUncVol)
   for (f in 1:nrow(par)) {
     for (i in 1:length(unique.spec)) {
       postmp <- pos

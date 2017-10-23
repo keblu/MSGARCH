@@ -62,7 +62,7 @@ class sARCH {
   }
 
   // initialize volatility
-  volatility set_vol(const double& y0) {
+  volatility set_vol() {
     volatility out;
     out.h = alpha0 / (1 - alpha1);
     out.lnh = log(out.h);

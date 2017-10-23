@@ -60,7 +60,7 @@ class gjrGARCH {
   }
 
   // initialize volatility to its undonditional expected value
-  volatility set_vol(const double& y0) {
+  volatility set_vol() {
     volatility out;
     out.h = alpha0 / (1 - alpha1 - fz.Ez2Ineg * alpha2 - beta);
     out.lnh = log(out.h);

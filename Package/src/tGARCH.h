@@ -67,7 +67,7 @@ class tGARCH {
   }
 
   // initialize volatility to its undonditional expected value
-  volatility set_vol(const double& y0) {
+  volatility set_vol() {
     volatility out;
     out.fh = alpha0 / (1 + (alpha1 + alpha2) * fz.EzIneg - beta);
     out.h = pow(out.fh, 2);

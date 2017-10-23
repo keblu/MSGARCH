@@ -124,11 +124,11 @@ public:
   }
   
   // initialize all volatilities to their undonditional expected value
-  volatilityVector set_vol(const double& y0) {
+  volatilityVector set_vol() {
     volatilityVector vol(K);
     int k = 0;
     for (many::iterator it = specs.begin(); it != specs.end(); ++it) {
-      vol[k] = (*it)->spec_set_vol(y0);
+      vol[k] = (*it)->spec_set_vol();
       k++;
     }
     return vol;
@@ -220,8 +220,6 @@ public:
   
   NumericVector get_p_last() { return PLast; }
   
-  int get_K() { return K; }
-  
   List f_get_Pstate(const NumericVector&, const NumericVector&);
   
   // check prior
@@ -251,7 +249,7 @@ public:
   // compute loglikelihood matrix
   NumericMatrix calc_lndMat(const NumericVector&);
   
-  NumericMatrix f_unc_vol(NumericMatrix&, const NumericVector&);
+  NumericMatrix f_unc_vol(NumericMatrix&);
   
   // apply Hamilton filter
   double HamiltonFilter(const NumericMatrix&);
@@ -278,7 +276,7 @@ inline void MSgarch::loadparam(const NumericVector& theta) {
   P = P_mat;
   arma::mat I = arma::eye(K,K);
   arma::mat Umat = arma::ones(K,K);
-    arma::vec Uvec(K);
+  arma::vec Uvec(K);
   Uvec.fill(1);
   arma::mat foo = (I - as<arma::mat>(P_mat) + Umat).t();
   
@@ -317,9 +315,8 @@ inline prior MSgarch::calc_prior(const NumericVector& theta) {
   return out;
 }
 
-inline NumericMatrix MSgarch::f_unc_vol(NumericMatrix& all_thetas,
-                                        const NumericVector& y) {
-  int K = get_K();
+inline NumericMatrix MSgarch::f_unc_vol(NumericMatrix& all_thetas) {
+  
   int nb_thetas = all_thetas.nrow();
   volatilityVector vol;
   NumericVector theta_j;
@@ -329,7 +326,7 @@ inline NumericMatrix MSgarch::f_unc_vol(NumericMatrix& all_thetas,
     theta_j = all_thetas(j, _);
     loadparam(theta_j);
     prep_ineq_vol();
-    vol = set_vol(y[0]);
+    vol = set_vol();
     // initialize volatility
     for (int s = 0; s < K; s++) {
       ht(j, s) = vol[s].h;
@@ -340,7 +337,7 @@ inline NumericMatrix MSgarch::f_unc_vol(NumericMatrix& all_thetas,
 
 inline arma::cube MSgarch::calc_ht(NumericMatrix& all_thetas,
                                    const NumericVector& y) {
-  int K = get_K();
+  
   int nb_obs = y.size();
   int nb_thetas = all_thetas.nrow();
   volatilityVector vol;
@@ -351,7 +348,7 @@ inline arma::cube MSgarch::calc_ht(NumericMatrix& all_thetas,
     theta_j = all_thetas(j, _);
     loadparam(theta_j);
     prep_ineq_vol();
-    vol = set_vol(y[0]);
+    vol = set_vol();
     // initialize volatility
     for (int s = 0; s < K; s++) {
       ht(0, j, s) = vol[s].h;
@@ -381,7 +378,7 @@ inline NumericVector MSgarch::f_pdf(const NumericVector& x,
   NumericVector out(nx);
   loadparam(theta);  // load parameters
   prep_ineq_vol();   // prepare functions related to volatility
-  volatilityVector vol = set_vol(y[0]);  // initialize volatility
+  volatilityVector vol = set_vol();  // initialize volatility
   
   for (int t = 0; t < ny; t++) increment_vol(vol, y[t]);
   
@@ -418,7 +415,7 @@ inline arma::cube MSgarch::f_pdf_its(const NumericVector& theta,
   arma::cube tmp(nx, ny, K);
   loadparam(theta);  // load parameters
   prep_ineq_vol();   // prepare functions related to volatility
-  volatilityVector vol = set_vol(y[0]);  // initialize volatility
+  volatilityVector vol = set_vol();  // initialize volatility
   
   for (many::iterator it = specs.begin(); it != specs.end(); ++it) {
     sig = sqrt(vol[s].h);
@@ -456,7 +453,7 @@ inline NumericVector MSgarch::f_cdf(const NumericVector& x,
   NumericVector out(nx);
   loadparam(theta);  // load parameters
   prep_ineq_vol();   // prepare functions related to volatility
-  volatilityVector vol = set_vol(y[0]);  // initialize volatility
+  volatilityVector vol = set_vol();  // initialize volatility
   
   for (int t = 0; t < ny; t++) increment_vol(vol, y[t]);
   
@@ -493,7 +490,7 @@ inline arma::cube MSgarch::f_cdf_its(const NumericVector& theta,
   arma::cube tmp(nx, ny, K);
   loadparam(theta);  // load parameters
   prep_ineq_vol();   // prepare functions related to volatility
-  volatilityVector vol = set_vol(y[0]);  // initialize volatility
+  volatilityVector vol = set_vol();  // initialize volatility
   for (many::iterator it = specs.begin(); it != specs.end(); ++it) {
     sig = sqrt(vol[s].h);
     for (int ix = 0; ix < nx; ix++) {
@@ -520,7 +517,6 @@ inline arma::cube MSgarch::f_cdf_its(const NumericVector& theta,
 //------------------------------//
 inline List MSgarch::f_sim(const int& n, const int& m, const NumericVector& theta) {
   // setup
-  K = get_K();
   NumericMatrix y(m,n);  // observations
   NumericMatrix S(m,n);  // states of the Markov chain
   arma::cube CondVol(m,n,K);
@@ -533,7 +529,7 @@ inline List MSgarch::f_sim(const int& n, const int& m, const NumericVector& thet
   for (int i = 0; i < m; i++) {
     S(i,0) = sampleState(P0);             // sample initial state
     z = rndgen(S(i,0));
-    vol = set_vol(z);
+    vol = set_vol();
     for (int s = 0; s < K; s++) {
       CondVol(i, 0, s) = sqrt(vol[s].h);
     }
@@ -555,14 +551,13 @@ inline List MSgarch::f_simAhead(const NumericVector& y, const int& n, const int&
                                 const NumericVector& theta,
                                 const NumericVector& P0_) {
   // setup
-  K = get_K();
   int nb_obs = y.size();  // total number of observations to simulate
   NumericMatrix y_sim(m, n);
   NumericMatrix S(m, n);
   arma::cube CondVol(m,n,K);
   loadparam(theta);  // load parameters
   prep_ineq_vol();   // prep for 'set_vol'
-  volatilityVector vol0 = set_vol(y[0]);
+  volatilityVector vol0 = set_vol();
   double z;
   for (int t = 1; t <= nb_obs; t++) {
     increment_vol(vol0, y[t - 1]);  // increment all volatilities
@@ -600,7 +595,7 @@ inline List MSgarch::f_rnd(const int& n, const NumericVector& theta,
   loadparam(theta);       // load parameters
   double z;
   prep_ineq_vol();  // prep for 'set_vol'
-  volatilityVector vol = set_vol(y[0]);
+  volatilityVector vol = set_vol();
   
   for (int i = 1; i <= nb_obs; i++) {  // loop over observations
     increment_vol(vol, y[i - 1]);      // increment all volatilities
@@ -627,7 +622,7 @@ inline NumericMatrix MSgarch::calc_lndMat(const NumericVector& y) {
   NumericMatrix lndMat(K, nb_obs - 1);
   
   // initialize
-  volatilityVector vol = set_vol(y[0]);
+  volatilityVector vol = set_vol();
   prep_kernel();
   
   // loop over observations
@@ -679,7 +674,7 @@ inline List MSgarch::f_get_Pstate(const NumericVector& theta,
   // init
   loadparam(theta);  // load parameters
   prep_ineq_vol();   // prepare functions related to volatility
-  volatilityVector vol = set_vol(y[0]);   // initialize volatility
+  volatilityVector vol = set_vol();   // initialize volatility
   NumericMatrix lndMat = calc_lndMat(y);  // likelihood in each state
   
   int n_step = lndMat.ncol();

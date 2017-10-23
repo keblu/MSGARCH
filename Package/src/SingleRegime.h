@@ -32,7 +32,7 @@ class Base {
   virtual void spec_prep_ineq_vol() = 0;
   virtual double spec_ineq_func() = 0;
   virtual bool spec_calc_r1() = 0;
-  virtual volatility spec_set_vol(const double&) = 0;
+  virtual volatility spec_set_vol() = 0;
   virtual void spec_increment_vol(volatility&, const double&) = 0;
   virtual void spec_prep_kernel() = 0;
   virtual NumericVector spec_rndgen(const int&) = 0;
@@ -124,7 +124,7 @@ class SingleRegime : public Base {
   void spec_prep_ineq_vol() { spec.prep_ineq_vol(); }
   double spec_ineq_func() { return spec.ineq_func(); }
   bool spec_calc_r1() { return spec.calc_r1(); }
-  volatility spec_set_vol(const double& y0) { return spec.set_vol(y0); }
+  volatility spec_set_vol() { return spec.set_vol(); }
 
   void spec_increment_vol(volatility& vol, const double& yim1) {
     spec.increment_vol(vol, yim1);
@@ -171,7 +171,7 @@ List SingleRegime<Model>::f_sim(const int& n,
   NumericMatrix CondVol(m,n);
   for (int i = 0; i < m; i++){
 	   z   = spec.rndgen(n);
-	   vol = spec.set_vol(z[0]);
+	   vol = spec.set_vol();
 	   CondVol(i,0) = sqrt(vol.h);
 	   y(i,0) = z[0] * sqrt(vol.h);
 		for (int t = 1; t < n; t++) {
@@ -192,7 +192,7 @@ NumericVector SingleRegime<Model>::f_pdf(const NumericVector& x,
   // computes volatility
   spec.loadparam(theta);  // load parameters
   spec.prep_ineq_vol();   // prepare functions related to volatility
-  volatility vol = spec.set_vol(y[0]);  // initialize volatility
+  volatility vol = spec.set_vol();  // initialize volatility
   int ny = y.size();
   for (int t = 0; t < ny; t++) spec.increment_vol(vol, y[t]);
   double sig = sqrt(vol.h);
@@ -221,7 +221,7 @@ arma::cube SingleRegime<Model>::f_pdf_its(const NumericVector& theta,
   int ny = y.size();
   int nx = x.nrow();
   arma::cube out(nx, ny, 1);
-  volatility vol = spec.set_vol(y[0]);  // initialize volatility
+  volatility vol = spec.set_vol();  // initialize volatility
   sig = sqrt(vol.h);
   for (int ix = 0; ix < nx; ix++) {
     out(ix, 0, 0) = spec_calc_pdf(x(ix, 0) / sig) / sig;  //
@@ -247,7 +247,7 @@ NumericVector SingleRegime<Model>::f_cdf(const NumericVector& x,
   // computes volatility
   spec.loadparam(theta);  // load parameters
   spec.prep_ineq_vol();   // prepare functions related to volatility
-  volatility vol = spec.set_vol(y[0]);  // initialize volatility
+  volatility vol = spec.set_vol();  // initialize volatility
   int ny = y.size();
   for (int t = 0; t < ny; t++) spec.increment_vol(vol, y[t]);
   double sig = sqrt(vol.h);
@@ -276,7 +276,7 @@ arma::cube SingleRegime<Model>::f_cdf_its(const NumericVector& theta,
   int nx = x.nrow();
   arma::cube out(nx, ny, 1);
 
-  volatility vol = spec.set_vol(y[0]);  // initialize volatility
+  volatility vol = spec.set_vol();  // initialize volatility
   sig = sqrt(vol.h);
   for (int ix = 0; ix < nx; ix++) {
     out(ix, 0, 0) = spec.calc_cdf(x(ix, 0) / sig);  //
@@ -301,7 +301,7 @@ NumericVector SingleRegime<Model>::f_rnd(const int& n,
                                          const NumericVector& y) {
   spec.loadparam(theta);  // load parameters
   spec.prep_ineq_vol();   // prepare functions related to volatility
-  volatility vol = spec.set_vol(y[0]);  // initialize volatility
+  volatility vol = spec.set_vol();  // initialize volatility
   int ny = y.size();
   for (int t = 1; t <= ny; t++) spec.increment_vol(vol, y[t - 1]);
   return sqrt(vol.h) * spec.rndgen(n);
@@ -319,7 +319,7 @@ List SingleRegime<Model>::f_simAhead(const NumericVector& y,
   NumericMatrix CondVol(m,n);
   spec.loadparam(theta);  // load parameters
   spec.prep_ineq_vol();   // prep for 'set_vol'
-  volatility vol0 = spec.set_vol(y[0]);
+  volatility vol0 = spec.set_vol();
   for (int t = 1; t <= nb_obs; t++) {
     spec.increment_vol(vol0, y[t - 1]);  // increment all volatilities
   }
@@ -356,7 +356,7 @@ NumericMatrix SingleRegime<Model>::calc_ht(NumericMatrix& all_thetas,
     theta_j = all_thetas(j, _);
     spec.loadparam(theta_j);
     spec.prep_ineq_vol();
-    vol = spec.set_vol(y[0]);  // initialize volatility
+    vol = spec.set_vol();  // initialize volatility
     ht(0, j) = vol.h;
     for (int i = 1; i <= nb_obs; i++) {   // loop over observations
       spec.increment_vol(vol, y[i - 1]);  // increment volatility
@@ -379,7 +379,7 @@ NumericVector SingleRegime<Model>::f_unc_vol(NumericMatrix& all_thetas,
     theta_j = all_thetas(j, _);
     spec.loadparam(theta_j);
     spec.prep_ineq_vol();
-    vol = spec.set_vol(y[0]);  // initialize volatility
+    vol = spec.set_vol();  // initialize volatility
     ht(j) = vol.h;
   }
   return ht;
@@ -409,7 +409,7 @@ NumericVector SingleRegime<Model>::eval_model(NumericMatrix& all_thetas,
     }
     if (pr.r1) {  // if prior satisfied
       tmp = 0;
-      vol = spec.set_vol(y[0]);  // initialize volatility
+      vol = spec.set_vol();  // initialize volatility
       spec.prep_kernel();
       for (int i = 1; i < nb_obs; i++) {     // loop over observations
         spec.increment_vol(vol, y[i - 1]);   // increment volatility

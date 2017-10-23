@@ -63,7 +63,7 @@ class eGARCH {
   }
 
   // initialize volatility to its undonditional expected value
-  volatility set_vol(const double& y0) {
+  volatility set_vol() {
     volatility out;
     out.lnh = alpha0 / (1 - beta);
     out.h = exp(out.lnh);
