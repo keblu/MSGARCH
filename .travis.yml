@@ -24,3 +24,4 @@ r:
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
+  - cat /home/travis/build/keblu/MSGARCH/Package/MSGARCH.Rcheck/tests/testthat.Rout
