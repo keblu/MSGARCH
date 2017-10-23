@@ -16,7 +16,7 @@ before_install:
 script:
   - |
     R CMD build .
-    travis_wait 40 R CMD check --no-build-vignettes --no-manual --as-cran MSGARCH*tar.gz
+    travis_wait 120 R CMD check --no-build-vignettes --no-manual --as-cran --use-valgrind --leak-check=full --track-origins=yes MSGARCH*tar.gz
   
 r:
   - devel
