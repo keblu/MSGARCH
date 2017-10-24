@@ -6,7 +6,7 @@ f_InferenceFun <- function(vPw, data, spec, do.plm, mNegHessian = NULL) {
   
   if (is.null(mNegHessian)) {
     mNegHessian <- stats::optim(par = vPw, fn = f_nll, data = data,
-                 spec = spec, do.plm = do.plm,
+                 spec = spec, do.plm = do.plm, method = "BFGS",
                  control = list(maxit = 1L),
                  hessian = TRUE)$hessian
     
