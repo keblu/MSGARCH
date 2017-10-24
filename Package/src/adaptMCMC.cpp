@@ -15,8 +15,8 @@ arma::mat makePositiveDefinite(arma::mat& semiDefMat) {
     if (eigVal.max() < 0) {
       semiDefMat *= 0;
     } else {
-      double minEig = 2.23e-16;
-      for (int uu=0; uu < eigVal.n_elem - 1; uu++) {
+      double minEig = 1e-14;
+      for (int uu=0; uu < eigVal.n_elem; uu++) {
         if (eigVal(uu) < minEig) {
           eigVal(uu) = minEig;
         }

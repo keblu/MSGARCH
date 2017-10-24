@@ -221,7 +221,11 @@ f_sort_par <- function(spec, par) {
   params_loc  <- c(0, cumsum(Nbparams))
   tmp <- par
   pos <- 1:Nmodel
-  unc.vol.all <- spec$rcpp.func$unc_vol_Rcpp(parUncVol)
+  if(isTRUE(spec$is.mix)){
+    unc.vol.all <- spec$rcpp.func$unc_vol_Rcpp(spec$func$f.do.mix(parUncVol))
+  } else {
+    unc.vol.all <- spec$rcpp.func$unc_vol_Rcpp(parUncVol)
+  }
   for (f in 1:nrow(par)) {
     for (i in 1:length(unique.spec)) {
       postmp <- pos
