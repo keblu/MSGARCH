@@ -58,7 +58,7 @@ testthat::test_that("Simulation State", {
     exp.state = c(1, 1)
   }
   
-  if (is.null(exp.draw)) {
+  if (is.null(exp.state)) {
     mess = paste0("Current platform never tested\n", 
                   "Using x86_64-w64-mingw32/x64 (64-bit) results\n")
     warning(mess)
@@ -84,7 +84,7 @@ testthat::test_that("Simulation CondVol", {
                          ncol = 2)
   }
   
-  if (is.null(exp.draw)) {
+  if (is.null(exp.condvol)) {
     mess = paste0("Current platform never tested\n", 
                   "Using x86_64-w64-mingw32/x64 (64-bit) results\n")
     warning(mess)
