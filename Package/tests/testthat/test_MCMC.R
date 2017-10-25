@@ -1,67 +1,29 @@
-testthat::context("Test Estimation")
+testthat::context("Test MCMC Estimation")
 
-tol <- 1e-4
-tmp <- sessionInfo()
-Plaform_version <- tmp$platform
-#MSGARCH_Version <- tmp$otherPkgs$MSGARCH$Version
 set.seed(1234)
 data("SMI", package = "MSGARCH")
-spec <- CreateSpec(variance.spec = list(model = c("sGARCH")),
+spec <- MSGARCH::CreateSpec(variance.spec = list(model = c("sGARCH")),
                    distribution.spec = list(distribution = c("norm")),
                    switch.spec = list(do.mix = FALSE, K = 2))
-fit <- FitMCMC(spec, data = SMI, ctr = list(n.burn = 500, n.mcmc = 500, n.thin = 1))
+fit <- MSGARCH::FitMCMC(spec, data = SMI, ctr = list(n.burn = 500, n.mcmc = 500, n.thin = 1))
 
-testthat::test_that("MCMC Estimation GARCH NORMAL", {
+testthat::test_that("MCMC Estimation MS GARCH NORMAL", {
+  
+  tol <- 0.05
   est.par <- colMeans(fit$par)
-  exp.par = NULL
-  if (Plaform_version == "x86_64-w64-mingw32/x64 (64-bit)") {
-    exp.par <- c(0.024830248370305032, 0.058325465217369206, 0.900978983936512878, 0.465471511033367147, 0.029848278434822500,
-                 0.895415983876721944, 0.978624434569418389, 0.242716760045187135)
-  }
+  exp.par <- c(0.02483046, 0.05832523, 0.90097897, 0.46547319, 
+               0.02984767, 0.89541786, 0.97862471, 0.24272290)
   
-  if (Plaform_version == "x86_64-apple-darwin16.6.0 (64-bit)") {
-    exp.par <- c(0.024830248370305032, 0.058325465217369206, 0.900978983936512878, 0.465471511033367147, 0.029848278434822500,
-                 0.895415983876721944, 0.978624434569418389, 0.242716760045187135)
-  }
-  
-  if (Plaform_version == "x86_64-pc-linux-gnu (64-bit)") {
-    exp.par <- c(0.024830248370305032, 0.058325465217369206, 0.900978983936512878, 0.465471511033367147, 0.029848278434822500,
-                 0.895415983876721944, 0.978624434569418389, 0.242716760045187135)
-  }
-  
-  if (is.null(exp.par)) {
-    mess = paste0("Current platform never tested\n", 
-                  "Using x86_64-w64-mingw32/x64 (64-bit) results\n")
-    warning(mess)
-    exp.par <- est.par
-  }
-  
-  testthat::expect_true(max(est.par - exp.par) < tol)
+  testthat::expect_true(max(abs(est.par - exp.par)) < tol)
   
 })
 
 testthat::test_that("DIC", {
+  
+  tol <- 0.1
   est.par <- DIC(fit)$DIC
-  exp.par = NULL
-  if (Plaform_version == "x86_64-w64-mingw32/x64 (64-bit)") {
-    exp.par <- c(6825.8205675690924)
-  }
+  exp.par <- 6825.8205675690924
   
-  if (Plaform_version == "x86_64-apple-darwin16.6.0 (64-bit)") {
-    exp.par <- c(6825.8205675690924)
-  }
-  
-  if (Plaform_version == "x86_64-pc-linux-gnu (64-bit)") {
-    exp.par <- c(6825.8205675690924)
-  }
-  
-  if (is.null(exp.par)) {
-    mess = paste0("Current platform never tested\n", 
-                  "Using x86_64-w64-mingw32/x64 (64-bit) results\n")
-    warning(mess)
-    exp.par <- est.par
-  }
-  
-  testthat::expect_true(max(est.par - exp.par) < tol)
+  testthat::expect_true(abs(est.par - exp.par) < tol)
   
 })
