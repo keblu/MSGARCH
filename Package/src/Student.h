@@ -30,7 +30,7 @@ class Student {
     coeffs_mean.push_back(10),
     coeffs_sd.push_back(1e4);           // mean and standard deviation of prior distribution
     Sigma0.push_back(10);  // Sigma0
-    lower.push_back(nu_lb), upper.push_back(1000);  // lower and upper bounds
+    lower.push_back(nu_lb), upper.push_back(100);  // lower and upper bounds
   }
 
   // set "nu" (this function should always be called first)
