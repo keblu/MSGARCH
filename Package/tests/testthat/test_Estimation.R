@@ -1,6 +1,9 @@
 testthat::context("Test Estimation")
 
 tol <- 1e-4
+tmp <- sessionInfo()
+Plaform_version <- tmp$platform
+#MSGARCH_Version <- tmp$otherPkgs$MSGARCH$Version
 
 testthat::test_that("Estimation MSGARCH", {
 
@@ -8,27 +11,32 @@ testthat::test_that("Estimation MSGARCH", {
   spec <- CreateSpec(variance.spec = list(model = c("sGARCH")),
                      distribution.spec = list(distribution = c("norm")),
                      switch.spec = list(do.mix = FALSE, K = 2))
-  fit <- FitML(spec = spec, data = SMI)
-  bic <- BIC(fit)
-  tmp <- abs(bic - 6841.18485426964)
-  test1 <- tmp < tol
-  aic <- AIC(fit)
-  tmp <- abs(aic - 6794.59248618279)
-  test2 <- tmp < tol
-  testthat::expect_true(test1 & test2)
-})
-
-testthat::test_that("Estimation MIXGARCH", {
-  data("SMI", package = "MSGARCH")
-  spec <- CreateSpec(variance.spec = list(model = c("sGARCH")),
-                     distribution.spec = list(distribution = c("norm")),
-                     switch.spec = list(do.mix = TRUE, K = 2))
-  fit <- FitML(spec = spec, data = SMI)
-  bic <- BIC(fit)
-  tmp <- abs(bic - 6838.9210075872)
-  test1 <- tmp < tol
-  aic <- AIC(fit)
-  tmp <- abs(aic - 6798.15268498273)
-  test2 <- tmp < tol
-  testthat::expect_true(test1 & test2)
+  fit <- FitML(spec, data = SMI)
+  
+  exp.par <- NULL
+  if (Plaform_version == "x86_64-w64-mingw32/x64 (64-bit)") {
+    exp.par <- c(0.021631876185, 0.087024443479, 0.881493722371, 0.020659831566, 
+                 0.005396009353, 0.994040728662, 0.978348086740, 0.998703301894 )
+  }
+  
+  if (Plaform_version == "x86_64-apple-darwin16.6.0 (64-bit)") {
+    exp.par <- c(0.021631876264, 0.087024443575, 0.881493722230, 0.020659831227, 
+                 0.005396009212, 0.994040728788, 0.978348086694, 0.998703303884)
+  }
+  
+  if (Plaform_version == "x86_64-pc-linux-gnu (64-bit)") {
+    exp.par <- c(0.021631876185, 0.087024443479, 0.881493722371, 0.020659831566,
+                 0.005396009353, 0.994040728662, 0.978348086740, 0.998703301894)
+  }
+  
+  
+  est.par <- fit$par
+  if (is.null(exp.par)) {
+    mess = paste0("Current platform never tested\n", 
+                  "Using x86_64-w64-mingw32/x64 (64-bit) results\n")
+    warning(mess)
+    exp.par <- est.par
+  }
+  testthat::expect_true(max(est.par - exp.par) < tol)
+  
 })

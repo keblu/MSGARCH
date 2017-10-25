@@ -15,8 +15,8 @@
 ### LOAD THE PACKAGE
 
 # Load the package from CRAN or from the tar
-# install.packages("MSGARCH") # !!! install version 1.2
-# install.packages("MSGARCH_1.2.tar.gz", repos = NULL)
+# install.packages("MSGARCH") # !!! install version 1.3
+# install.packages("MSGARCH_1.3.tar.gz", repos = NULL)
 # install.packages("devtools")
 # library("devtools")
 # devtools::install_github("keblu/MSGARCH", subdir = "Package")

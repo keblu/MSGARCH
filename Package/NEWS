@@ -1,6 +1,7 @@
 Changes in Version 1.3
   o Fix CRAN valgrind error
   o Solaris error fix
+  o inst/test removed and moved to GitHub Examples folder
 Changes in Version 1.2
   o Small improvements
   o Robustification of Hessian
