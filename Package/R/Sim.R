@@ -76,7 +76,7 @@ Sim.MSGARCH_SPEC <- function(object, data = NULL, n.ahead = 1L,
       tmp <- object$rcpp.func$sim(n.ahead  + n.burnin, n.sim, par[i, ])
       if (object$K == 1L) {
         draw[,start:end]  <- t(tmp$draws)
-        state[,start:end] <- matrix(1, nrow = n.sim, ncol = n.ahead)
+        state[,start:end] <- matrix(0, nrow = n.ahead + n.burnin, ncol = n.sim)
         CondVol[,start:end,] <- t(tmp$CondVol)
       } else {
         draw[,start:end]  <- t(tmp$draws)
@@ -108,7 +108,7 @@ Sim.MSGARCH_SPEC <- function(object, data = NULL, n.ahead = 1L,
       tmp <- object$rcpp.func$simahead(y = data, n = n.ahead, m = n.sim, par = par[i, ], P_0[i, ])
       if (object$K == 1L) {
         draw[,start:end]  <- t(tmp$draws)
-        state[,start:end] <- matrix(1, nrow = n.sim, ncol = n.ahead)
+        state[,start:end] <- matrix(0, nrow = n.ahead, ncol = n.sim)
         CondVol[,start:end,1] <- t(tmp$CondVol)
       } else {
         draw[,start:end]  <- t(tmp$draws)
