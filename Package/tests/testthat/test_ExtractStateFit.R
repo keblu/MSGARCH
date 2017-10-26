@@ -9,7 +9,7 @@ fit <- MSGARCH::FitML(spec, data = SMI)
 testthat::test_that("ExtractStateFit", {
  
   est.len = length(MSGARCH::ExtractStateFit(fit))
-  exp.len = 2
+  exp.len = 2L
   
   testthat::expect_true(est.len == exp.len)
 })
