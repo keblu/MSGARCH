@@ -75,7 +75,7 @@ Sim.MSGARCH_SPEC <- function(object, data = NULL, n.ahead = 1L,
     for (i in 1:nrow(par)) {
       tmp <- object$rcpp.func$sim(n.ahead  + n.burnin, n.sim, par[i, ])
       if (object$K == 1L) {
-        draw[,start:end]  <- t(tmp$y)
+        draw[,start:end]  <- t(tmp$draws)
         state[,start:end] <- matrix(1, nrow = n.sim, ncol = n.ahead)
         CondVol[,start:end,] <- t(tmp$CondVol)
       } else {
