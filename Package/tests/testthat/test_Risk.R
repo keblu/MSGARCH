@@ -25,8 +25,8 @@ testthat::test_that("Out of sample Risk", {
   est.Risk <- MSGARCH::Risk(object = spec, par = par, data = SMI, do.its = FALSE, n.ahead = 2)
   
   tol <- 0.05
-  est.VaR <- est.Risk$VaR[,1]
-  est.ES  <- est.Risk$ES[,2]
+  est.VaR <- est.Risk$VaR[, 1]
+  est.ES  <- est.Risk$ES[, 2]
   exp.VaR <- c(-2.4300333085258528, -2.4536175976412151)
   exp.ES  <- c(-2.1709270732079351, -2.2054183166214902 )
   
