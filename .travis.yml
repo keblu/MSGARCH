@@ -7,7 +7,6 @@ r_github_packages:
   
 os:
   - linux
-  - osx
   
 addons:
   apt:
