@@ -6,10 +6,12 @@
 ### 'Markov-Switching GARCH Models in R: The MSGARCH Package'.
 
 ### !!! Results of the paper were obtained with the following setup:
-### !!! R version 3.4.1 (2017-06-30)
+### !!! R version 3.4.2 (2017-09-28)
 ### !!! Platform: x86_64-w64-mingw32/x64 (64-bit)
+### !!! Running under: Windows 7 x64 (build 7601) Service Pack 1
 
-### !!! RESULTS ARE PLATFORM DEPENDENT (similar up to the 8th digits) !!!
+### !!! RESULTS ARE PLATFORM DEPENDENT (but similar up to the 8th digits) !!!
+### !!! ALSO SET THE SEED PROPERLY !!!
 
 #################################################################################
 ### LOAD THE PACKAGE
@@ -17,9 +19,6 @@
 # Load the package from CRAN or from the tar
 # install.packages("MSGARCH") # !!! install version 1.3
 # install.packages("MSGARCH_1.3.tar.gz", repos = NULL)
-# install.packages("devtools")
-# library("devtools")
-# devtools::install_github("keblu/MSGARCH", subdir = "Package")
 
 #################################################################################
 ### ADDITIONAL PACKAGES REQUIRED FOR THE ANLAYSIS: e1071
@@ -162,13 +161,13 @@ ctr <- list(n.mcmc = n.mcmc, n.burn = n.burn,
 fit.mcmc <- FitMCMC(ms2.gjr.s, data = SMI, ctr = ctr)
 summary(fit.mcmc)
 
-## convergence of the chain
+## Convergence of the chain
 #par(mfrow = c(3, 4))
 #coda::traceplot(fit.MCMC$par)
 #coda::heidel.diag(fit.MCMC$par)
 #coda::acfplot(fit.MCMC$par)
 
-## posterior draws
+## Posterior draws
 draws <- as.matrix(fit.mcmc$par)
 
 ## This function computes the unconditional volatility
@@ -183,13 +182,15 @@ f_ucvol <- function(par) {
   return(out)
 }
 
-## compute unconditional volatility
+## Compute unconditional volatility
 ucvol.draws <- f_ucvol(draws)
 ucvol.bay   <- lapply(ucvol.draws, mean)
 ucvol.mle   <- f_ucvol(fit.ml$par)
-unlist(ucvol.mle)
+
+## Using mle and posterior mean
 unlist(ucvol.bay)
 
+## Using the whole posterior
 sapply(ucvol.draws, function(x) quantile(x, probs = c(0.025, 0.975)))
 
 ## Compute skewness and quantiles of unconditional volatility
@@ -197,7 +198,7 @@ sapply(ucvol.draws, quantile, probs = c(0.025, 0.975))
 library("e1071")
 sapply(ucvol.draws, e1071::skewness)
 
-## impact of paramter uncertainty in pred
+## Impact of paramter uncertainty in pred
 n.mesh <- 1000
 x <- seq(from = -5, to = 0, length.out = n.mesh)
 pred.mle <- as.vector(Pred(fit.ml, x = x, n.ahead = 1))
@@ -231,8 +232,10 @@ dev.off()
 ######################
 
 pdf(file = "figure2.pdf", height = 13, width = 16, compress = TRUE)
-par(mfrow = c(2, 1))
-plot(as.vector(SMI), las = 1, type = 'l', pch = 21, col = 'black',
+op <- par(mfrow = c(2,1),
+          oma = c(1,1,0,0) + 0.0,
+          mar = c(2,2,2,2) + 0.0)
+plot(as.vector(SMI), las = 1, type = 'p', pch = 20, col = 'black',
      cex = 1.5, axes = FALSE, ann = FALSE)
 par(new = TRUE)
 ylabel <- expression(paste("Pr(", s[t], " = 2 | ", hat(psi), ", ", I[t], ")"))
@@ -242,6 +245,7 @@ title(main = "Smoothed probabilities", cex.main = 1.5)
 plot(zoo::zoo(vol, order.by = zoo::index(SMI)), lty = 1, plot.type = "single",
      col = "black", las = 1, ylab = "", xlab = "Date", lwd = 3, cex.axis = 1.5, cex.lab = 1.5)
 title(main = "Volatility (%)", cex.main = 1.5)
+par(op)
 dev.off()
 
 ######################
@@ -299,6 +303,7 @@ dev.off()
 ######################
 
 pdf(file = "figure5.pdf", height = 13, width = 16, compress = TRUE)
+#png(filename = "figure5.png", height = 13, width = 16, units = "in", res = 600)
 xlim <- c(-4, -1.2)
 ylim <- c(0, 0.1)
 par(mfrow = c(1, 1))
@@ -316,3 +321,4 @@ legend("topleft", c("MCMC draws", "Bayesian","ML"),
        lty = c(1, 1, 2), bty = "n", cex = 2)
 box()
 dev.off()
+
