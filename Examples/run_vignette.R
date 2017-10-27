@@ -21,9 +21,6 @@
 # install.packages("MSGARCH_1.3.tar.gz", repos = NULL)
 
 #################################################################################
-### ADDITIONAL PACKAGES REQUIRED FOR THE ANLAYSIS: e1071
-
-#################################################################################
 ### PACKAGE MSGARCH
 ### Reports the code used to generate full results in the paper
 #################################################################################
@@ -187,16 +184,11 @@ ucvol.draws <- f_ucvol(draws)
 ucvol.bay   <- lapply(ucvol.draws, mean)
 ucvol.mle   <- f_ucvol(fit.ml$par)
 
-## Using mle and posterior mean
+## Posterior mean
 unlist(ucvol.bay)
 
-## Using the whole posterior
-sapply(ucvol.draws, function(x) quantile(x, probs = c(0.025, 0.975)))
-
-## Compute skewness and quantiles of unconditional volatility
+## Quantiles of unconditional volatility
 sapply(ucvol.draws, quantile, probs = c(0.025, 0.975))
-library("e1071")
-sapply(ucvol.draws, e1071::skewness)
 
 ## Impact of paramter uncertainty in pred
 n.mesh <- 1000
