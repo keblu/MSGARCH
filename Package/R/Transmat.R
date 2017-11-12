@@ -6,7 +6,7 @@
 #' @param par Vector (of size d) of
 #' parameter estimates (not required when using a fit object) where d must have
 #' the same length as the default parameters of the specification.
-#' @param n.ahead Number of steps ahead. (Default: \code{n.ahead = 1L})
+#' @param nahead Number of steps ahead. (Default: \code{nahead = 1L})
 #' @param ... Not used. Other arguments to \code{TransMat}.
 #' @return A matrix (of size K x K) in the case of a Markov-Switching model
 #'  or a vector (of size K) in the case of a Mixture of GARCH model.
@@ -23,7 +23,7 @@
 #' fit <- FitML(spec = spec, data = SMI)
 #'
 #' # Extract the transition matrix 10 steps ahead
-#' trans.mat <- TransMat(fit, n.ahead = 10)
+#' trans.mat <- TransMat(fit, nahead = 10)
 #' print(trans.mat)
 #' @importFrom stats quantile
 #' @import expm
@@ -34,7 +34,7 @@ TransMat <- function(object, ...) {
 
 #' @rdname TransMat
 #' @export
-TransMat.MSGARCH_SPEC <- function(object, par = NULL, n.ahead = 1L, ...) {
+TransMat.MSGARCH_SPEC <- function(object, par = NULL, nahead = 1L, ...) {
   object <- f_check_spec(object)
   if (isTRUE(object$is.shape.ind)) {
     par <- object$func$f.do.shape.ind(par = par)
@@ -58,13 +58,13 @@ TransMat.MSGARCH_SPEC <- function(object, par = NULL, n.ahead = 1L, ...) {
     p[1L, n.model] <- 1 - sum(p)
   }
   if (!object$is.mix) {
-    p <- p %^% n.ahead
+    p <- p %^% nahead
   }
   if (object$is.mix) {
     col_label <- paste0("State ", 1:object$K)
     row_label <- paste0("Probability")
   } else {
-    col_label <- paste0("t+", n.ahead, "|k=", 1:object$K)
+    col_label <- paste0("t+", nahead, "|k=", 1:object$K)
     row_label <- paste0("t|k=", 1:object$K)
   }
   rownames(p) <- row_label
@@ -74,7 +74,7 @@ TransMat.MSGARCH_SPEC <- function(object, par = NULL, n.ahead = 1L, ...) {
 
 #' @rdname TransMat
 #' @export
-TransMat.MSGARCH_ML_FIT <- function(object, n.ahead = 1L, ...) {
-  out <- TransMat(object = object$spec, par = object$par, n.ahead = n.ahead)
+TransMat.MSGARCH_ML_FIT <- function(object, nahead = 1L, ...) {
+  out <- TransMat(object = object$spec, par = object$par, nahead = nahead)
   return(out)
 }

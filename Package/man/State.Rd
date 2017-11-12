@@ -11,9 +11,9 @@ State(object, ...)
 
 \method{State}{MSGARCH_SPEC}(object, par, data, ...)
 
-\method{State}{MSGARCH_ML_FIT}(object, new.data = NULL, ...)
+\method{State}{MSGARCH_ML_FIT}(object, newdata = NULL, ...)
 
-\method{State}{MSGARCH_MCMC_FIT}(object, new.data = NULL, ...)
+\method{State}{MSGARCH_MCMC_FIT}(object, newdata = NULL, ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}
@@ -23,21 +23,21 @@ created with \code{\link{FitMCMC}}.}
 
 \item{...}{Not used. Other arguments to \code{State}.}
 
-\item{par}{Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter estimates
+\item{par}{Vector (of size d) or matrix (of size \code{nmcmc} x d) of parameter estimates
 where d must have
 the same length as the default parameters of the specification.}
 
 \item{data}{Vector (of size T) of observations.}
 
-\item{new.data}{Vector (of size T*) of new observations. (Default \code{new.data = NULL})}
+\item{newdata}{Vector (of size T*) of new observations. (Default \code{newdata = NULL})}
 }
 \value{
 A list of class \code{MSGARCH_PSTATE} with the following elements:
 \itemize{
-\item \code{FiltProb}: Filtered probabilities (array of size (T + T*) x (\code{n.mcmc or 1}) x K).
-\item \code{PredProb}: Predictive probabilities (array of size (T + T* + 1) x (\code{n.mcmc or 1}) x K).
-\item \code{SmoothProb}: Smoothed probabilities (array of size (T + T* + 1) x (\code{n.mcmc or 1}) x K).
-\item \code{Viterbi}:  Most likely path (matrix of size (T + T*) x (\code{n.mcmc} or 1)).
+\item \code{FiltProb}: Filtered probabilities (array of size (T + T*) x (\code{nmcmc or 1}) x K).
+\item \code{PredProb}: Predictive probabilities (array of size (T + T* + 1) x (\code{nmcmc or 1}) x K).
+\item \code{SmoothProb}: Smoothed probabilities (array of size (T + T* + 1) x (\code{nmcmc or 1}) x K).
+\item \code{Viterbi}:  Most likely path (matrix of size (T + T*) x (\code{nmcmc} or 1)).
 }
 The class \code{MSGARCH_PSTATE} contains the \code{plot} method. The plot method contains
 as input \code{type.prob} which is one of \code{"filtered", "predictive", "smoothed", "viterbi"}.

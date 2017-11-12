@@ -23,21 +23,21 @@ created with \code{\link{FitMCMC}}.}
 
 \item{...}{Not used. Other arguments to \code{TransMat}.}
 
-\item{par}{Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter
+\item{par}{Vector (of size d) or matrix (of size \code{nmcmc} x d) of parameter
 estimates where d must have
 the same length as the default parameters of the specification.}
 
 \item{ctr}{A list of control parameters:
 \itemize{
-\item \code{n.sim} (integer >= 0) :
+\item \code{nsim} (integer >= 0) :
 Number indicating the number of simulation done for estimation of the
-unconditional volatility. (Default: \code{n.sim = 250L})
-\item \code{n.ahead} (integer >= 0) :
+unconditional volatility. (Default: \code{nsim = 250L})
+\item \code{nahead} (integer >= 0) :
 Number indicating the number of step ahead performs to estimate the
-unconditional volatility .(Default: \code{n.ahead = 5000L})
-\item \code{n.burn} (integer >= 0) :
+unconditional volatility .(Default: \code{nahead = 5000L})
+\item \code{nburn} (integer >= 0) :
 Number indicating the number of discarded step ahead to estimate the
-unconditional volatility. (Default: \code{n.burn = 1000L})
+unconditional volatility. (Default: \code{nburn = 1000L})
 }}
 }
 \value{
@@ -50,11 +50,11 @@ process in each state and for the overall process..
 \details{
 If a matrix of MCMC posterior draws is given, the
 Bayesian unconditional volatility are calculated.
- The unconditional volatility is estimated by first simulating \code{n.sim}
- paths up to \code{n.burn + n.ahead},
+ The unconditional volatility is estimated by first simulating \code{nsim}
+ paths up to \code{nburn + nahead},
  calculating a forecast of the conditional volatility at each step ahead,
- discarding the first \code{n.burn} step ahead conditional volatilities forecasts,
- and computing the mean of the remaining \code{n.ahead - n.burn} conditional
+ discarding the first \code{nburn} step ahead conditional volatilities forecasts,
+ and computing the mean of the remaining \code{nahead - nburn} conditional
  volatilites forecasts. This method is based on the fact that
  the conditional volatility forecast will converge to the unconditional volatilty
  the further the forecast his from the starting point.

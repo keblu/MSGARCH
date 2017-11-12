@@ -23,3 +23,10 @@ f_nll <- function(vPw, data, spec, do.plm) {
 
   return(-dLLK)
 }
+
+
+logLik.MSGARCH_ML_FIT <- function(object, ...){
+  out = structure(object$loglik, df = dofMSGARCH(object), 
+                  nobs = length(object$data))
+  return(out)
+}

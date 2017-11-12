@@ -78,7 +78,7 @@ cat("\n\n")
 cat("SECTION 3.3\n")
 cat("-----------\n\n")
 
-forecast <- Forecast(fit.ml, n.ahead = 5, do.return.draw = TRUE)
+forecast <- predict(fit.ml, nahead = 5, do.return.draw = TRUE)
 forecast$vol
 
 forecast$draw[, 1:4]
@@ -88,7 +88,7 @@ cat("\n\n")
 cat("SECTION 3.4\n")
 cat("-----------\n\n")
 
-risk <- Risk(fit.ml, alpha = c(0.01, 0.05), n.ahead = 5)
+risk <- Risk(fit.ml, alpha = c(0.01, 0.05), nahead = 5)
 risk$VaR
 risk$ES
 
@@ -100,8 +100,8 @@ cat("-----------\n\n")
 BIC(fit.ml)
 
 sr.fit <- ExtractStateFit(fit.ml)
-risk1 <- Risk(sr.fit[[1]], alpha = 0.05, n.ahead = 5)
-risk2 <- Risk(sr.fit[[2]], alpha = 0.05, n.ahead = 5)
+risk1 <- Risk(sr.fit[[1]], alpha = 0.05, nahead = 5)
+risk2 <- Risk(sr.fit[[2]], alpha = 0.05, nahead = 5)
 VaR <- cbind(risk1$VaR, risk2$VaR)
 colnames(VaR) <- c("State 1", "State 2")
 VaR
@@ -150,11 +150,11 @@ smoothed.prob <- State(fit.ml)$SmoothProb[, 1, 2, drop = TRUE]
 vol <- sqrt(250) * Volatility(fit.ml)
 
 ## MCMC estimation
-n.mcmc <- 12500
-n.burn <- 5000
-n.thin <- 5
-ctr <- list(n.mcmc = n.mcmc, n.burn = n.burn,
-            n.thin = n.thin, par0 = fit.ml$par)
+nmcmc <- 12500
+nburn <- 5000
+nthin <- 5
+ctr <- list(nmcmc = nmcmc, nburn = nburn,
+            nthin = nthin, par0 = fit.ml$par)
 fit.mcmc <- FitMCMC(ms2.gjr.s, data = SMI, ctr = ctr)
 summary(fit.mcmc)
 
@@ -193,12 +193,12 @@ sapply(ucvol.draws, quantile, probs = c(0.025, 0.975))
 ## Impact of paramter uncertainty in pred
 n.mesh <- 1000
 x <- seq(from = -5, to = 0, length.out = n.mesh)
-pred.mle <- as.vector(Pred(fit.ml, x = x, n.ahead = 1))
-pred.bay <- as.vector(Pred(fit.mcmc, x = x, n.ahead = 1))
+pred.mle <- as.vector(PredPdf(fit.ml, x = x, nahead = 1))
+pred.bay <- as.vector(PredPdf(fit.mcmc, x = x, nahead = 1))
 
 pred.draws <- matrix(data = NA, nrow = nrow(draws), ncol = n.mesh)
 for (i in 1:nrow(draws)) {
-  tmp <- Pred(ms2.gjr.s, par = draws[i,], x = x, data = SMI, n.ahead = 1)
+  tmp <- PredPdf(ms2.gjr.s, par = draws[i,], x = x, data = SMI, nahead = 1)
   pred.draws[i,] <- as.vector(tmp)
 }
 

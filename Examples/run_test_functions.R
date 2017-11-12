@@ -2,7 +2,7 @@ library("MSGARCH")
 
 ####################### FITML #########################
 #Loop over all model and all distribution and fit by ML the 
-#SMI up to 4 regime with similar conditional variance process and distribution
+#SMI up to K.max regime with similar conditional variance process and distribution
 #store the BIC of each estimation
 data("SMI", package = "MSGARCH")
 K.max = 2
@@ -25,7 +25,7 @@ for(dist in dist.spec){
 #fail 4 regime GJR garch sstd 
 ####################### FITMCMC ########################
 #Loop over all model and all distribution and fit by MCMC the 
-#SMI up to 4 regime with similar conditional variance process and distribution
+#SMI up to K.max regime with similar conditional variance process and distribution
 #store the DIC of each estimation
 data("SMI", package = "MSGARCH")
 K.max = 2
@@ -73,15 +73,15 @@ pit.x.its <- PIT(object = fit, x = x, do.norm = TRUE, do.its = TRUE)
 dim(pit.x.its) == c(2500, 601)
 plot(zoo::zoo(t(pit.x.its), order.by = x),plot.type = "single")
 
-# run PIT method on mesh at T + n.ahead
+# run PIT method on mesh at T + nahead
 set.seed(123)
-pit.x.ots <- PIT(object = fit, x = x, n.ahead = 5, do.norm = FALSE, do.its = FALSE, ctr = list(n.sim = 50000L))
+pit.x.ots <- PIT(object = fit, x = x, nahead = 5, do.norm = FALSE, do.its = FALSE, ctr = list(nsim = 50000L))
 dim(pit.x.ots)  == c(5, 601)
 plot(zoo::zoo(t(pit.x.ots), order.by = x))
 
 #Simulate from the fitted parameter
 set.seed(123)
-sim.series <- Sim(object = spec, par = fit$par, n.ahead = 1000L, n.sim = 1L)
+sim.series <- simulate(object = spec, par = fit$par, nahead = 1000L, nsim = 1L)
 dim(sim.series$draw) == c(1000,1)
 dim(sim.series$state) == c(1000,1)
 dim(sim.series$CondVol) == c(1000,1,2)
@@ -106,22 +106,22 @@ spec <- CreateSpec()
 # fit the model on the data by ML
 fit <- FitML(spec = spec, data = SMI)
 
-# run Pred method on data in-sample (log-likelihood)
-pred.data.its <- Pred(object = fit, log = TRUE, do.its = TRUE)
+# run PredPDF method on data in-sample (log-likelihood)
+pred.data.its <- PredPDF(object = fit, log = TRUE, do.its = TRUE)
 length(pred.data.its) == 2500
 round(sum(pred.data.its),4) == -3391.5866
 
 # create a mesh
 x <- seq(-3,3,0.01)
 
-# run pred method on x mesh in-sample
-pred.x.its <- Pred(object = fit, x = x, log = FALSE, do.its = TRUE)
+# run PredPDF method on x mesh in-sample
+pred.x.its <- PredPDF(object = fit, x = x, log = FALSE, do.its = TRUE)
 dim(pred.x.its) == c(2500,601)
 #plot all predictive
 plot(zoo::zoo(t(pred.x.its), order.by = x), plot.type = "single")
 
-# run pred method on x mesh in-sample
-pred.x.ots <- Pred(object = fit, x = x, log = FALSE, do.its = FALSE, n.ahead = 5, ctr = list(n.sim = 50000L))
+# run PredPDF method on x mesh in-sample
+pred.x.ots <- PredPDF(object = fit, x = x, log = FALSE, do.its = FALSE, nahead = 5, ctr = list(nsim = 50000L))
 dim(pred.x.ots) == c(5,601)
 #plot 1 step ahead predictive
 plot(zoo::zoo(t(pred.x.ots), order.by = x), plot.type = "single")
@@ -150,8 +150,8 @@ var(SMI/cond.vol.its) - 1 < 0.01
 
 ####################### Forecast ########################
 
-# compute the forcast of the conditional volatility from the fitted model up to n.ahead = 1000
-cond.vol.ots <- Forecast(object = fit, n.ahead = 5, do.return.draw = TRUE, ctr = list(n.sim = 50000L))
+# compute the forcast of the conditional volatility from the fitted model up to nahead = 1000
+cond.vol.ots <- predict(object = fit, nahead = 5, do.return.draw = TRUE, ctr = list(nsim = 50000L))
 length(cond.vol.ots$vol) == 5
 dim(cond.vol.ots$draw) == c(5, 50000)
 par(mfrow = c(2,1))
@@ -196,7 +196,7 @@ spec <- CreateSpec()
 fit <- FitML(spec = spec, data = SMI)
 
 
-simul <- Sim(object = spec,n.ahead = 100,n.sim = 1,par = fit$par)
+simul <- simulate(object = spec, nahead = 100,nsim = 1, par = fit$par)
 dim(simul$draw) == c(100,1)
 dim(simul$state) == c(100,1)
 dim(simul$CondVol) == c(100,1,2)
@@ -248,7 +248,7 @@ rugarch::VaRTest(actual = SMI, VaR = risk$VaR[,1],alpha = as.numeric(colnames(ri
 rugarch::ESTest(actual = SMI, VaR = risk$VaR[,1], ES = risk$ES[,1], alpha = as.numeric(colnames(risk$VaR)[1]))
 plot(risk)
 #step ahead Risk measure calculation
-risk <- Risk(fit, n.ahead = 1000, do.its = FALSE, ctr = list(n.sim = 10000L))
+risk <- Risk(fit, nahead = 1000, do.its = FALSE, ctr = list(nsim = 10000L))
 dim(risk$VaR) == c(1000,2)
 dim(risk$ES) == c(1000,2)
 plot(risk)

@@ -5,18 +5,18 @@
 #' created with \code{\link{CreateSpec}} or fit object of type \code{MSGARCH_ML_FIT}
 #' created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
 #' created with \code{\link{FitMCMC}}.
-#' @param par Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter estimates
+#' @param par Vector (of size d) or matrix (of size \code{nmcmc} x d) of parameter estimates
 #' where d must have
 #' the same length as the default parameters of the specification.
 #' @param data  Vector (of size T) of observations.
-#' @param new.data  Vector (of size T*) of new observations. (Default \code{new.data = NULL})
+#' @param newdata  Vector (of size T*) of new observations. (Default \code{newdata = NULL})
 #' @param ... Not used. Other arguments to \code{State}.
 #' @return A list of class \code{MSGARCH_PSTATE} with the following elements:
 #' \itemize{
-#' \item \code{FiltProb}: Filtered probabilities (array of size (T + T*) x (\code{n.mcmc or 1}) x K).
-#' \item \code{PredProb}: Predictive probabilities (array of size (T + T* + 1) x (\code{n.mcmc or 1}) x K).
-#' \item \code{SmoothProb}: Smoothed probabilities (array of size (T + T* + 1) x (\code{n.mcmc or 1}) x K).
-#' \item \code{Viterbi}:  Most likely path (matrix of size (T + T*) x (\code{n.mcmc} or 1)).
+#' \item \code{FiltProb}: Filtered probabilities (array of size (T + T*) x (\code{nmcmc or 1}) x K).
+#' \item \code{PredProb}: Predictive probabilities (array of size (T + T* + 1) x (\code{nmcmc or 1}) x K).
+#' \item \code{SmoothProb}: Smoothed probabilities (array of size (T + T* + 1) x (\code{nmcmc or 1}) x K).
+#' \item \code{Viterbi}:  Most likely path (matrix of size (T + T*) x (\code{nmcmc} or 1)).
 #' }
 #' The class \code{MSGARCH_PSTATE} contains the \code{plot} method. The plot method contains
 #' as input \code{type.prob} which is one of \code{"filtered", "predictive", "smoothed", "viterbi"}.
@@ -73,7 +73,7 @@ State.MSGARCH_SPEC <- function(object, par, data, ...) {
       out$SmoothProb[, i, j] <- tmp$SmoothProb[, j]
     }
     if (object$K > 1) {
-      P <- TransMat(object = object, par = par[i, ], n.ahead = 1)
+      P <- TransMat(object = object, par = par[i, ], nahead = 1)
       if (isTRUE(object$is.mix)) {
         P <- matrix(rep(P, object$K), nrow = object$K, ncol = object$K)
       }
@@ -92,16 +92,16 @@ State.MSGARCH_SPEC <- function(object, par, data, ...) {
 
 #' @rdname State
 #' @export
-State.MSGARCH_ML_FIT <- function(object, new.data = NULL, ...) {
-  data <- c(object$data, new.data)
+State.MSGARCH_ML_FIT <- function(object, newdata = NULL, ...) {
+  data <- c(object$data, newdata)
   out  <- State(object = object$spec, par = object$par, data = data)
   return(out)
 }
 
 #' @rdname State
 #' @export
-State.MSGARCH_MCMC_FIT <- function(object, new.data = NULL, ...) {
-  data <- c(object$data, new.data)
+State.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, ...) {
+  data <- c(object$data, newdata)
   out  <- State(object = object$spec, par = object$par, data = data)
   return(out)
 }

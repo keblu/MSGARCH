@@ -151,13 +151,13 @@ f_map_deriv <- function(x, lower, upper) {
 # Default parameters
 f_process_ctr <- function(ctr = list(), type = 1) {
   if (type == 1) {
-    con <- list(par0 = NULL, n.mcmc = 10000L,
+    con <- list(par0 = NULL, nmcmc = 10000L,
                 OptimFUN = f_OptimFUNDefault,
                 SamplerFUN = f_SamplerFUNDefault,
-                n.burn = 5000L, n.thin = 10L,  do.se = TRUE, do.plm = FALSE,
-                n.sim = 10000L, n.mesh = 1000L)
+                nburn = 5000L, nthin = 10L,  do.se = TRUE, do.plm = FALSE,
+                nsim = 10000L, nmesh = 1000L, do.sort = TRUE)
   } else if (type == 2) {
-    con <- list(n.sim = 250L, n.burn = 5000L, n.ahead = 1000L)
+    con <- list(nsim = 250L, nburn = 5000L, nahead = 1000L)
   }
   con[names(ctr)] <- ctr
   return(con)
@@ -414,4 +414,8 @@ f_check_parameterPriorSd <- function(prior.sd, vParNames) {
     stop(cat(paste("Wrong name in prior.sd:", vWrongPars)))
   }
   return(prior.sd)
+}
+
+
+dofMSGARCH = function(object){
 }

@@ -5,7 +5,7 @@ data("SMI", package = "MSGARCH")
 spec <- MSGARCH::CreateSpec(variance.spec = list(model = c("sGARCH")),
                    distribution.spec = list(distribution = c("norm")),
                    switch.spec = list(do.mix = FALSE, K = 2))
-fit <- MSGARCH::FitMCMC(spec, data = SMI, ctr = list(n.burn = 500, n.mcmc = 500, n.thin = 1))
+fit <- MSGARCH::FitMCMC(spec, data = SMI, ctr = list(nburn = 500, nmcmc = 500, nthin = 1))
 
 testthat::test_that("MCMC Estimation MS GARCH NORMAL", {
   

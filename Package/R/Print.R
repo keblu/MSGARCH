@@ -90,7 +90,7 @@ summary.MSGARCH_ML_FIT <- function(object, ...) {
       trans.mat <- TransMat(object)
       print(round(trans.mat, 4))
       cat(paste("------------------------------------------\n"))
-      stable.prob <- t(TransMat(object, n.ahead = 10000)[1, , drop = FALSE])
+      stable.prob <- t(TransMat(object, nahead = 10000)[1, , drop = FALSE])
     } else {
       stable.prob <- t(TransMat(object))
     }
@@ -111,9 +111,9 @@ summary.MSGARCH_ML_FIT <- function(object, ...) {
     #print(round(unc.vol$SR, 4))
   }
   cat(paste0("LL: ", round(object$loglik, 4), "\n"))
-  aic <- AIC(object)
+  aic <- stats::AIC(object)
   cat(paste0("AIC: ", round(aic, 4), "\n"))
-  bic <- BIC(object)
+  bic <- stats::BIC(object)
   cat(paste0("BIC: ", round(bic, 4)))
   cat(paste("\n------------------------------------------\n"))
   if (isTRUE(object$spec$is.mix)) {
@@ -156,7 +156,7 @@ summary.MSGARCH_MCMC_FIT <- function(object, ...) {
       print(round(post.trans.mat, 4))
       cat(paste("------------------------------------------\n"))
       post.stable.prob <- t(TransMat(object = object$spec,
-                                     par = colMeans(object$par), n.ahead = 10000)[1, , drop = FALSE])
+                                     par = colMeans(object$par), nahead = 10000)[1, , drop = FALSE])
     } else {
       post.stable.prob <- t(TransMat(object = object$spec, par =  colMeans(object$par)))
     }
@@ -178,29 +178,24 @@ summary.MSGARCH_MCMC_FIT <- function(object, ...) {
   }
   cat(paste("------------------------------------------\n"))
   cat(paste0("Acceptance rate MCMC sampler: ", round(100 * object$accept, 1), "%\n"))
-  cat(paste0("n.mcmc: ", object$ctr$n.mcmc, "\n"))
-  cat(paste0("n.burn: ", object$ctr$n.burn, "\n"))
-  cat(paste0("n.thin: ", object$ctr$n.thin, "\n"))
+  cat(paste0("nmcmc: ", object$ctr$nmcmc, "\n"))
+  cat(paste0("nburn: ", object$ctr$nburn, "\n"))
+  cat(paste0("nthin: ", object$ctr$nthin, "\n"))
   cat(paste("------------------------------------------\n"))
-  aic <- AIC(object)
-  cat(paste0("AIC: ", round(aic, 4), "\n"))
-  bic <- BIC(object)
-  cat(paste0("BIC: ", round(bic, 4), "\n"))
   dic <- DIC(object)$DIC
   cat(paste0("DIC: ", round(dic, 4)))
   cat(paste("\n------------------------------------------\n"))
   if (isTRUE(object$spec$is.mix)) {
     out <- list(spec = spec, summary = summ, post.stable.prob = post.stable.prob,
                 accept.rate = object$accept,
-                AIC = aic, BIC = bic, DIC = dic)
+                DIC = dic)
   } else {
     if (object$spec$K > 1) {
       out <- list(spec = spec, summary = summ, post.trans.mat = post.trans.mat,
                   post.stable.prob = post.stable.prob,
-                  accept.rate = object$accept, AIC = aic, BIC = bic, DIC = dic)
+                  accept.rate = object$accept, DIC = dic)
     } else {
-      out <- list(spec = spec, summary = summ, accept.rate = object$accept,
-                  AIC = aic, BIC = bic, DIC = dic)
+      out <- list(spec = spec, summary = summ, accept.rate = object$accept, DIC = dic)
     }
   }
   return(invisible(out))

@@ -8,7 +8,7 @@ par <- c(0.021631876185, 0.087024443479, 0.881493722371, 0.020659831566,
          0.005396009353, 0.994040728662, 0.978348086740, 0.998703301894)
 
 set.seed(1234)
-sim <- MSGARCH::Sim(object = spec,n.ahead = 20,n.sim = 2,par = par,n.burnin = 10)
+sim <- simulate(object = spec,nahead = 20,nsim = 2,par = par,nburn = 10)
 
 testthat::test_that("Simulation Draw", {
   

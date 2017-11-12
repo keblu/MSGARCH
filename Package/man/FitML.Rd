@@ -45,15 +45,15 @@ A list of class \code{MSGARCH_ML_FIT} with the following elements:
        }
 The \code{MSGARCH_ML_FIT} with the following methods:
 \itemize{
-\item \code{\link{AIC}}: Compute Akaike information criterion (AIC).
-\item \code{\link{BIC}}: Compute Bayesian information criterion (BIC).
+\item \code{AIC}: Compute Akaike information criterion (AIC).
+\item \code{BIC}: Compute Bayesian information criterion (BIC).
 \item \code{\link{Volatility}}: In-sample conditional volatility filterting of the overall process.
-\item \code{\link{Forecast}}: Forecast of the conditional volatility of the overall process.
+\item \code{predict}: Forecast of the conditional volatility of the overall process.
 \item \code{\link{UncVol}}: Unconditional volatility in each regime and the overall process.
-\item \code{\link{Pred}}: Predictive method.
+\item \code{\link{PredPdf}}: Predictive method.
 \item \code{\link{PIT}}: Probability Integral Transform.
 \item \code{\link{Risk}}: Value-at-Risk and Expected-Shortfall methods.
-\item \code{\link{Sim}}: Simulation method.
+\item \code{simulate}: Simulation method.
 \item \code{\link{State}}: State probabilities methods.
 \item \code{\link{ExtractStateFit}}: Single-regime model extractor.
 \item \code{summary}: Summary of the fit.

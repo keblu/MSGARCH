@@ -1,15 +1,15 @@
-f_CondVol <- function(object, par, data, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
+f_CondVol <- function(object, par, data, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
   object    <- f_check_spec(object)
   data      <- f_check_y(data)
   par.check <- f_check_par(object, par)
   if (nrow(par.check) == 1) {
     ctr     <- f_process_ctr(ctr)
-    n.sim <- ctr$n.sim
+    nsim <- ctr$nsim
   } else {
-    if(is.null(ctr$n.sim)){
-      n.sim = 1
+    if(is.null(ctr$nsim)){
+      nsim = 1
     } else {
-      n.sim = ctr$n.sim
+      nsim = ctr$nsim
     }
   }
   ctr       <- f_process_ctr(ctr)
@@ -30,14 +30,14 @@ f_CondVol <- function(object, par, data, do.its = FALSE, n.ahead = 1L, ctr = lis
   draw <- NULL
   if (!isTRUE(do.its)) {
     tmp    <- mean(vol[dim(PredProb)[1]])
-    vol    <- vector(mode = "numeric", length = n.ahead)
+    vol    <- vector(mode = "numeric", length = nahead)
     vol[1] <- tmp
-    if (n.ahead > 1) {
-      draw <- Sim(object = object, data = data, n.ahead = n.ahead,
-                  n.sim = n.sim, par = par)$draw
-      vol[2:n.ahead] = apply(draw[2:n.ahead,, drop = FALSE], 1, sd)
+    if (nahead > 1) {
+      draw <- Sim(object = object, data = data, nahead = nahead,
+                  nsim = nsim, par = par)$draw
+      vol[2:nahead] = apply(draw[2:nahead,, drop = FALSE], 1, sd)
     }
-    names(vol) <- paste0("h=", 1:n.ahead)
+    names(vol) <- paste0("h=", 1:nahead)
   } else {
     draw <- NULL
     if (nrow(par.check) > 1) {

@@ -11,9 +11,9 @@ Volatility(object, ...)
 
 \method{Volatility}{MSGARCH_SPEC}(object, par, data, ...)
 
-\method{Volatility}{MSGARCH_ML_FIT}(object, new.data = NULL, ...)
+\method{Volatility}{MSGARCH_ML_FIT}(object, newdata = NULL, ...)
 
-\method{Volatility}{MSGARCH_MCMC_FIT}(object, new.data = NULL, ...)
+\method{Volatility}{MSGARCH_MCMC_FIT}(object, newdata = NULL, ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}
@@ -22,12 +22,12 @@ created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT} created with \code{\
 
 \item{...}{Not used. Other arguments to \code{Volatility}.}
 
-\item{par}{Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter
+\item{par}{Vector (of size d) or matrix (of size \code{nmcmc} x d) of parameter
 estimates where d must have the same length as the default parameters of the specification.}
 
 \item{data}{Vector (of size T) of observations.}
 
-\item{new.data}{Vector (of size T*) of new observations. (Default \code{new.data = NULL})}
+\item{newdata}{Vector (of size T*) of new observations. (Default \code{newdata = NULL})}
 }
 \value{
 Condititional volatility (vector of size T + T*) of class \code{MSGARCH_CONDVOL}.\cr

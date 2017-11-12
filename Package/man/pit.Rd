@@ -10,13 +10,13 @@
 PIT(object, ...)
 
 \method{PIT}{MSGARCH_SPEC}(object, x = NULL, par = NULL, data = NULL,
-  do.norm = FALSE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...)
+  do.norm = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
 
-\method{PIT}{MSGARCH_ML_FIT}(object, x = NULL, new.data = NULL,
-  do.norm = TRUE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...)
+\method{PIT}{MSGARCH_ML_FIT}(object, x = NULL, newdata = NULL,
+  do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
 
-\method{PIT}{MSGARCH_MCMC_FIT}(object, x = NULL, new.data = NULL,
-  do.norm = TRUE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...)
+\method{PIT}{MSGARCH_MCMC_FIT}(object, x = NULL, newdata = NULL,
+  do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}
@@ -27,7 +27,7 @@ created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT} created with \code{\
 
 \item{x}{Vector (of size n). Used when \code{do.its = FALSE}.}
 
-\item{par}{Vector (of size d) or matrix (of size \code{n.mcmc} x d) of
+\item{par}{Vector (of size d) or matrix (of size \code{nmcmc} x d) of
 parameter estimates where d must have
 the same length as the default parameters of the specification.}
 
@@ -38,23 +38,23 @@ into standard Normal variate. (Default: \code{do.norm = FALSE})}
 
 \item{do.its}{Logical indicating if the in-sample PIT is returned. (Default: \code{do.its = FALSE})}
 
-\item{n.ahead}{Scalar indicating the number of step-ahead evaluation.
-Valid only when \code{do.its = FALSE}. (Default: \code{n.ahead = 1L})}
+\item{nahead}{Scalar indicating the number of step-ahead evaluation.
+Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})}
 
 \item{ctr}{A list of control parameters:
 \itemize{
-\item \code{n.sim} (integer >= 0):
+\item \code{nsim} (integer >= 0):
 Number indicating the number of simulation done for the
-evaluation of the PIT at \code{n.ahead > 1}. (Default: \code{n.sim = 10000L})
+evaluation of the PIT at \code{nahead > 1}. (Default: \code{nsim = 10000L})
 }}
 
-\item{new.data}{Vector (of size T*) of new observations. (Default \code{new.data = NULL})}
+\item{newdata}{Vector (of size T*) of new observations. (Default \code{newdata = NULL})}
 }
 \value{
 A vector or matrix of class \code{MSGARCH_PIT}. \cr
 If \code{do.its = FALSE}: Probability integral transform of the
-points \code{x} at \cr \code{t = T + T* + 1, ... ,t = T + T* + n.ahead} or Normal variate derived from the probability
-integral transform of \code{x} (matrix of size \code{n.ahead} x n).\cr
+points \code{x} at \cr \code{t = T + T* + 1, ... ,t = T + T* + nahead} or Normal variate derived from the probability
+integral transform of \code{x} (matrix of size \code{nahead} x n).\cr
 If \code{do.its = TRUE}: In-sample  probability integral transform or Normal variate
 derived from the probability integral transform of \code{data} if \code{x = NULL} (vector of
 size T + T*) or in-sample  probability integral transform or Normal variate
@@ -68,9 +68,9 @@ transform (PIT).
 If a matrix of MCMC posterior draws is given, the
 Bayesian probability integral transform is calculated.
 Two or more step-ahead probability integral
-transform are estimated via simulation of \code{n.sim} paths up to \code{t = T + T* + n.ahead}.
+transform are estimated via simulation of \code{nsim} paths up to \code{t = T + T* + nahead}.
 The empirical probability integral transforms is then inferred from these simulations.\cr
-If \code{do.its = FALSE}, the vector \code{x} are evaluated as  \code{t = T + T* + 1, ... ,t = T + T* + n.ahead}
+If \code{do.its = FALSE}, the vector \code{x} are evaluated as  \code{t = T + T* + 1, ... ,t = T + T* + nahead}
 realizations.\cr
 If \code{do.its = TRUE}, \code{x} is evaluated
 at each time \code{t} up to time \code{t = T + T*}.\cr
@@ -97,7 +97,7 @@ qqline(pit.its)
 
 # simulate a serie from the model
 set.seed(123)
-sim.series <- Sim(object = spec, par = fit$par, n.ahead= 1000L, n.sim = 1L)
+sim.series <- simulate(object = spec, par = fit$par, nahead= 1000L, nsim = 1L)
 sim.series <- as.vector(sim.series$draw)
 
 # run PIT method on the simualed serie with the true par

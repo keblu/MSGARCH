@@ -5,27 +5,27 @@
 #' created with \code{\link{CreateSpec}} or fit object of type \code{MSGARCH_ML_FIT}
 #' created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT} created with \code{\link{FitMCMC}}.
 #' @param x  Vector (of size n). Used when \code{do.its = FALSE}.
-#' @param par Vector (of size d) or matrix (of size \code{n.mcmc} x d) of
+#' @param par Vector (of size d) or matrix (of size \code{nmcmc} x d) of
 #' parameter estimates where d must have
 #' the same length as the default parameters of the specification.
 #' @param data  Vector (of size T) of observations.
-#' @param new.data  Vector (of size T*) of new observations. (Default \code{new.data = NULL})
+#' @param newdata  Vector (of size T*) of new observations. (Default \code{newdata = NULL})
 #' @param do.norm  Logical indicating if the PIT values are transformed
 #' into standard Normal variate. (Default: \code{do.norm = FALSE})
 #' @param do.its  Logical indicating if the in-sample PIT is returned. (Default: \code{do.its = FALSE})
-#' @param n.ahead  Scalar indicating the number of step-ahead evaluation.
-#'  Valid only when \code{do.its = FALSE}. (Default: \code{n.ahead = 1L})
+#' @param nahead  Scalar indicating the number of step-ahead evaluation.
+#'  Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})
 #' @param ctr A list of control parameters:
 #'        \itemize{
-#'        \item \code{n.sim} (integer >= 0):
+#'        \item \code{nsim} (integer >= 0):
 #'        Number indicating the number of simulation done for the
-#'        evaluation of the PIT at \code{n.ahead > 1}. (Default: \code{n.sim = 10000L})
+#'        evaluation of the PIT at \code{nahead > 1}. (Default: \code{nsim = 10000L})
 #'        }
 #' @param ... Not used. Other arguments to \code{PIT}.
 #' @return A vector or matrix of class \code{MSGARCH_PIT}. \cr
 #' If \code{do.its = FALSE}: Probability integral transform of the
-#' points \code{x} at \cr \code{t = T + T* + 1, ... ,t = T + T* + n.ahead} or Normal variate derived from the probability
-#' integral transform of \code{x} (matrix of size \code{n.ahead} x n).\cr
+#' points \code{x} at \cr \code{t = T + T* + 1, ... ,t = T + T* + nahead} or Normal variate derived from the probability
+#' integral transform of \code{x} (matrix of size \code{nahead} x n).\cr
 #' If \code{do.its = TRUE}: In-sample  probability integral transform or Normal variate
 #' derived from the probability integral transform of \code{data} if \code{x = NULL} (vector of
 #' size T + T*) or in-sample  probability integral transform or Normal variate
@@ -33,9 +33,9 @@
 #' @details If a matrix of MCMC posterior draws is given, the
 #' Bayesian probability integral transform is calculated.
 #' Two or more step-ahead probability integral
-#' transform are estimated via simulation of \code{n.sim} paths up to \code{t = T + T* + n.ahead}.
+#' transform are estimated via simulation of \code{nsim} paths up to \code{t = T + T* + nahead}.
 #' The empirical probability integral transforms is then inferred from these simulations.\cr
-#' If \code{do.its = FALSE}, the vector \code{x} are evaluated as  \code{t = T + T* + 1, ... ,t = T + T* + n.ahead}
+#' If \code{do.its = FALSE}, the vector \code{x} are evaluated as  \code{t = T + T* + 1, ... ,t = T + T* + nahead}
 #' realizations.\cr
 #' If \code{do.its = TRUE}, \code{x} is evaluated
 #' at each time \code{t} up to time \code{t = T + T*}.\cr
@@ -61,7 +61,7 @@
 #'
 #' # simulate a serie from the model
 #' set.seed(123)
-#' sim.series <- Sim(object = spec, par = fit$par, n.ahead= 1000L, n.sim = 1L)
+#' sim.series <- simulate(object = spec, par = fit$par, nahead= 1000L, nsim = 1L)
 #' sim.series <- as.vector(sim.series$draw)
 #'
 #' # run PIT method on the simualed serie with the true par
@@ -77,7 +77,7 @@ PIT <- function(object, ...) {
 #' @rdname PIT
 #' @export
 PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
-                             do.norm = FALSE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
+                             do.norm = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
   object <- f_check_spec(object)
   data   <- f_check_y(data)
   if (is.vector(par)) {
@@ -85,12 +85,12 @@ PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
   }
   if (nrow(par) == 1) {
     ctr     <- f_process_ctr(ctr)
-    n.sim <- ctr$n.sim
+    nsim <- ctr$nsim
   } else {
-    if(is.null(ctr$n.sim)){
-      n.sim = 1
+    if(is.null(ctr$nsim)){
+      nsim = 1
     } else {
-      n.sim = ctr$n.sim
+      nsim = ctr$nsim
     }
   }
   ctr    <- f_process_ctr(ctr)
@@ -136,18 +136,18 @@ PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
     if (ncol(x) != 1L) {
       stop("x must be a vector or a matrix of size N x 1")
     }
-    tmp <- matrix(data = 0, nrow = nrow(x), ncol = n.ahead)
+    tmp <- matrix(data = 0, nrow = nrow(x), ncol = nahead)
     for (i in 1:nrow(par)) {
       tmp[, 1] <- tmp[, 1] + object$rcpp.func$cdf_Rcpp(x, par_check[i, ], data, FALSE)
     }
     tmp <- tmp/nrow(par)
-    if (n.ahead > 1) {
-      draw <- Sim(object = object, data = data, n.ahead = n.ahead, n.sim = n.sim, par = par)$draw
-      for (j in 2:n.ahead) {
+    if (nahead > 1) {
+      draw <- Sim(object = object, data = data, nahead = nahead, nsim = nsim, par = par)$draw
+      for (j in 2:nahead) {
         tmp[, j] <- f_cdf_empirical(y = draw[j, ], x)
       }
     }
-    colnames(tmp) <- paste0("h=",1:n.ahead)
+    colnames(tmp) <- paste0("h=",1:nahead)
   }
   if (!isTRUE(ctr$do.return.draw)) {
     draw <- NULL
@@ -169,20 +169,20 @@ PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
 
 #' @rdname PIT
 #' @export
-PIT.MSGARCH_ML_FIT <- function(object, x = NULL, new.data = NULL,
-                               do.norm = TRUE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
-  data = c(object$data, new.data)
+PIT.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
+                               do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+  data = c(object$data, newdata)
   out <- PIT(object = object$spec, x = x, par = object$par, data = data,
-             do.norm = do.norm, do.its = do.its, n.ahead = n.ahead, ctr = ctr)
+             do.norm = do.norm, do.its = do.its, nahead = nahead, ctr = ctr)
   return(out)
 }
 
 #' @rdname PIT
 #' @export
-PIT.MSGARCH_MCMC_FIT <- function(object, x = NULL, new.data = NULL,
-                                 do.norm = TRUE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
-  data = c(object$data, new.data)
+PIT.MSGARCH_MCMC_FIT <- function(object, x = NULL, newdata = NULL,
+                                 do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+  data = c(object$data, newdata)
   out <- PIT(object = object$spec, x = x, par = object$par, data = data,
-             do.norm = do.norm, do.its = do.its, n.ahead = n.ahead, ctr = ctr)
+             do.norm = do.norm, do.its = do.its, nahead = nahead, ctr = ctr)
   return(out)
 }

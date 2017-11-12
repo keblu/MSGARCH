@@ -3,13 +3,13 @@
 # @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{CreateSpec}}
 # or fit object of type \code{MSGARCH_ML_FIT} created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
 # created with \code{\link{FitMCMC}}.
-# @param par Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter
+# @param par Vector (of size d) or matrix (of size \code{nmcmc} x d) of parameter
 # estimates (not required when using a fit object) where d must have the same length
 # as the default parameters of the specification.
 # @param data  Vector (of size T) of observations (not required when using a fit object).
 # @param log  Logical indicating if the log kernel is returned. (Default: \code{log = TRUE})
 # @param do.prior  Logical indicating if the prior is evaluated. (Default: \code{do.prior = TRUE})
-# @return (Log-)kernel value (scalar or vector of size \code{n.mcmc}) of the vector of observations.
+# @return (Log-)kernel value (scalar or vector of size \code{nmcmc}) of the vector of observations.
 # @details If a matrix of parameter estimates is given, each parameter estimate (each row) is evaluated individually.
 #  The kernel is a combination of the prior and the likelihood function.
 #  The kernel is equal to LP(\eqn{\psi}) + LL(data|\eqn{\psi}) where LP is the log-prior of \eqn{\psi}

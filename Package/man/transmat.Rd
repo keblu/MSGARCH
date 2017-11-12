@@ -8,9 +8,9 @@
 \usage{
 TransMat(object, ...)
 
-\method{TransMat}{MSGARCH_SPEC}(object, par = NULL, n.ahead = 1L, ...)
+\method{TransMat}{MSGARCH_SPEC}(object, par = NULL, nahead = 1L, ...)
 
-\method{TransMat}{MSGARCH_ML_FIT}(object, n.ahead = 1L, ...)
+\method{TransMat}{MSGARCH_ML_FIT}(object, nahead = 1L, ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}
@@ -23,7 +23,7 @@ or fit object of type \code{MSGARCH_ML_FIT} created with \code{\link{FitML}}.}
 parameter estimates (not required when using a fit object) where d must have
 the same length as the default parameters of the specification.}
 
-\item{n.ahead}{Number of steps ahead. (Default: \code{n.ahead = 1L})}
+\item{nahead}{Number of steps ahead. (Default: \code{nahead = 1L})}
 }
 \value{
 A matrix (of size K x K) in the case of a Markov-Switching model
@@ -45,6 +45,6 @@ spec <- CreateSpec()
 fit <- FitML(spec = spec, data = SMI)
 
 # Extract the transition matrix 10 steps ahead
-trans.mat <- TransMat(fit, n.ahead = 10)
+trans.mat <- TransMat(fit, nahead = 10)
 print(trans.mat)
 }

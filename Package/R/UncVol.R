@@ -5,30 +5,30 @@
 #' created with \code{\link{CreateSpec}} or fit object of type \code{MSGARCH_ML_FIT}
 #' created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
 #' created with \code{\link{FitMCMC}}.
-#' @param par Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter
+#' @param par Vector (of size d) or matrix (of size \code{nmcmc} x d) of parameter
 #' estimates where d must have
 #' the same length as the default parameters of the specification.
 #' @param ... Not used. Other arguments to \code{TransMat}.
 #' @param ctr A list of control parameters:
 #'        \itemize{
-#'        \item \code{n.sim} (integer >= 0) :
+#'        \item \code{nsim} (integer >= 0) :
 #'        Number indicating the number of simulation done for estimation of the
-#'        unconditional volatility. (Default: \code{n.sim = 250L})
-#'        \item \code{n.ahead} (integer >= 0) :
+#'        unconditional volatility. (Default: \code{nsim = 250L})
+#'        \item \code{nahead} (integer >= 0) :
 #'        Number indicating the number of step ahead performs to estimate the
-#'        unconditional volatility .(Default: \code{n.ahead = 5000L})
-#'        \item \code{n.burn} (integer >= 0) :
+#'        unconditional volatility .(Default: \code{nahead = 5000L})
+#'        \item \code{nburn} (integer >= 0) :
 #'        Number indicating the number of discarded step ahead to estimate the
-#'        unconditional volatility. (Default: \code{n.burn = 1000L})
+#'        unconditional volatility. (Default: \code{nburn = 1000L})
 #'        }
 #' @return A \code{scalar} corresponding to the process unconditional volatility.
 #' @details If a matrix of MCMC posterior draws is given, the
 #' Bayesian unconditional volatility are calculated.
-#'  The unconditional volatility is estimated by first simulating \code{n.sim}
-#'  paths up to \code{n.burn + n.ahead},
+#'  The unconditional volatility is estimated by first simulating \code{nsim}
+#'  paths up to \code{nburn + nahead},
 #'  calculating a forecast of the conditional volatility at each step ahead,
-#'  discarding the first \code{n.burn} step ahead conditional volatilities forecasts,
-#'  and computing the mean of the remaining \code{n.ahead - n.burn} conditional
+#'  discarding the first \code{nburn} step ahead conditional volatilities forecasts,
+#'  and computing the mean of the remaining \code{nahead - nburn} conditional
 #'  volatilites forecasts. This method is based on the fact that
 #'  the conditional volatility forecast will converge to the unconditional volatilty
 #'  the further the forecast his from the starting point.
@@ -59,12 +59,12 @@ UncVol.MSGARCH_SPEC <- function(object, par = NULL, ctr = list(), ...) {
   }
   if (nrow(par) == 1) {
     ctr   <- f_process_ctr(ctr, type = 2)
-    n.sim <- ctr$n.sim
+    nsim <- ctr$nsim
   } else {
-    if(is.null(ctr$n.sim)){
-      n.sim = 1
+    if(is.null(ctr$nsim)){
+      nsim = 1
     } else {
-      n.sim = ctr$n.sim
+      nsim = ctr$nsim
     }
   }
   ctr    <- f_process_ctr(ctr, type = 2)
@@ -72,9 +72,9 @@ UncVol.MSGARCH_SPEC <- function(object, par = NULL, ctr = list(), ...) {
                  par = par,
                  data = c(1,1),
                  do.its = FALSE,
-                 n.ahead = ctr$n.burn + ctr$n.ahead,
-                 ctr = list(n.sim = n.sim))$vol
-  out <- mean(tmp[ctr$n.burn:ctr$n.ahead])
+                 nahead = ctr$nburn + ctr$nahead,
+                 ctr = list(nsim = nsim))$vol
+  out <- mean(tmp[ctr$nburn:ctr$nahead])
   return(out)
 }
 

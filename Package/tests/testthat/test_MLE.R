@@ -21,7 +21,7 @@ testthat::test_that("Estimation MS GARCH NORMAL", {
 testthat::test_that("Estimation BIC", {
   
   tol <- 0.1
-  est.BIC <- MSGARCH::BIC(fit)
+  est.BIC <- BIC(fit)
   exp.BIC <- 6841.1848542696416
   
   testthat::expect_true(abs(exp.BIC - exp.BIC) < tol)
@@ -32,7 +32,7 @@ testthat::test_that("Estimation BIC", {
 testthat::test_that("Estimation AIC", {
   
   tol <- 0.1
-  est.AIC <- MSGARCH::AIC(fit)
+  est.AIC <- AIC(fit)
   exp.AIC <- 6794.5924861827916
   
   testthat::expect_true(abs(est.AIC - exp.AIC) < tol)

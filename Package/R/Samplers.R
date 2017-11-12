@@ -5,7 +5,7 @@ f_SamplerFUNDefault <- function(f_posterior, data, spec, par0, ctr) {
   }
   draw <- f_RCPP_adaptMCMC(theta0 = par0, acc_rate = 0.25, 
                            sigma = diag(length(par0)), 
-                           func = p.log, n_mcmc = ctr$n.burn + ctr$n.mcmc)
+                           func = p.log, n_mcmc = ctr$nburn + ctr$nmcmc)
   colnames(draw) = names(par0)
   return(draw)
 }

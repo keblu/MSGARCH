@@ -22,7 +22,7 @@ testthat::test_that("In Sample Risk", {
 
 testthat::test_that("Out of sample Risk", {
   set.seed(1234)
-  est.Risk <- MSGARCH::Risk(object = spec, par = par, data = SMI, do.its = FALSE, n.ahead = 2)
+  est.Risk <- MSGARCH::Risk(object = spec, par = par, data = SMI, do.its = FALSE, nahead = 2)
   
   tol <- 0.05
   est.VaR <- est.Risk$VaR[, 1]

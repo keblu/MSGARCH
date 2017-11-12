@@ -10,13 +10,14 @@
 Risk(object, ...)
 
 \method{Risk}{MSGARCH_SPEC}(object, par, data, alpha = c(0.01, 0.05),
-  do.es = TRUE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...)
+  nahead = 1L, do.es = TRUE, do.its = FALSE, do.cumulative = FALSE,
+  ctr = list(), ...)
 
-\method{Risk}{MSGARCH_ML_FIT}(object, new.data = NULL, alpha = c(0.01,
-  0.05), do.es = TRUE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...)
+\method{Risk}{MSGARCH_ML_FIT}(object, newdata = NULL, alpha = c(0.01, 0.05),
+  do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
 
-\method{Risk}{MSGARCH_MCMC_FIT}(object, new.data = NULL, alpha = c(0.01,
-  0.05), do.es = TRUE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...)
+\method{Risk}{MSGARCH_MCMC_FIT}(object, newdata = NULL, alpha = c(0.01,
+  0.05), do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}
@@ -26,7 +27,7 @@ created with \code{\link{FitMCMC}}.}
 
 \item{...}{Not used. Other arguments to \code{Risk}.}
 
-\item{par}{Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter estimates
+\item{par}{Vector (of size d) or matrix (of size \code{nmcmc} x d) of parameter estimates
 where d must have
 the same length as the default parameters of the specification.}
 
@@ -35,35 +36,39 @@ the same length as the default parameters of the specification.}
 \item{alpha}{Vector (of size R) of Value-at-risk and Expected-shortfall levels.\cr
 (Default: \code{alpha = c(0.01, 0.05)})}
 
+\item{nahead}{Scalar indicating the number of step-ahead evaluation. (Default: \code{nahead = 1L}). Not used when
+\code{do.its = TRUE} as it only return in-sample one-step ahead risk measures.}
+
 \item{do.es}{Logical indicating if Expected-shortfall is also calculated.
 (Default: \code{do.es = TRUE})}
 
 \item{do.its}{Logical indicating if the in-sample risk estimators are returned.
-(Default: \code{do.its = FALSE})}
+(Default: \code{do.its = FALSE}).}
 
-\item{n.ahead}{Scalar indicating the number of step-ahead evaluation. (Default: \code{n.ahead = 1L})}
+\item{do.cumulative}{Logical indicating if cumulative risk measure should be return.
+(Default: \code{do.cumulative = FALSE}).}
 
 \item{ctr}{A list of control parameters:
 \itemize{
-\item \code{n.mesh} (integer >= 0) : Number of points for density
- evaluation. (Default: \code{n.mesh = 1000L})
-\item \code{n.sim} (integer >= 0) :
+\item \code{nmesh} (integer >= 0) : Number of points for density
+ evaluation. (Default: \code{nmesh = 1000L})
+\item \code{nsim} (integer >= 0) :
 Number indicating the number of simulation done for estimation of the
-density at \code{n.ahead > 1}. (Default: \code{n.sim = 10000L})
+density at \code{nahead > 1}. (Default: \code{nsim = 10000L})
 }}
 
-\item{new.data}{Vector (of size T*) of new observations. (Default \code{new.data = NULL})}
+\item{newdata}{Vector (of size T*) of new observations. (Default \code{newdata = NULL})}
 }
 \value{
 A list of class \code{MSGARCH_RISK} with the following elements:
 \itemize{
 \item \code{VaR}:\cr
-If \code{do.its = FALSE}: Value-at-Risk at \code{t = T + T* + 1, ... ,t = T + T* + n.ahead} at the
-chosen levels (matrix of size \code{n.ahead} x R).\cr
+If \code{do.its = FALSE}: Value-at-Risk at \code{t = T + T* + 1, ... ,t = T + T* + nahead} at the
+chosen levels (matrix of size \code{nahead} x R).\cr
 If \code{do.its = TRUE}: In-sample Value-at-Risk at the chosen levels (Matrix of size (T + T*) x R).
 \item \code{ES}:\cr
-If \code{do.its = FALSE}: Expected-shortfall at \code{t = T + T* + 1, ... ,t = T + T* + n.ahead} at the
-chosen levels (matrix of size \code{n.ahead} x R).\cr
+If \code{do.its = FALSE}: Expected-shortfall at \code{t = T + T* + 1, ... ,t = T + T* + nahead} at the
+chosen levels (matrix of size \code{nahead} x R).\cr
 If \code{do.its = TRUE}: In-sample Expected-shortfall at the chosen levels (Matrix of size (T + T*) x R).
 }
 The \code{MSGARCH_RISK} contains the \code{plot} method.
@@ -76,10 +81,11 @@ Method returning the Value-at-Risk and Expected-shortfall risk measures.
 \details{
 If a matrix of MCMC posterior draws is given, the
 Bayesian Value-at-Risk and Expected-shortfall are calculated.
-Two or more step ahead risk measures are estimated via simulation of \code{n.sim} paths up to
-\code{t = T + T* + n.ahead}.
-If \code{do.its = FALSE}, the risk estimators at \code{t = T + T* + 1, ... ,t = T + T* + n.ahead}
-are computed.
+Two or more step ahead risk measures are estimated via simulation of \code{nsim} paths up to
+\code{t = T + T* + nahead}.
+If \code{do.its = FALSE}, the risk estimators at \code{t = T + T* + 1, ... ,t = T + T* + nahead}
+are computed. \code{do.cumulative = TRUE} indicate the function to compute the risk meausre 
+over aggregated period up to \code{nahead} period using the \code{cumsum} function on the simulated data.
 }
 \examples{
 # load data
@@ -97,5 +103,5 @@ risk.its <- Risk(object = fit, alpha = 0.05, do.es = FALSE, do.its = TRUE)
 plot(risk.its)
 
 # compute the one-step ahead Value-at-Risk and Expected-shortfall out-of-sample
-Risk(object = fit, alpha = 0.05, do.es = FALSE, do.its = FALSE, n.ahead = 1L)
+Risk(object = fit, alpha = 0.05, do.es = FALSE, do.its = FALSE, nahead = 1L)
 }

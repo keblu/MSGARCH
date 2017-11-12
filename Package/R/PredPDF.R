@@ -4,33 +4,33 @@
 #' or fit object of type \code{MSGARCH_ML_FIT} created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
 #' created with \code{\link{FitMCMC}}.
 #' @param x Vector (of size n). Used when \code{do.its = FALSE}.
-#' @param par Vector (of size d) or matrix (of size \code{n.mcmc} x d) of parameter
+#' @param par Vector (of size d) or matrix (of size \code{nmcmc} x d) of parameter
 #' estimates where d must have the same length as the default parameters of the specification.
 #' @param data  Vector (of size T) of observations.
-#' @param new.data  Vector (of size T*) of new observations. (Default \code{new.data = NULL})
+#' @param newdata  Vector (of size T*) of new observations. (Default \code{newdata = NULL})
 #' @param log  Logical indicating if the log-density is returned. (Default: \code{log = FALSE})
 #' @param do.its  Logical indicating if the in-sample predictive is returned. (Default: \code{do.its = FALSE})
-#' @param n.ahead  Scalar indicating the number of step-ahead evaluation.
-#' Valid only when \code{do.its = FALSE}. (Default: \code{n.ahead = 1L})
+#' @param nahead  Scalar indicating the number of step-ahead evaluation.
+#' Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})
 #' @param ctr A list of control parameters:
 #'        \itemize{
-#'        \item \code{n.sim} (integer >= 0) :
+#'        \item \code{nsim} (integer >= 0) :
 #'        Number indicating the number of simulation done for the evaluation
-#'        of the density at \code{n.ahead} > 1. (Default: \code{n.sim = 10000L})
+#'        of the density at \code{nahead} > 1. (Default: \code{nsim = 10000L})
 #'        }
 #' @param ... Not used. Other arguments to \code{Pred}.
 #' @return A vector or matrix of class \code{MSGARCH_PRED}.\cr
 #' If \code{do.its = FALSE}: (Log-)predictive of
-#' the points \code{x} at \code{t = T + T* + 1, ... ,t = T + T* + n.ahead} (matrix of
-#' size \code{n.ahead} x n).\cr
+#' the points \code{x} at \code{t = T + T* + 1, ... ,t = T + T* + nahead} (matrix of
+#' size \code{nahead} x n).\cr
 #' If \code{do.its = TRUE}: In-sample predictive of \code{data} if \code{x = NULL}
 #' (vector of size T + T*) or in-sample predictive of \code{x} (matrix of size (T + T*) x n).
 #' @details If a matrix of MCMC posterior draws is given, the Bayesian
 #' predictive probability density  is calculated.
-#' Two or more step-ahead predictive probability density are estimated via simulation of \code{n.sim} paths up to
-#'  \code{t = T + T* +  n.ahead}. The predictive distribution are then inferred from these
+#' Two or more step-ahead predictive probability density are estimated via simulation of \code{nsim} paths up to
+#'  \code{t = T + T* +  nahead}. The predictive distribution are then inferred from these
 #'  simulations via a Gaussian Kernel density.
-#' If \code{do.its = FALSE}, the vector \code{x} are evaluated as \code{t = T + T* + 1, ... ,t = T + T* + n.ahead}
+#' If \code{do.its = FALSE}, the vector \code{x} are evaluated as \code{t = T + T* + 1, ... ,t = T + T* + nahead}
 #' realization.\cr
 #' If \code{do.its = TRUE} and  \code{x} is evaluated
 #' at each time \code{t} up top time \code{t = T + T*}.\cr
@@ -46,23 +46,23 @@
 #' # fit the model on the data by ML
 #' fit <- FitML(spec = spec, data = SMI)
 #'
-#'# run Pred method in-sample
-#' pred.its <- Pred(object = fit, log = TRUE, do.its = TRUE)
+#'# run PredPdf method in-sample
+#' pred.its <- PredPdf(object = fit, log = TRUE, do.its = TRUE)
 #'
 #' # create a mesh
 #' x <- seq(-3,3,0.01)
 #'
-#' # run pred method on mesh at T + 1
-#' pred.x <- Pred(object = fit, x = x, log = TRUE, do.its = FALSE)
+#' # run PredPdf method on mesh at T + 1
+#' pred.x <- PredPdf(object = fit, x = x, log = TRUE, do.its = FALSE)
 #' @export
-Pred <- function(object, ...) {
-  UseMethod(generic = "Pred", object)
+PredPdf <- function(object, ...) {
+  UseMethod(generic = "PredPdf", object)
 }
 
-#' @rdname Pred
+#' @rdname PredPdf
 #' @export
-Pred.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
-                              log = FALSE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
+PredPdf.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
+                              log = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
   object <- f_check_spec(object)
   data   <- f_check_y(data)
   if (is.vector(par)) {
@@ -70,12 +70,12 @@ Pred.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
   }
   if (nrow(par) == 1) {
     ctr     <- f_process_ctr(ctr)
-    n.sim <- ctr$n.sim
+    nsim <- ctr$nsim
   } else {
-    if(is.null(ctr$n.sim)){
-      n.sim = 1
+    if(is.null(ctr$nsim)){
+      nsim = 1
     } else {
-      n.sim = ctr$n.sim
+      nsim = ctr$nsim
     }
   }
   ctr    <- f_process_ctr(ctr)
@@ -124,18 +124,18 @@ Pred.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
     if (ncol(x) != 1L) {
       stop("x have more than 1 column: x must be a vector or a matrix of size N x 1")
     }
-    tmp <- matrix(data = 0, nrow = nrow(x), ncol = n.ahead)
+    tmp <- matrix(data = 0, nrow = nrow(x), ncol = nahead)
     for (i in 1:nrow(par)) {
       tmp[, 1] <- tmp[, 1] + object$rcpp.func$pdf_Rcpp(x, par_check[i, ], data, FALSE)
     }
     tmp <- tmp/nrow(par)
-    if (n.ahead > 1) {
-      draw <- Sim(object = object, data = data, n.ahead = n.ahead, n.sim = n.sim, par = par)$draw
-      for (j in 2:n.ahead) {
+    if (nahead > 1) {
+      draw <- Sim(object = object, data = data, nahead = nahead, nsim = nsim, par = par)$draw
+      for (j in 2:nahead) {
         tmp[, j] <- f_pdf_kernel(y = draw[j, ], x = x)
       }
     }
-    colnames(tmp) <- paste0("h=",1:n.ahead)
+    colnames(tmp) <- paste0("h=",1:nahead)
   }
   
   if (!isTRUE(ctr$do.return.draw)) {
@@ -156,22 +156,22 @@ Pred.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
   return(out)
 }
 
-#' @rdname Pred
+#' @rdname PredPdf
 #' @export
-Pred.MSGARCH_ML_FIT <- function(object, x = NULL, new.data = NULL,
-                                log = FALSE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
-  data <- c(object$data, new.data)
-  out  <- Pred(object = object$spec, x = x, par = object$par, data = data,
-               log = log, do.its = do.its, n.ahead = n.ahead, ctr = ctr)
+PredPdf.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
+                                log = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+  data <- c(object$data, newdata)
+  out  <- PredPdf(object = object$spec, x = x, par = object$par, data = data,
+               log = log, do.its = do.its, nahead = nahead, ctr = ctr)
   return(out)
 }
 
-#' @rdname Pred
+#' @rdname PredPdf
 #' @export
-Pred.MSGARCH_MCMC_FIT <- function(object, x = NULL, new.data = NULL,
-                                  log = FALSE, do.its = FALSE, n.ahead = 1L, ctr = list(), ...) {
-  data <- c(object$data, new.data)
-  out  <- Pred(object = object$spec, x = x, par = object$par, data = data,
-               log = log, do.its = do.its, n.ahead = n.ahead, ctr = ctr)
+PredPdf.MSGARCH_MCMC_FIT <- function(object, x = NULL, newdata = NULL,
+                                  log = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+  data <- c(object$data, newdata)
+  out  <- PredPdf(object = object$spec, x = x, par = object$par, data = data,
+               log = log, do.its = do.its, nahead = nahead, ctr = ctr)
   return(out)
 }
