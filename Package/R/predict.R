@@ -14,6 +14,7 @@
 #'        \itemize{
 #'        \item \code{nsim} (integer >= 0):
 #'        Number indicating the number of simulation done for the
+#'        conditional volatlity forecast at \code{nahead > 1}. (Default: \code{nsim = 10000L})
 #'        }
 #' @param ... Not used. Other arguments to \code{Forecast}.
 #' @return A list of class \code{MSGARCH_CONDVOL} with the following elements:
