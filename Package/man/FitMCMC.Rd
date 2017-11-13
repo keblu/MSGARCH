@@ -24,8 +24,8 @@ the method automatically set starting parameters; see *Details*).
 (Default: \code{nmcmc = 10000L})
 \item \code{nthin} (integer > 0): Thinning factor (every \code{nthin}
 draws are kept). (Default: \code{nthin = 10L})
-\item \code{do.sort} (bool): Does each draw of the MCMC chain are 
-sorted based on the unconditional variance of each models. (Default: \code{do.sort = TRUE})
+ MCMC draws are ordered to ensure that unconditional variance is an 
+ increasing function of the regime (identification constraint). If the user sets
 \item \code{SamplerFUN}: Custom MCMC sampler (see *Details*).
 }}
 }
@@ -73,8 +73,7 @@ the data, \code{spec} is the specification,
 parameters. The inputs \code{spec} and \code{data},
 must be passed as inputs in the sampler (see *Examples*).
 The custom sampler must output a matrix containing the MCMC chain. \cr
-Sorting of each MCMC draw conditional on the unconditional variance via \code{do.sort = TRUE}serve as to resolve the label switching problem that 
-can arise from the estimation of Markov-switching and mixture model using bayesian methodology.\cr
+When \code{do.sort = TRUE}, sorting of each MCMC draw conditional on the unconditional variance is done across homogeneous regime specification.\cr
 }
 \examples{
 # load data
@@ -112,6 +111,10 @@ Andreas, S. (2012).
 Ardia, D. Bluteau, K. Boudt, K. Catania, L. & Trottier, D.-A. (2016).
 Markov-switching GARCH models in \R: The MSGARCH package.
 \url{https://ssrn.com/abstract=2845809}
+
+Geweke J (2007).
+Interpretation and Inference in Mixture Models: Simple MCMC Works.
+\emph{Computational Statistics & Data Analysis}, 51(7), 3529-3550.
 
 MacDonald, I.L., Zucchini, W. (1997).
 Hidden Markov and other models for discrete-valued time series.
