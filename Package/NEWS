@@ -1,15 +1,22 @@
 Changes in Version 2.0
   o Add do.cumulative boolean argument to Risk for aggregated in time risk measures computation.
-  o Forecasts are now handle through the predict function. The predict function follows the standard stats::predict function. The Forecast method is thus discountinued.
+  o Forecasts are now handle through the predict function. The predict function follows the standard stats::predict function.
+    The Forecast method is thus discountinued.
   o Simulations are now handle through the simulate function and the Sim function is discountinued.
-    Simulation ahead of a sample can be retreived via the predict function with the argument do.return      .draw = TRUE. The simulate function follows the standard stats::simulate function.
-  o Argument n.sim,n.mcmc,n.thin,n.burn,n.mesh,n.ahead,new.data are now relabeled to 
-    nsim,nmcmc,nthin,nburn,nmesh,nahead,newdata for more standard labelling of argument.
-  o The Pred function is now handle through the PredPDF function to avoid confusion with the function        name Pred and predict (Pred was for Predictive Density).
-  o AIC and BIC now use the stats::AIC and stats::BIC implementation thus removing the MSGARCH::AIC and     MSGARCH::BIC function. Usage is unchanged.
+    Simulation ahead of a sample can be retreived via the predict function with the argument do.return.draw = TRUE.
+    The simulate function follows the standard stats::simulate function.
+  o Argument n.sim, n.mcmc, n.thin, n.burn, n.mesh, n.ahead, new.data are now relabeled to 
+    nsim, nmcmc, nthin, nburn, nmesh, nahead, newdata for more standard labelling of argument.
+  o The Pred function is now handle through the PredPDF function to avoid confusion with the function 
+    name Pred and predict (Pred was for Predictive Density).
+  o AIC and BIC now use the stats::AIC and stats::BIC implementation thus removing the MSGARCH::AIC and 
+    MSGARCH::BIC function. Usage is unchanged.
   o Remove AIC and BIC functionalities for MSGARCH_MCMC_FIT object as it was not useful given 
     the MSGARCH::DIC function. stats::AIC/BIC cannot handle the MSGARCH_MCMC_FIT version of AIC and BIC.
-  o do.sort can now be configure in the FitMCMC ctr argument. do.sort indicate if the each paramater        draw of the MCMC change should be sorted conditional on the unconditional variance of each state        (from low to high). This serve as to resolve label switching issue encountered in Markov-switching       and mixture models bayesian estimation. Previous version of MSGARCH had this parameter set at TRUE      at all time. The unsorted chain can now be outputted by setting do.sort = FALSE
+  o do.sort can now be configure in the FitMCMC ctr argument. do.sort indicate if the each paramater draw of the MCMC change should be  
+    sorted conditional on the unconditional variance of each state (from low to high). This serve as to resolve label switching issue 
+    encountered in Markov-switching and mixture models bayesian estimation. Previous version of MSGARCH had this parameter set at TRUE
+    at all time. The unsorted chain can now be outputted by setting do.sort = FALSE
 Changes in Version 1.3
   o Fix CRAN valgrind error
   o Solaris error fix
