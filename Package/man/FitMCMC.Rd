@@ -24,8 +24,11 @@ the method automatically set starting parameters; see *Details*).
 (Default: \code{nmcmc = 10000L})
 \item \code{nthin} (integer > 0): Thinning factor (every \code{nthin}
 draws are kept). (Default: \code{nthin = 10L})
+\item \code{do.sort} (bool): Logical indicating if the MCMC draws are post-sorted
+ following Geweke (2007). By default,  \code{do.sort = TRUE}, such that the
  MCMC draws are ordered to ensure that unconditional variance is an 
  increasing function of the regime (identification constraint). If the user sets
+  \code{do.sort = FALSE}, no sorting is imposed, and label switching can occur (see *Details*).
 \item \code{SamplerFUN}: Custom MCMC sampler (see *Details*).
 }}
 }
