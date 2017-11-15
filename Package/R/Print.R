@@ -214,11 +214,27 @@ print.MSGARCH_FORECAST <- function(x, ...){
 }
 #' @export
 print.MSGARCH_CONDVOL <- function(x, ...){
-  print(unclass(x))
+  if(any(class(x) == "zoo")){
+    class(x) = "zoo"
+    print(x)
+  } else  if(any(class(x) == "ts")){
+    class(x) = "ts"
+    print(x)
+  } else {
+    print(unclass(x))
+  }
 }
 #' @export
 print.MSGARCH_RISK <- function(x, ...){
-  print(unclass(x))
+  if(any(class(x) == "zoo")){
+    class(x) = "zoo"
+    print(x)
+  } else  if(any(class(x) == "ts")){
+    class(x) = "ts"
+    print(x)
+  } else {
+    print(unclass(x))
+  }
 }
 #' @export
 print.MSGARCH_PSTATE <- function(x, ...){
@@ -226,5 +242,13 @@ print.MSGARCH_PSTATE <- function(x, ...){
 }
 #' @export
 print.MSGARCH_SIM <- function(x, ...){
-  print(unclass(x))
+  if(any(class(x) == "zoo")){
+    class(x) = "zoo"
+    print(x)
+  } else  if(any(class(x) == "ts")){
+    class(x) = "ts"
+    print(x)
+  } else {
+    print(unclass(x))
+  }
 }

@@ -127,8 +127,8 @@ Sim.MSGARCH_SPEC <- function(object, data = NULL, nahead = 1L,
     dimnames(CondVol)[[1]] = paste0("t=",1:nahead)
   } else {
     # Simulation ahead of data
-    data  <- f_check_y(data)
-    P_0   <- matrix(State(object, par = par, data = data)$PredProb[(length(data) + 1L), ,], ncol = object$K)
+    data_  <- f_check_y(data)
+    P_0   <- matrix(State(object, par = par, data = data_)$PredProb[(length(data_) + 1L), ,], ncol = object$K)
     par   <- f_check_par(object, par)
     start <- 1
     end   <- nsim
@@ -138,7 +138,7 @@ Sim.MSGARCH_SPEC <- function(object, data = NULL, nahead = 1L,
                      dimnames =  list(paste0("h=",1:(nahead)),
                                       paste0("Sim #",1:(nsim * nrow(par))),paste0("k=",1:object$K)))
     for (i in 1:nrow(par)) {
-      tmp <- object$rcpp.func$simahead(y = data, n = nahead, m = nsim, par = par[i, ], P_0[i, ])
+      tmp <- object$rcpp.func$simahead(y = data_, n = nahead, m = nsim, par = par[i, ], P_0[i, ])
       if (object$K == 1L) {
         draw[,start:end]  <- t(tmp$draws)
         state[,start:end] <- matrix(0, nrow = nahead, ncol = nsim)
@@ -153,6 +153,13 @@ Sim.MSGARCH_SPEC <- function(object, data = NULL, nahead = 1L,
     }
     rownames(draw) = rownames(state) = paste0("h=",1:nahead)
     colnames(draw) = colnames(state) =  paste0("Sim #",1:(nsim * nrow(par)))
+    if(zoo::is.zoo(data)){
+      draw = zoo::zooreg(draw, order.by =  zoo::index(data)[length(data)]+(1:nahead))
+    }
+    if(is.ts(data)){
+      draw = zoo::zooreg(draw, order.by =  zoo::index(data)[length(data)]+(1:nahead))
+      draw = as.ts(draw)
+    }
   }
   out <- list()
   out$draw <- draw

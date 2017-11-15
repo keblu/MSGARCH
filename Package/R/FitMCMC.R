@@ -99,6 +99,7 @@
 #' f_MCMC <- function(f_posterior, data, spec, par0, ctr){
 #'   par <- mcmc::metrop(f_posterior, initial = par0, nbatch = ctr$nmcmc + ctr$nburn,
 #'                         data = data, spec = spec)$batch
+#'   colnames(par) = names(par0)
 #'   return(par)
 #' }
 #'
@@ -119,7 +120,7 @@ FitMCMC.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
 
   time.start <- Sys.time()
   spec <- f_check_spec(spec)
-  data <- f_check_y(data)
+  data_ <- f_check_y(data)
   ctr  <- f_process_ctr(ctr)
   ctr$do.plm <- TRUE
 
@@ -128,7 +129,7 @@ FitMCMC.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
   }
 
   if (is.null(ctr$par0)) {
-    par0 <- f_StargingValues(data, spec, ctr)
+    par0 <- f_StargingValues(data_, spec, ctr)
   } else {
     par0 = ctr$par0
     if (isTRUE(spec$regime.const.pars.bool)) {
@@ -139,7 +140,7 @@ FitMCMC.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
     }
     par0 <- f_unmapPar(par0, spec, do.plm = TRUE)
   }
-  par    <- ctr$SamplerFUN(f_posterior = f_posterior, data = data, spec = spec, par0 = par0, ctr = ctr)
+  par    <- ctr$SamplerFUN(f_posterior = f_posterior, data = data_, spec = spec, par0 = par0, ctr = ctr)
   np     <- length(par0)
   accept <- 1 - mean(duplicated(par))
   by     <- seq(from = (ctr$nburn + 1L), to = (ctr$nburn + ctr$nmcmc), by = ctr$nthin)

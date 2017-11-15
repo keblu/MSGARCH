@@ -10,6 +10,8 @@
 #' @param par Vector (of size d) or matrix (of size \code{nmcmc} x d) of
 #' parameter estimates where d must have
 #' the same length as the default parameters of the specification.
+#' @param do.cumulative logical indicating if the conditional volatility prediction is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+#' (Default: \code{do.cumulative = FALSE})
 #' @param ctr A list of control parameters:
 #'        \itemize{
 #'        \item \code{nsim} (integer >= 0):
@@ -44,10 +46,31 @@
 
 #' @rdname predict
 #' @export
-predict.MSGARCH_SPEC <- function(object, newdata = NULL, nahead = 1L, do.return.draw = FALSE, par = NULL, ctr = list(), ...) {
-  data <- c(object$data, newdata)
+predict.MSGARCH_SPEC <- function(object, newdata = NULL, nahead = 1L, do.return.draw = FALSE, par = NULL, do.cumulative = FALSE, ctr = list(), ...) {
   out  <- f_CondVol(object = object, par = par, data = newdata, nahead = nahead,
-                    do.its = FALSE, ctr = ctr)
+                    do.its = FALSE, do.cumulative = do.cumulative, ctr = ctr)
+  if(!isTRUE(do.return.draw)){
+    out$draw = NULL
+  }
+  
+  class(out) <- "MSGARCH_FORECAST"
+  return(out)
+}
+
+#' @rdname predict
+#' @export
+predict.MSGARCH_ML_FIT <- function(object, newdata = NULL, nahead = 1L, do.return.draw = FALSE, do.cumulative = FALSE, ctr = list(), ...) {
+  data <- c(object$data, newdata)
+  if(is.ts(object$data)){
+    if(is.null(newdata)){
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
+    } else {
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
+    }
+    data = as.ts(data)
+  }
+  out  <- f_CondVol(object = object$spec, par = object$par, data = data, nahead = nahead,
+                    do.its = FALSE, do.cumulative = do.cumulative, ctr = ctr)
   if(!isTRUE(do.return.draw)){
     out$draw = NULL
   }
@@ -57,23 +80,18 @@ predict.MSGARCH_SPEC <- function(object, newdata = NULL, nahead = 1L, do.return.
 
 #' @rdname predict
 #' @export
-predict.MSGARCH_ML_FIT <- function(object, newdata = NULL, nahead = 1L, do.return.draw = FALSE, ctr = list(), ...) {
+predict.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, nahead = 1L, do.return.draw = FALSE, do.cumulative = FALSE, ctr = list(), ...) {
   data <- c(object$data, newdata)
-  out  <- f_CondVol(object = object$spec, par = object$par, data = data, nahead = nahead,
-                    do.its = FALSE, ctr = ctr)
-  if(!isTRUE(do.return.draw)){
-    out$draw = NULL
+  if(is.ts(object$data)){
+    if(is.null(newdata)){
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
+    } else {
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
+    }
+    data = as.ts(data)
   }
-  class(out) <- "MSGARCH_FORECAST"
-  return(out)
-}
-
-#' @rdname predict
-#' @export
-predict.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, nahead = 1L, do.return.draw = FALSE, ctr = list(), ...) {
-  data <- c(object$data, newdata)
   out  <- f_CondVol(object = object$spec, par = object$par, data = data, nahead = nahead,
-                    do.its = FALSE, ctr = ctr)
+                    do.its = FALSE, do.cumulative = do.cumulative, ctr = ctr)
   if(!isTRUE(do.return.draw)){
     out$draw = NULL
   }

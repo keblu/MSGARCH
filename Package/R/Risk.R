@@ -17,8 +17,8 @@
 #'  (Default: \code{do.its = FALSE}).  
 #' @param nahead  Scalar indicating the number of step-ahead evaluation. (Default: \code{nahead = 1L}). Not used when
 #' \code{do.its = TRUE} as it only return in-sample one-step ahead risk measures.
-#' @param do.cumulative  Logical indicating if cumulative risk measure should be return.
-#'  (Default: \code{do.cumulative = FALSE}).  
+#' @param do.cumulative logical indicating if risk measure is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+#'  Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})
 #' @param ctr A list of control parameters:
 #'        \itemize{
 #'        \item \code{nmesh} (integer >= 0) : Number of points for density
@@ -91,24 +91,38 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
     }
   }
   object  <- f_check_spec(object)
-  data    <- f_check_y(data)
+  data_    <- f_check_y(data)
   ctr     <- f_process_ctr(ctr)
   out     <- list()
   n.alpha <- length(alpha)
-  xmin    <- min(data) - sd(data)
-  xmax    <- max(data) + sd(data)
+  xmin    <- min(data_) - sd(data_)
+  xmax    <- max(data_) + sd(data_)
   
   x     <- seq(from = xmin, to = xmax, length.out = ctr$nmesh)
-  pdf_x <- PredPdf(object = object, par = par, x = x, data = data, do.its = do.its, log = FALSE)
+  pdf_x <- PredPdf(object = object, par = par, x = x, data = data_, do.its = do.its, log = FALSE)
   cumul <- apply(pdf_x, 1L, cumsum) * (x[2L] - x[1L])
   out   <- list()
   draw  <- NULL
   if (do.its == TRUE) {
     out$VaR <- matrix(NA, nrow = nrow(pdf_x), ncol = n.alpha)
-    rownames(out$VaR) <-  paste0("t=",1:length(data))
+    rownames(out$VaR) <-  paste0("t=",1:length(data_))
+    if(zoo::is.zoo(data)){
+      out$VaR = zoo::zooreg(out$VaR, order.by = zoo::index(data))
+    }
+    if(is.ts(data)){
+      out$VaR = zoo::zooreg(out$VaR, order.by = zoo::index(data))
+      out$VaR = as.ts(out$VaR)
+    }
   } else {
     out$VaR <- matrix(NA, nrow = nahead, ncol = n.alpha)
     rownames(out$VaR) <-  paste0("h=",1:nahead)
+    if(zoo::is.zoo(data)){
+      out$VaR = zoo::zooreg(out$VaR, order.by = zoo::index(data)[length(data)]+(1:nahead))
+    }
+    if(is.ts(data)){
+      out$VaR = zoo::zooreg(out$VaR, order.by = zoo::index(data)[length(data)]+(1:nahead))
+      out$VaR = as.ts(out$VaR)
+    }
   }
   for (n in 1:nrow(pdf_x)) {
     for (i in 1:n.alpha) {
@@ -117,7 +131,7 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
   }
   
   if (nahead > 1 & do.its == FALSE) {
-    draw <- Sim(object = object, data = data, nahead = nahead, nsim = nsim, par = par)$draw
+    draw <- Sim(object = object, data = data_, nahead = nahead, nsim = nsim, par = par)$draw
     if(isTRUE(do.cumulative)){
       draw = apply(draw, 2, cumsum)
     }
@@ -129,27 +143,40 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
   if (isTRUE(do.es)) {
     if (do.its == TRUE) {
       out$ES <- matrix(NA, nrow = nrow(pdf_x), ncol = n.alpha)
-      rownames(out$ES) <- paste0("t=",1:length(data))
+      rownames(out$ES) <- paste0("t=",1:length(data_))
+      if(zoo::is.zoo(data)){
+        out$ES = zoo::zooreg(out$ES, order.by = zoo::index(data))
+      }
+      if(is.ts(data)){
+        out$ES = zoo::zooreg(out$ES, order.by = zoo::index(data))
+        out$ES = as.ts(out$ES)
+      }
     } else {
       out$ES <- matrix(NA, nrow = nahead, ncol = n.alpha)
       rownames(out$ES) <- paste0("h=",1:nahead)
+      if(zoo::is.zoo(data)){
+        out$ES = zoo::zooreg(out$ES, order.by = zoo::index(data)[length(data)]+(1:nahead))
+      }
+      if(is.ts(data)){
+        out$ES = zoo::zooreg(out$ES, order.by = zoo::index(data)[length(data)]+(1:nahead))
+        out$ES = as.ts(out$ES)
+      }
     }
     for (n in 1:nrow(pdf_x)) {
       for (i in 1:n.alpha) {
-        out$ES[n, i] <- sum(pdf_x[n, x <= out$VaR[n, i]] * (x[2L] - x[1L])/alpha[i] * x[x <= out$VaR[n, i]])
+        out$ES[n, i] <- sum(pdf_x[n, x <= as.numeric(out$VaR[n, i])] * (x[2L] - x[1L])/alpha[i] * x[x <= as.numeric(out$VaR[n, i])])
       }
     }
-    
     if (nahead > 1 & do.its == FALSE) {
       for (i in 1:n.alpha) {
         for (j in 2:nahead) {
-          out$ES[j, i] <- mean(draw[j, draw[j, ] <= out$VaR[j, i]])
+          out$ES[j, i] <- mean(draw[j, draw[j, ] <= as.numeric(out$VaR[j, i])])
         }
       }
     }
   }
   colnames(out$VaR) <- alpha
-  
+
   if (isTRUE(do.es)) {
     colnames(out$ES) <- alpha
   }
@@ -162,6 +189,14 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
 Risk.MSGARCH_ML_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
                                 do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
   data <- c(object$data, newdata)
+  if(is.ts(object$data)){
+    if(is.null(newdata)){
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
+    } else {
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
+    }
+    data = as.ts(data)
+  }
   out  <- Risk(object = object$spec, par = object$par, data = data, alpha = alpha,
                do.es = do.es, do.its = do.its, nahead = nahead, ctr = ctr)
   return(out)
@@ -172,6 +207,14 @@ Risk.MSGARCH_ML_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
 Risk.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
                                   do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
   data <- c(object$data, newdata)
+  if(is.ts(object$data)){
+    if(is.null(newdata)){
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
+    } else {
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
+    }
+    data = as.ts(data)
+  }
   out  <- Risk(object = object$spec, par = object$par, data = data, alpha = alpha,
                do.es = do.es, do.its = do.its, nahead = nahead, ctr = ctr)
   return(out)

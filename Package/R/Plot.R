@@ -59,10 +59,10 @@ plot.MSGARCH_PSTATE <- function(x, type.prob = c("Smoothed"), date = NULL, main 
       return(main)
     }
   }
-  index.date = TRUE
   if (is.null(date)) {
-    date = 1:dim(state)[[1]]
-    index.date = FALSE
+    date = dimnames(state)[[1]]
+    date = tryCatch({as.Date(date)}, error = function(e) {
+      return(as.numeric(date))})
   }
   
   if (is.null(ylab)) {
@@ -84,12 +84,9 @@ plot.MSGARCH_PSTATE <- function(x, type.prob = c("Smoothed"), date = NULL, main 
   if (is.null(med.col)) {
     med.col = "blue"
   }
-  
   if (dim(state)[2L] > 1L) {
     plot.func = function(x, generated.main, ...) {
-      if (isTRUE(index.date)) {
-        graphics::axis.Date(side = 1L, x = zoo::index(x), ...)
-      }
+      graphics::axis.Date(side = 1L, x = zoo::index(x), ...)
       fanplot::fan0(x, type = "interval", med.col = med.col, med.ln = med.ln,
                     xlab = xlab, ylab = ylab, xlim = range(zoo::index(x)),
                     ylim = range(x), main = generated.main,
@@ -97,8 +94,8 @@ plot.MSGARCH_PSTATE <- function(x, type.prob = c("Smoothed"), date = NULL, main 
     }
   } else {
     plot.func <- function(x, generated.main, ...) {
-      graphics::plot(x, plot.type = "single", ylab = ylab, xlab = xlab,
-                     main = generated.main, ...)
+    plot(x, plot.type = "single", ylab = ylab, xlab = xlab,
+           main = generated.main, ...)
     }
   }
   if (!f_match(type.prob, "VIT")) {
@@ -143,10 +140,12 @@ plot.MSGARCH_CONDVOL<- function(x, date = NULL, main = NULL, xlab = NULL,
       return(main)
     }
   }
-  index.date = TRUE
   if (is.null(date)) {
+    if(any(class(ht) == "zoo") || any(class(ht) == "ts")){
+      date = zoo::index(ht)
+    } else {
     date = 1:length(ht)
-    index.date = FALSE
+    }
   }
   
   if (is.null(ylab)) {
@@ -180,7 +179,11 @@ plot.MSGARCH_RISK <- function(x, date = NULL, main.VaR = NULL, main.ES = NULL,
   risk <- x
   
   if (is.null(date)) {
-    date = 1:dim(risk$VaR)[1]
+    if(any(class(risk$VaR) == "zoo") || any(class(risk$VaR) == "ts")){
+      date = zoo::index(risk$VaR)
+    } else {
+      date = 1:length(risk$VaR)
+    }
   }
   if (is.null(main.VaR)) {
     main.VaR = "Value-At-Risk"

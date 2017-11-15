@@ -10,7 +10,8 @@
 PIT(object, ...)
 
 \method{PIT}{MSGARCH_SPEC}(object, x = NULL, par = NULL, data = NULL,
-  do.norm = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
+  do.norm = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
+  ctr = list(), ...)
 
 \method{PIT}{MSGARCH_ML_FIT}(object, x = NULL, newdata = NULL,
   do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
@@ -41,6 +42,9 @@ into standard Normal variate. (Default: \code{do.norm = FALSE})}
 \item{nahead}{Scalar indicating the number of step-ahead evaluation.
 Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})}
 
+\item{do.cumulative}{logical indicating if PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
+
 \item{ctr}{A list of control parameters:
 \itemize{
 \item \code{nsim} (integer >= 0):
@@ -48,7 +52,7 @@ Number indicating the number of simulation done for the
 evaluation of the PIT at \code{nahead > 1}. (Default: \code{nsim = 10000L})
 }}
 
-\item{newdata}{Vector (of size T*) of new observations. (Default \code{newdata = NULL})}
+\item{newdata}{Vector (of size T*) of new observations. (Default: \code{newdata = NULL})}
 }
 \value{
 A vector or matrix of class \code{MSGARCH_PIT}. \cr

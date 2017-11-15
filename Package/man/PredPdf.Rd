@@ -10,7 +10,8 @@
 PredPdf(object, ...)
 
 \method{PredPdf}{MSGARCH_SPEC}(object, x = NULL, par = NULL, data = NULL,
-  log = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
+  log = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
+  ctr = list(), ...)
 
 \method{PredPdf}{MSGARCH_ML_FIT}(object, x = NULL, newdata = NULL,
   log = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...)
@@ -38,6 +39,9 @@ estimates where d must have the same length as the default parameters of the spe
 
 \item{nahead}{Scalar indicating the number of step-ahead evaluation.
 Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})}
+
+\item{do.cumulative}{logical indicating if predictive density is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
 
 \item{ctr}{A list of control parameters:
 \itemize{

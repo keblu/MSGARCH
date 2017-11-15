@@ -51,18 +51,25 @@ State.MSGARCH_SPEC <- function(object, par, data, ...) {
   object <- f_check_spec(object)
   par    <- f_check_par(object, par)
   y      <- as.matrix(data)
+
+  if(zoo::is.zoo(data)|| is.ts(data)){
+    date = zoo::index(data)
+  } else {
+    date = 1:nrow(y)
+  }
+  
   FiltProb <- array(dim = c(nrow(y), nrow(par), object$K),
-                    dimnames = list(paste0("t=",1:(nrow(y))),
+                    dimnames = list(as.character(date),
                                     paste0("draw #",1:nrow(par)), paste0("k=",1:object$K)))
   PredProb <- array(dim = c(nrow(y) + 1L, nrow(par), object$K),
-                    dimnames = list(paste0("t=",1:(nrow(y)+1)),
+                    dimnames = list(as.character(c(date, date[length(date)] + 1)),
                                     paste0("draw #",1:nrow(par)), paste0("k=",1:object$K)))
   SmoothProb <- array(dim = c(nrow(y) + 1L, nrow(par), object$K),
-                      dimnames = list(paste0("t=",1:(nrow(y)+1)),
+                      dimnames = list(as.character(c(date, date[length(date)] + 1)),
                                       paste0("draw #",1:nrow(par)), paste0("k=",1:object$K)))
   
   viterbi <- matrix(data = NA, nrow = nrow(y), ncol = nrow(par),
-                    dimnames = list(paste0("t=",1:nrow(y)), paste0("draw #",1:nrow(par))))
+                    dimnames = list(as.character(date), paste0("draw #",1:nrow(par))))
   
   out <- list(FiltProb = FiltProb, PredProb = PredProb, SmoothProb = SmoothProb, Viterbi = viterbi)
   for (i in 1:nrow(par)) {

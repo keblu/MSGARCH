@@ -107,7 +107,7 @@ spec <- CreateSpec()
 fit <- FitML(spec = spec, data = SMI)
 
 # run PredPDF method on data in-sample (log-likelihood)
-pred.data.its <- PredPDF(object = fit, log = TRUE, do.its = TRUE)
+pred.data.its <- PredPdf(object = fit, log = TRUE, do.its = TRUE)
 length(pred.data.its) == 2500
 round(sum(pred.data.its),4) == -3391.5866
 
@@ -115,13 +115,13 @@ round(sum(pred.data.its),4) == -3391.5866
 x <- seq(-3,3,0.01)
 
 # run PredPDF method on x mesh in-sample
-pred.x.its <- PredPDF(object = fit, x = x, log = FALSE, do.its = TRUE)
+pred.x.its <- PredPdf(object = fit, x = x, log = FALSE, do.its = TRUE)
 dim(pred.x.its) == c(2500,601)
 #plot all predictive
 plot(zoo::zoo(t(pred.x.its), order.by = x), plot.type = "single")
 
 # run PredPDF method on x mesh in-sample
-pred.x.ots <- PredPDF(object = fit, x = x, log = FALSE, do.its = FALSE, nahead = 5, ctr = list(nsim = 50000L))
+pred.x.ots <- PredPdf(object = fit, x = x, log = FALSE, do.its = FALSE, nahead = 5, ctr = list(nsim = 50000L))
 dim(pred.x.ots) == c(5,601)
 #plot 1 step ahead predictive
 plot(zoo::zoo(t(pred.x.ots), order.by = x), plot.type = "single")
@@ -154,7 +154,7 @@ var(SMI/cond.vol.its) - 1 < 0.01
 cond.vol.ots <- predict(object = fit, nahead = 5, do.return.draw = TRUE, ctr = list(nsim = 50000L))
 length(cond.vol.ots$vol) == 5
 dim(cond.vol.ots$draw) == c(5, 50000)
-par(mfrow = c(2,1))
+par(mfrow = c(1,1))
 plot(cond.vol.ots)
 ####################### UncVol ########################
 par(mfrow = c(1,1))

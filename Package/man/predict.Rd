@@ -7,13 +7,14 @@
 \title{predict method.}
 \usage{
 \method{predict}{MSGARCH_SPEC}(object, newdata = NULL, nahead = 1L,
-  do.return.draw = FALSE, par = NULL, ctr = list(), ...)
+  do.return.draw = FALSE, par = NULL, do.cumulative = FALSE,
+  ctr = list(), ...)
 
 \method{predict}{MSGARCH_ML_FIT}(object, newdata = NULL, nahead = 1L,
-  do.return.draw = FALSE, ctr = list(), ...)
+  do.return.draw = FALSE, do.cumulative = FALSE, ctr = list(), ...)
 
 \method{predict}{MSGARCH_MCMC_FIT}(object, newdata = NULL, nahead = 1L,
-  do.return.draw = FALSE, ctr = list(), ...)
+  do.return.draw = FALSE, do.cumulative = FALSE, ctr = list(), ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}
@@ -29,6 +30,9 @@ created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT} created with \code{\
 \item{par}{Vector (of size d) or matrix (of size \code{nmcmc} x d) of
 parameter estimates where d must have
 the same length as the default parameters of the specification.}
+
+\item{do.cumulative}{logical indicating if the conditional volatility prediction is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+(Default: \code{do.cumulative = FALSE})}
 
 \item{ctr}{A list of control parameters:
 \itemize{

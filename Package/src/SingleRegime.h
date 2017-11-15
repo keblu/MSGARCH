@@ -220,18 +220,18 @@ arma::cube SingleRegime<Model>::f_pdf_its(const NumericVector& theta,
   spec.prep_ineq_vol();   // prepare functions related to volatility
   int ny = y.size();
   int nx = x.nrow();
-  arma::cube out(nx, ny, 1);
+  arma::cube out(ny,nx, 1);
   volatility vol = spec.set_vol();  // initialize volatility
   sig = sqrt(vol.h);
   for (int ix = 0; ix < nx; ix++) {
-    out(ix, 0, 0) = spec_calc_pdf(x(ix, 0) / sig) / sig;  //
+    out(0, ix, 0) = spec_calc_pdf(x(ix, 0) / sig) / sig;  //
   }
 
   for (int i = 1; i < ny; i++) {
     spec.increment_vol(vol, y[i - 1]);
     sig = sqrt(vol.h);
     for (int ix = 0; ix < nx; ix++) {
-      out(ix, i, 0) = spec_calc_pdf(x(ix, i) / sig) / sig;  //
+      out(i, ix, 0) = spec_calc_pdf(x(ix, i) / sig) / sig;  //
     }
   }
 
@@ -274,19 +274,19 @@ arma::cube SingleRegime<Model>::f_cdf_its(const NumericVector& theta,
   spec.prep_ineq_vol();   // prepare functions related to volatility
   int ny = y.size();
   int nx = x.nrow();
-  arma::cube out(nx, ny, 1);
+  arma::cube out(ny,nx, 1);
 
   volatility vol = spec.set_vol();  // initialize volatility
   sig = sqrt(vol.h);
   for (int ix = 0; ix < nx; ix++) {
-    out(ix, 0, 0) = spec.calc_cdf(x(ix, 0) / sig);  //
+    out(0, ix, 0) = spec.calc_cdf(x(ix, 0) / sig);  //
   }
 
   for (int i = 1; i < ny; i++) {
     spec.increment_vol(vol, y[i - 1]);
     sig = sqrt(vol.h);
     for (int ix = 0; ix < nx; ix++) {
-      out(ix, i, 0) = spec.calc_cdf(x(ix, i) / sig);  //
+      out(i, ix, 0) = spec.calc_cdf(x(ix, i) / sig);  //
     }
   }
 

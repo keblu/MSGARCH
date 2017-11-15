@@ -9,12 +9,14 @@
 #' parameter estimates where d must have
 #' the same length as the default parameters of the specification.
 #' @param data  Vector (of size T) of observations.
-#' @param newdata  Vector (of size T*) of new observations. (Default \code{newdata = NULL})
+#' @param newdata  Vector (of size T*) of new observations. (Default: \code{newdata = NULL})
 #' @param do.norm  Logical indicating if the PIT values are transformed
 #' into standard Normal variate. (Default: \code{do.norm = FALSE})
 #' @param do.its  Logical indicating if the in-sample PIT is returned. (Default: \code{do.its = FALSE})
 #' @param nahead  Scalar indicating the number of step-ahead evaluation.
-#'  Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})
+#' Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})
+#' @param do.cumulative logical indicating if PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+#'  Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})
 #' @param ctr A list of control parameters:
 #'        \itemize{
 #'        \item \code{nsim} (integer >= 0):
@@ -77,9 +79,9 @@ PIT <- function(object, ...) {
 #' @rdname PIT
 #' @export
 PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
-                             do.norm = FALSE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+                             do.norm = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
   object <- f_check_spec(object)
-  data   <- f_check_y(data)
+  data_   <- f_check_y(data)
   if (is.vector(par)) {
     par <- matrix(par, nrow = 1L)
   }
@@ -102,52 +104,71 @@ PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
   par_check <- f_check_par(object, par)
   if (isTRUE(do.its)) {
     if (is.null(x)) {
-      x <- matrix(data = data, ncol = length(data))
+      x <- matrix(data = data_, ncol = length(data_))
     } else {
       x <- matrix(x)
       if (ncol(x) == 1L) {
-        x <- matrix(x, ncol = length(data), nrow = nrow(x))
+        x <- matrix(x, ncol = length(data_), nrow = nrow(x))
       } else {
         stop("x have more than 1 column: x must be a vector, NULL, or a matrix of size n x 1")
       }
     }
-    tmp <- matrix(data = 0, nrow = nrow(x), ncol = length(data))
+    tmp <- matrix(data = 0, nrow = length(data_), ncol = nrow(x))
     for (i in 1:nrow(par)) {
       if (object$K == 1) {
-        tmp2 <- object$rcpp.func$cdf_Rcpp_its(par_check[i, ], data, x, FALSE)
+        tmp2 <- object$rcpp.func$cdf_Rcpp_its(par_check[i, ], data_, x, FALSE)
         tmp <- tmp + tmp2[, , 1L]
       } else {
-        Pstate <- State(object = object, par = par[i, ], data = data)$PredProb
+        Pstate <- State(object = object, par = par[i, ], data = data_)$PredProb
         Pstate.tmp <- matrix(data = NA, nrow = dim(Pstate)[1L], ncol = dim(Pstate)[3L])
         for (j in 1:dim(Pstate)[3L]) {
           Pstate.tmp[, j] <- Pstate[, , j]
         }
-        tmp2 <- object$rcpp.func$cdf_Rcpp_its(par_check[i, ], data, x, FALSE)
+        tmp2 <- object$rcpp.func$cdf_Rcpp_its(par_check[i, ], data_, x, FALSE)
         for (k in 1:object$K) {
-          tmp <- tmp + tmp2[, , k] * matrix(Pstate.tmp[1:(nrow(Pstate.tmp) - 1L), k],
-                                            ncol = length(data), nrow = nrow(x), byrow = TRUE)
+          tmp <- tmp + tmp2[, , k] * matrix(Pstate.tmp[1:(nrow(Pstate.tmp) - 1L), k], 
+                                            ncol = nrow(x), nrow = length(data))
         }
       }
     }
     tmp <- tmp/nrow(par)
-    colnames(tmp) =  paste0("t=",1:length(data))
+    rownames(tmp) =  paste0("t=",1:length(data_))
+    if(zoo::is.zoo(data)){
+      tmp = zoo::zooreg(tmp, order.by = zoo::index(data))
+    }
+    if(is.ts(data)){
+      tmp = zoo::zooreg(tmp, order.by = zoo::index(data))
+      tmp = as.ts(tmp)
+      colnames(tmp) = rep("",ncol(tmp)) 
+    }
   } else {
     x <- matrix(x)
     if (ncol(x) != 1L) {
       stop("x must be a vector or a matrix of size N x 1")
     }
-    tmp <- matrix(data = 0, nrow = nrow(x), ncol = nahead)
+    tmp <- matrix(data = 0, nrow = nahead, ncol = nrow(x))
     for (i in 1:nrow(par)) {
-      tmp[, 1] <- tmp[, 1] + object$rcpp.func$cdf_Rcpp(x, par_check[i, ], data, FALSE)
+      tmp[1,] <- tmp[1, ] + object$rcpp.func$cdf_Rcpp(x, par_check[i, ], data_, FALSE)
     }
     tmp <- tmp/nrow(par)
     if (nahead > 1) {
-      draw <- Sim(object = object, data = data, nahead = nahead, nsim = nsim, par = par)$draw
+      draw <- Sim(object = object, data = data_, nahead = nahead, nsim = nsim, par = par)$draw
+      if(isTRUE(do.cumulative)){
+        draw = apply(draw, 2, cumsum)
+      }
       for (j in 2:nahead) {
-        tmp[, j] <- f_cdf_empirical(y = draw[j, ], x)
+        tmp[j, ] <- f_cdf_empirical(y = draw[j, ], x)
       }
     }
-    colnames(tmp) <- paste0("h=",1:nahead)
+    rownames(tmp) <- paste0("h=",1:nahead)
+    if(zoo::is.zoo(data)){
+      tmp = zoo::zooreg(tmp, order.by = zoo::index(data)[length(data)]+(1:nahead))
+    }
+    if(is.ts(data)){
+      tmp = zoo::zooreg(tmp, order.by = zoo::index(data)[length(data)]+(1:nahead))
+      tmp = as.ts(tmp)
+      colnames(tmp) = rep("",ncol(tmp)) 
+    }
   }
   if (!isTRUE(ctr$do.return.draw)) {
     draw <- NULL
@@ -158,12 +179,12 @@ PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
     rownames(tmp2) <- rownames(tmp)
     tmp <- tmp2
   }
-  if(isTRUE(x.is.null)){
-    out <- tmp[1,]
+  if(isTRUE(x.is.null) && !is.ts(data)){
+    out <- tmp[,1]
   } else {
-    out <- t(tmp)
+    out = tmp
   }
-  class(out) <- "MSGARCH_PIT"
+  class(out) <- c("MSGARCH_PIT", class(out))
   return(out)
 }
 
@@ -172,6 +193,14 @@ PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
 PIT.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
                                do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
   data = c(object$data, newdata)
+  if(is.ts(object$data)){
+    if(is.null(newdata)){
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
+    } else {
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
+    }
+    data = as.ts(data)
+  }
   out <- PIT(object = object$spec, x = x, par = object$par, data = data,
              do.norm = do.norm, do.its = do.its, nahead = nahead, ctr = ctr)
   return(out)
@@ -182,6 +211,14 @@ PIT.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
 PIT.MSGARCH_MCMC_FIT <- function(object, x = NULL, newdata = NULL,
                                  do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
   data = c(object$data, newdata)
+  if(is.ts(object$data)){
+    if(is.null(newdata)){
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
+    } else {
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
+    }
+    data = as.ts(data)
+  }
   out <- PIT(object = object$spec, x = x, par = object$par, data = data,
              do.norm = do.norm, do.its = do.its, nahead = nahead, ctr = ctr)
   return(out)

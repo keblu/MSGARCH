@@ -1,0 +1,60 @@
+* installing *source* package 'MSGARCH' ...
+** libs
+
+*** arch - i386
+make: Nothing to be done for `all'.
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/Decoding.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/EM.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/Egarch.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/Ged.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/MSgarch.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/Mapping.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/Normal.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/RcppExports.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/Student.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/Tgarch.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/adaptMCMC.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/gjrGARCH.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/pdf_c.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/sARCH.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-i386/sGARCH.o: File format not recognized
+There were 15 warnings (use warnings() to see them)
+installing to C:/Users/Keven/DOCUME~1/GitHub/MSGARC~1/MSGARCH/PACKAG~1.RCH/MSGARCH/libs/i386
+
+*** arch - x64
+make: Nothing to be done for `all'.
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/Decoding.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/EM.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/Egarch.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/Ged.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/MSgarch.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/Mapping.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/Normal.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/RcppExports.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/Student.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/Tgarch.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/adaptMCMC.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/gjrGARCH.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/pdf_c.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/sARCH.o: File format not recognized
+C:\Rtools\mingw_32\bin\nm.exe: C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/Package/src-x64/sGARCH.o: File format not recognized
+There were 15 warnings (use warnings() to see them)
+installing to C:/Users/Keven/DOCUME~1/GitHub/MSGARC~1/MSGARCH/PACKAG~1.RCH/MSGARCH/libs/x64
+** R
+** data
+** inst
+** preparing package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded
+*** arch - i386
+Error: package or namespace load failed for 'MSGARCH' in inDL(x, as.logical(local), as.logical(now), ...):
+ unable to load shared object 'C:/Users/Keven/Documents/GitHub/MSGARCH public/MSGARCH/package.Rcheck/MSGARCH/libs/i386/MSGARCH.dll':
+  LoadLibrary failure:  %1 is not a valid Win32 application.
+
+Error: loading failed
+Execution halted
+*** arch - x64
+ERROR: loading failed for 'i386'
+* removing 'C:/Users/Keven/DOCUME~1/GitHub/MSGARC~1/MSGARCH/PACKAG~1.RCH/MSGARCH'

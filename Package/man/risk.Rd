@@ -45,8 +45,8 @@ the same length as the default parameters of the specification.}
 \item{do.its}{Logical indicating if the in-sample risk estimators are returned.
 (Default: \code{do.its = FALSE}).}
 
-\item{do.cumulative}{Logical indicating if cumulative risk measure should be return.
-(Default: \code{do.cumulative = FALSE}).}
+\item{do.cumulative}{logical indicating if risk measure is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
 
 \item{ctr}{A list of control parameters:
 \itemize{

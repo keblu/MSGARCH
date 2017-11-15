@@ -43,13 +43,13 @@ DIC.MSGARCH_MCMC_FIT <- function(fit) {
 
 f_DIC <- function(spec, par, data) {
   spec <- f_check_spec(spec)
-  data <- f_check_y(data)
+  data_ <- f_check_y(data)
   if (is.vector(x = par)) {
     par <- matrix(data = par, nrow = 1L)
   }
   LL <- vector(mode = "numeric", length = nrow(par))
   for (i in 1:nrow(par)) {
-    LL[i] <- Kernel(object = spec, par = par[i, ], data = data, log = TRUE, do.prior = FALSE)
+    LL[i] <- Kernel(object = spec, par = par[i, ], data = data_, log = TRUE, do.prior = FALSE)
   }
   D.bar <- -2 * mean(x = LL)
   pV    <- stats::var(x = -2 * LL)/2

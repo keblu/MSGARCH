@@ -100,7 +100,7 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
   
   time.start <- Sys.time()
   spec <- f_check_spec(spec)
-  data <- f_check_y(data)
+  data_ <- f_check_y(data)
   ctr  <- f_process_ctr(ctr)
   
   if ((isTRUE(spec$fixed.pars.bool)) || (isTRUE(spec$regime.const.pars.bool))) {
@@ -109,7 +109,7 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
   }
   
   if (is.null(ctr$par0)) {
-    vPw  <- f_StargingValues(data, spec, ctr)
+    vPw  <- f_StargingValues(data_, spec, ctr)
     par0 <- matrix(f_mapPar(vPw, spec, ctr$do.plm), nrow = 1L, dimnames = list(NULL, names(vPw)))
   } else {
     par0 = ctr$par0
@@ -121,7 +121,7 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
       vPw <- f_substitute_fixedpar(vPw, spec$fixed.pars)
     }
   }
-  optimizer <- ctr$OptimFUN(vPw, f_nll, spec, data, ctr$do.plm)
+  optimizer <- ctr$OptimFUN(vPw, f_nll, spec, data_, ctr$do.plm)
   
   llk <- -optimizer$value
   
@@ -160,7 +160,7 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
   elapsed.time <- Sys.time() - time.start
   
   if (isTRUE(ctr$do.se)) {
-    Inference <- f_InferenceFun(vPww, data, spec, do.plm = ctr$do.plm)
+    Inference <- f_InferenceFun(vPww, data_, spec, do.plm = ctr$do.plm)
   } else {
     Inference <- NULL
   }

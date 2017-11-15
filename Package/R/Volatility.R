@@ -43,6 +43,14 @@ Volatility.MSGARCH_SPEC <- function(object, par, data, ...) {
 #' @export
 Volatility.MSGARCH_ML_FIT <- function(object, newdata = NULL, ...) {
   data <- c(object$data, newdata)
+  if(is.ts(object$data)){
+    if(is.null(newdata)){
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
+    } else {
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
+    }
+    data = as.ts(data)
+  }
   out  <- f_CondVol(object = object$spec, par = object$par, data = data,
                   do.its = TRUE, ctr = list())
   return(out$vol)
@@ -52,6 +60,14 @@ Volatility.MSGARCH_ML_FIT <- function(object, newdata = NULL, ...) {
 #' @export
 Volatility.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, ...) {
   data <- c(object$data, newdata)
+  if(is.ts(object$data)){
+    if(is.null(newdata)){
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
+    } else {
+      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
+    }
+    data = as.ts(data)
+  }
   out  <- f_CondVol(object = object$spec, par = object$par, data = data,
                   do.its = TRUE, ctr = list())
   return(out$vol)
