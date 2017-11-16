@@ -1,6 +1,3 @@
-Changes in Version 2.1
-  o Support for zoo and ts timeseries. When using MSGARCH functionality, if a ts or zoo object     is passed as data, the date or index now appear in the output as well. For forecast, the       date are continued from the last data of the time series with inrcement of 1 day.
-  o do.cumulative is now available for PredPdf, PIT, and predict.
 Changes in Version 2.0
   o Add do.cumulative boolean argument to Risk for aggregated in time risk measures computation.
   o Forecasts are now handle through the predict function. The predict function follows the standard stats::predict function.
@@ -20,6 +17,8 @@ Changes in Version 2.0
     sorted conditional on the unconditional variance of each state (from low to high). This serve as to resolve label switching issue 
     encountered in Markov-switching and mixture models bayesian estimation. Previous version of MSGARCH had this parameter set at TRUE
     at all time. The unsorted chain can now be outputted by setting do.sort = FALSE
+  o Support for zoo and ts timeseries. When using MSGARCH functionality, if a ts or zoo object     is passed as data, the date or index now appear in the output as well. For forecast, the       date are continued from the last data of the time series with inrcement of 1 day.
+  o do.cumulative is now available for PredPdf, PIT, and predict.
 Changes in Version 1.3
   o Fix CRAN valgrind error
   o Solaris error fix
