@@ -1,3 +1,8 @@
+#################################################################################
+### DESCRIPTION
+
+### This code is used in the illustrations of backtesting with MSGARCH models
+
 rm(list = ls())
 library("MSGARCH")
 data("SMI", package = "MSGARCH")

@@ -1,3 +1,10 @@
+#################################################################################
+### DESCRIPTION
+
+### This code is used to test functions implemented in MSGARCH but which are
+### too time-consuming for testthat 
+### This is run before submitting to CRAN
+
 library("MSGARCH")
 
 ####################### FITML #########################
@@ -10,9 +17,9 @@ variance.model = c("sARCH","sGARCH","gjrGARCH","tGARCH","eGARCH")
 dist.spec = c("norm","snorm","std","sstd","ged","sged")
 out = array(NA,dim = c(5,6,K.max),dimnames = list(variance.model,dist.spec, paste0("K=",1:K.max)))
 do.mix = FALSE
-for(dist in dist.spec){
-  for(model in variance.model){
-    for(k in 1:K.max){
+for (dist in dist.spec) {
+  for (model in variance.model) {
+    for (k in 1:K.max) {
       spec <- CreateSpec(variance.spec = list(model = model),
                          distribution.spec = list(distribution = dist),
                          switch.spec = list(do.mix = do.mix, K = k))
@@ -33,9 +40,9 @@ variance.model = c("sARCH","sGARCH","gjrGARCH","tGARCH","eGARCH")
 dist.spec = c("norm","snorm","std","sstd","ged","sged")
 out = array(NA,dim = c(5,6,K.max),dimnames = list(variance.model,dist.spec, paste0("K=",1:K.max)))
 do.mix = FALSE
-for(dist in dist.spec){
-  for(model in variance.model){
-    for(k in 1:K.max){
+for (dist in dist.spec) {
+  for (model in variance.model) {
+    for (k in 1:K.max) {
       spec <- CreateSpec(variance.spec = list(model = model),
                          distribution.spec = list(distribution = dist),
                          switch.spec = list(do.mix = do.mix, K = k))
@@ -170,14 +177,14 @@ fit <- FitML(spec = spec, data = SMI)
 
 #evaluate error due to simulation for overall uncvol process
 out = NULL
-for(i in 1:100){
+for (i in 1:100) {
   out[i] <- UncVol(fit)
 }
 
 boxplot(out)
 out <- matrix(NA, nrow = 100, ncol = 2)
 #evaluate error due to simulation for overall each regime uncvol
-for(i in 1:100){
+for (i in 1:100) {
   out[i,] <- sapply(ExtractStateFit(fit), UncVol)
 }
 
@@ -242,7 +249,7 @@ risk <- Risk(fit, do.its = TRUE)
 dim(risk$VaR) == c(2500,2)
 dim(risk$ES) == c(2500,2)
 #Risk test with rugarch
-library(rugarch)
+library("rugarch")
 rugarch::VaRDurTest(actual = SMI, VaR = risk$VaR[,1],alpha = as.numeric(colnames(risk$VaR)[1]))
 rugarch::VaRTest(actual = SMI, VaR = risk$VaR[,1],alpha = as.numeric(colnames(risk$VaR)[1]))
 rugarch::ESTest(actual = SMI, VaR = risk$VaR[,1], ES = risk$ES[,1], alpha = as.numeric(colnames(risk$VaR)[1]))

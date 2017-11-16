@@ -17,8 +17,8 @@
 ### LOAD THE PACKAGE
 
 # Load the package from CRAN or from the tar
-# install.packages("MSGARCH") # !!! install version 1.3
-# install.packages("MSGARCH_1.3.tar.gz", repos = NULL)
+# install.packages("MSGARCH") # !!! install version 2.0
+# install.packages("MSGARCH_2.0.tar.gz", repos = NULL)
 
 #################################################################################
 ### PACKAGE MSGARCH
@@ -78,10 +78,10 @@ cat("\n\n")
 cat("SECTION 3.3\n")
 cat("-----------\n\n")
 
-forecast <- predict(fit.ml, nahead = 5, do.return.draw = TRUE)
-forecast$vol
+pred <- predict(fit.ml, nahead = 5, do.return.draw = TRUE)
+pred$vol
 
-forecast$draw[, 1:4]
+pred$draw[, 1:4]
 
 ######################################################
 cat("\n\n")
