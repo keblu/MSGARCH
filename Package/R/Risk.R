@@ -17,7 +17,7 @@
 #'  (Default: \code{do.its = FALSE}).  
 #' @param nahead  Scalar indicating the number of step-ahead evaluation. (Default: \code{nahead = 1L}). Not used when
 #' \code{do.its = TRUE} as it only return in-sample one-step ahead risk measures.
-#' @param do.cumulative logical indicating if risk measure is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+#' @param do.cumulative logical indicating if the risk measures are computed on the cumulative simulations (typically log-returns, as they can be aggregated).
 #'  Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})
 #' @param ctr A list of control parameters:
 #'        \itemize{

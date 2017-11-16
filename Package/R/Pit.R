@@ -15,7 +15,7 @@
 #' @param do.its  Logical indicating if the in-sample PIT is returned. (Default: \code{do.its = FALSE})
 #' @param nahead  Scalar indicating the number of step-ahead evaluation.
 #' Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})
-#' @param do.cumulative logical indicating if PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+#' @param do.cumulative logical indicating if the PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
 #'  Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})
 #' @param ctr A list of control parameters:
 #'        \itemize{

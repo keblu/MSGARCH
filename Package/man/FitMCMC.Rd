@@ -97,6 +97,7 @@ library("mcmc")
 f_MCMC <- function(f_posterior, data, spec, par0, ctr){
   par <- mcmc::metrop(f_posterior, initial = par0, nbatch = ctr$nmcmc + ctr$nburn,
                         data = data, spec = spec)$batch
+  colnames(par) = names(par0)
   return(par)
 }
 
