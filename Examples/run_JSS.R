@@ -202,6 +202,68 @@ for (i in 1:nrow(draws)) {
   pred.draws[i,] <- as.vector(tmp)
 }
 
+## Backtesting
+
+## Create GJR-std specification for comparison
+gjr.s <- CreateSpec(variance.spec = list(model = c("gjrGARCH")),
+                    distribution.spec = list(distribution = c("std")),
+                    switch.spec = list(K = 1))
+
+models <- list(gjr.s, ms2.gjr.s)
+
+n_backtest <- 1000 # number of out-of-sample evaluation 
+n_its      <- 1500 # fit sample size
+alpha      <- 0.05 # risk Level 
+k_update   <- 100  # estimation frequency
+
+## Initialization 
+VaR   <- matrix(NA, nrow = n_backtest, ncol = length(models))
+y_ots <- matrix(NA, nrow = n_backtest, ncol = 1)
+model_fit <- vector(mode = "list", length = length(models))
+
+# iterate over out-of-sample time
+for (i in 1:n_backtest) { 
+  cat("Backtest - Iteration: ", i, "\n")
+  y_its    <- SMI[i:(n_its + i - 1)] # in-sample data 
+  y_ots[i] <- SMI[n_its + i]         # out-of-sample data
+  
+  # iterate over models
+  for (j in 1:length(models)) { 
+    
+    # do we update the model estimation
+    if (k_update == 1 || i %% k_update == 1) {
+      cat("Model", j, "is reestimated\n")
+      model_fit[[j]] <- FitML(spec = models[[j]], data = y_its, 
+                              ctr = list(do.se = FALSE)) 
+    }
+    
+    # calculate VaR 1-step ahead
+    VaR[i,j] <- Risk(model_fit[[j]]$spec, par = model_fit[[j]]$par,
+                     data = y_its,
+                     n.ahead = 1,
+                     alpha   = alpha,
+                     do.es   = FALSE,
+                     do.its  = FALSE)$VaR
+  }                                
+}
+
+## Test the VaR
+# install.packages("GAS")
+library("GAS")
+CC_pval <- DQ_pval <- NULL
+for (j in 1:length(models)) { #iterate over model
+  test <- GAS::BacktestVaR(data  = y_ots,
+                           VaR   = VaR[,j],
+                           alpha = alpha)
+  
+  CC_pval[j] <- test$LRcc[2]      
+  DQ_pval[j] <- test$DQ$pvalue  
+}
+names(CC_pval) <- names(DQ_pval) <- c("SR", "MS")
+
+print(CC_pval)
+print(DQ_pval)
+
 sink()
 
 ############################################
@@ -312,5 +374,26 @@ legend("topleft", c("MCMC draws", "Bayesian","ML"),
        col = c("lightsteelblue", "blue", "red"), lwd = 3,
        lty = c(1, 1, 2), bty = "n", cex = 2)
 box()
+dev.off()
+
+######################
+##     FIGURE 6     ##
+######################
+
+library("zoo")
+time.index <- zoo::index(SMI)[(n_its + 1):(n_backtest + n_its)]
+y_ots <- zoo::zoo(y_ots, order.by = time.index)
+VaR   <- zoo::zoo(VaR, order.by = time.index)
+
+pdf(file = "figure6.pdf", height = 13, width = 16, compress = TRUE)
+par(mfrow = c(1, 1))
+plot(y_ots, type = 'p', las = 1, lwd = 1, xlab = "Date (year)",
+     ylab = "", col = "black", cex.axis = 1.5, cex.lab = 1.5, pch = 19)
+lines(VaR[,1], type = 'l', col = "red", lwd = 3, lty = "dashed")
+lines(VaR[,2], type = 'l', col = "blue", lwd = 3)
+legend("topleft", legend = c("VaR 5% - GJR-std", "VaR 5% - MS2-GJR-std"), 
+       col = c("red", "blue"), lwd = 3, cex = 1.5, lty = c("dashed", "solid"))
+abline(h = 0)
+title("SMI log-returns (%) and VaR-5%", cex.main = 1.5)
 dev.off()
 
