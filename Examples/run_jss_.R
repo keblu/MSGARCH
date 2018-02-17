@@ -211,35 +211,35 @@ gjr.s <- CreateSpec(variance.spec = list(model = c("gjrGARCH")),
 
 models <- list(gjr.s, ms2.gjr.s)
 
-n_backtest <- 1000 # number of out-of-sample evaluation 
-n_its      <- 1500 # fit sample size
-alpha      <- 0.05 # risk Level 
-k_update   <- 100  # estimation frequency
+n.ots    <- 1000 # number of out-of-sample evaluation 
+n.its    <- 1500 # fit sample size
+alpha    <- 0.05 # risk Level 
+k.update <- 100  # estimation frequency
 
 ## Initialization 
-VaR   <- matrix(NA, nrow = n_backtest, ncol = length(models))
-y_ots <- matrix(NA, nrow = n_backtest, ncol = 1)
-model_fit <- vector(mode = "list", length = length(models))
+VaR   <- matrix(NA, nrow = n.ots, ncol = length(models))
+y.ots <- matrix(NA, nrow = n.ots, ncol = 1)
+model.fit <- vector(mode = "list", length = length(models))
 
 # iterate over out-of-sample time
-for (i in 1:n_backtest) { 
+for (i in 1:n.ots) { 
   cat("Backtest - Iteration: ", i, "\n")
-  y_its    <- SMI[i:(n_its + i - 1)] # in-sample data 
-  y_ots[i] <- SMI[n_its + i]         # out-of-sample data
+  y.its    <- SMI[i:(n.its + i - 1)] # in-sample data 
+  y.ots[i] <- SMI[n.its + i]         # out-of-sample data
   
   # iterate over models
   for (j in 1:length(models)) { 
     
     # do we update the model estimation
-    if (k_update == 1 || i %% k_update == 1) {
+    if (k.update == 1 || i %% k.update == 1) {
       cat("Model", j, "is reestimated\n")
-      model_fit[[j]] <- FitML(spec = models[[j]], data = y_its, 
+      model.fit[[j]] <- FitML(spec = models[[j]], data = y.its, 
                               ctr = list(do.se = FALSE)) 
     }
     
     # calculate VaR 1-step ahead
-    VaR[i,j] <- Risk(model_fit[[j]]$spec, par = model_fit[[j]]$par,
-                     data = y_its,
+    VaR[i,j] <- Risk(model.fit[[j]]$spec, par = model.fit[[j]]$par,
+                     data = y.its,
                      n.ahead = 1,
                      alpha   = alpha,
                      do.es   = FALSE,
@@ -250,19 +250,19 @@ for (i in 1:n_backtest) {
 ## Test the VaR
 # install.packages("GAS")
 library("GAS")
-CC_pval <- DQ_pval <- NULL
-for (j in 1:length(models)) { #iterate over model
-  test <- GAS::BacktestVaR(data  = y_ots,
+CC.pval <- DQ.pval <- NULL
+for (j in 1:length(models)) { 
+  test <- GAS::BacktestVaR(data  = y.ots,
                            VaR   = VaR[,j],
                            alpha = alpha)
   
-  CC_pval[j] <- test$LRcc[2]      
-  DQ_pval[j] <- test$DQ$pvalue  
+  CC.pval[j] <- test$LRcc[2]      
+  DQ.pval[j] <- test$DQ$pvalue  
 }
-names(CC_pval) <- names(DQ_pval) <- c("SR", "MS")
+names(CC.pval) <- names(DQ.pval) <- c("GJR-std", "MS2-GJR-std")
 
-print(CC_pval)
-print(DQ_pval)
+print(CC.pval)
+print(DQ.pval)
 
 sink()
 
@@ -381,8 +381,8 @@ dev.off()
 ######################
 
 library("zoo")
-time.index <- zoo::index(SMI)[(n_its + 1):(n_backtest + n_its)]
-y_ots <- zoo::zoo(y_ots, order.by = time.index)
+time.index <- zoo::index(SMI)[(n.its + 1):(n.ots + n.its)]
+y_ots <- zoo::zoo(y.ots, order.by = time.index)
 VaR   <- zoo::zoo(VaR, order.by = time.index)
 
 pdf(file = "figure6.pdf", height = 13, width = 16, compress = TRUE)
@@ -394,6 +394,6 @@ lines(VaR[,2], type = 'l', col = "blue", lwd = 3)
 legend("topleft", legend = c("VaR 5% - GJR-std", "VaR 5% - MS2-GJR-std"), 
        col = c("red", "blue"), lwd = 3, cex = 1.5, lty = c("dashed", "solid"))
 abline(h = 0)
-title("SMI log-returns (%) and VaR-5%", cex.main = 1.5)
+title("Backtesing VaR at 5% risk level", cex.main = 1.5)
 dev.off()
 
