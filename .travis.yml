@@ -2,9 +2,6 @@ language: r
 sudo: required
 cache: packages
 
-r_github_packages:
-  -  jimhester/covr
-  
 os:
   - linux
   
@@ -26,5 +23,4 @@ r:
   - release
 
 after_success:
-  - Rscript -e 'library(covr); codecov()'
   - cat /home/travis/build/keblu/MSGARCH/Package/MSGARCH.Rcheck/tests/testthat.Rout
