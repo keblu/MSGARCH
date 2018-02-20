@@ -17,9 +17,9 @@ loadModule("Ged", TRUE)
   assign(".ged_sym_created", new(Class = getFromNamespace("ged_sym", ns = "MSGARCH")), envir = MSGARCH_env)
   assign(".ged_skew_created", new(Class = getFromNamespace("ged_skew", ns = "MSGARCH")), envir = MSGARCH_env)
   
-  packageStartupMessage("\nThis version of MSGARCH is not compatible with MSGARCH code base prior to version 1.1\n",
-                          "Please refer to the documentation or the vignette to adapt your code.\n",
-                        "Some functions and arguments has changed name starting v.2.0.\n",
-                        "See the documentation, NEWS, and the vignette for more information.\n")
+
+
+
+
 }
 
