@@ -64,7 +64,7 @@ Method that performs Maximum Likelihood estimation
 of a \code{MSGARCH_SPEC} object on a set of observations.
 }
 \details{
-By default, \code{OptimFUN} is set such that optimization is done via the well known Broyden-
+By default, \code{OptimFUN} is set such that optimization is done via the well-known Broyden-
 Fletcher-Goldfarb-Shanno (BFGS) algorithm using the \code{optim} function with \code{method =
 "BFGS"}.
 Starting values when \code{par0} is not provided are chosen automatically

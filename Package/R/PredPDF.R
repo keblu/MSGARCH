@@ -1,5 +1,5 @@
 #' @title Predictive density.
-#' @description Method returning the predictive probability density.
+#' @description Method returning the predictive density.
 #' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{CreateSpec}}
 #' or fit object of type \code{MSGARCH_ML_FIT} created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
 #' created with \code{\link{FitMCMC}}.
@@ -12,7 +12,8 @@
 #' @param do.its  Logical indicating if the in-sample predictive is returned. (Default: \code{do.its = FALSE})
 #' @param nahead  Scalar indicating the number of step-ahead evaluation.
 #' Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})
-#' @param do.cumulative logical indicating if predictive density is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+#' @param do.cumulative Logical indicating if predictive density is computed on the 
+#' cumulative simulations (typically log-returns, as they can be aggregated).
 #'  Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})
 #' @param ctr A list of control parameters:
 #'        \itemize{
@@ -20,7 +21,7 @@
 #'        Number indicating the number of simulation done for the evaluation
 #'        of the density at \code{nahead} > 1. (Default: \code{nsim = 10000L})
 #'        }
-#' @param ... Not used. Other arguments to \code{Pred}.
+#' @param ... Not used. Other arguments to \code{PredPdf}.
 #' @return A vector or matrix of class \code{MSGARCH_PRED}.\cr
 #' If \code{do.its = FALSE}: (Log-)predictive of
 #' the points \code{x} at \code{t = T + T* + 1, ... ,t = T + T* + nahead} (matrix of
@@ -36,7 +37,8 @@
 #' realization.\cr
 #' If \code{do.its = TRUE} and  \code{x} is evaluated
 #' at each time \code{t} up top time \code{t = T + T*}.\cr
-#' Finally, if \code{x = NULL} the vector \code{data} is evaluated for sample evaluation of the predictive denisty ((log-)likelihood of each sample points).
+#' Finally, if \code{x = NULL} the vector \code{data} is evaluated for sample 
+#' evaluation of the predictive denisty ((log-)likelihood of each sample points).
 #' @examples
 #' # load data
 #' data("SMI", package = "MSGARCH")
@@ -64,7 +66,8 @@ PredPdf <- function(object, ...) {
 #' @rdname PredPdf
 #' @export
 PredPdf.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
-                              log = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
+                              log = FALSE, do.its = FALSE, nahead = 1L, 
+                              do.cumulative = FALSE, ctr = list(), ...) {
   object <- f_check_spec(object)
   data_   <- f_check_y(data)
   if (is.vector(par)) {

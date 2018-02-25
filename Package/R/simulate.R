@@ -8,8 +8,7 @@
 #' @param nburn Burnin period discarded (first simulation draws).
 #' @param par Vector (of size d) or matrix (of size \code{nahead} x d) of parameter
 #' @param seed 	Integer indicateing if and how the random number generator should be initialized. 
-#' If \code{seed = NULL},the state of the random generator will not change. (Default: \code{seed = NULL})
-#' estimates where d must have the same length as the default parameters of the specification.
+#' If \code{seed = NULL}, the state of the random generator will not change. (Default: \code{seed = NULL})
 #' @param ... Not used. Other arguments to \code{simulate}.
 #' @return A list of class \code{MSGARCH_SIM} with the following elements:.
 #' \itemize{
@@ -20,6 +19,7 @@
 #' The \code{MSGARCH_SIM} class contains the \code{plot} method.
 #' @details If a matrix of parameters estimates is provided, \code{nsim} simuations will be done for each row.
 #' @examples
+#' #' # !!!! FIXME !!!!
 #' # create model specification
 #' # MS(2)-GARCH(1,1)-Normal (default)
 #' spec <- CreateSpec()
@@ -68,7 +68,6 @@ simulate.MSGARCH_MCMC_FIT <- function(object, nsim = 1L, seed = NULL, nahead = 1
               nsim = nsim, par = object$par, nburn = nburn, seed = seed)
   return(out)
 }
-
 
 #For internal use and simulate function
 Sim <- function(object, data = NULL, nahead = 1L,

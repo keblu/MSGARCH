@@ -37,7 +37,7 @@ the same length as the default parameters of the specification.}
 (Default: \code{alpha = c(0.01, 0.05)})}
 
 \item{nahead}{Scalar indicating the number of step-ahead evaluation. (Default: \code{nahead = 1L}). Not used when
-\code{do.its = TRUE} as it only return in-sample one-step ahead risk measures.}
+\code{do.its = TRUE} as it only returns in-sample one-step ahead risk measures.}
 
 \item{do.es}{Logical indicating if Expected-shortfall is also calculated.
 (Default: \code{do.es = TRUE})}
@@ -45,8 +45,9 @@ the same length as the default parameters of the specification.}
 \item{do.its}{Logical indicating if the in-sample risk estimators are returned.
 (Default: \code{do.its = FALSE}).}
 
-\item{do.cumulative}{logical indicating if the risk measures are computed on the cumulative simulations (typically log-returns, as they can be aggregated).
-Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
+\item{do.cumulative}{Logical indicating if the risk measures are computed on the 
+cumulative simulations (typically log-returns, as they can be aggregated).
+ Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
 
 \item{ctr}{A list of control parameters:
 \itemize{

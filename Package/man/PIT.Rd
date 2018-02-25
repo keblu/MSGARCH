@@ -42,7 +42,7 @@ into standard Normal variate. (Default: \code{do.norm = FALSE})}
 \item{nahead}{Scalar indicating the number of step-ahead evaluation.
 Valid only when \code{do.its = FALSE}. (Default: \code{nahead = 1L})}
 
-\item{do.cumulative}{logical indicating if the PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+\item{do.cumulative}{Logical indicating if the PIT is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
 Only available for \code{do.its = FALSE}. (Default: \code{do.cumulative = FALSE})}
 
 \item{ctr}{A list of control parameters:

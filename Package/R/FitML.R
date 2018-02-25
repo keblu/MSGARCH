@@ -48,7 +48,7 @@
 #' \item \code{\link{ExtractStateFit}}: Single-regime model extractor.
 #' \item \code{summary}: Summary of the fit.
 #' }
-#' @details By default, \code{OptimFUN} is set such that optimization is done via the well known Broyden-
+#' @details By default, \code{OptimFUN} is set such that optimization is done via the well-known Broyden-
 #' Fletcher-Goldfarb-Shanno (BFGS) algorithm using the \code{optim} function with \code{method =
 #' "BFGS"}.
 #' Starting values when \code{par0} is not provided are chosen automatically

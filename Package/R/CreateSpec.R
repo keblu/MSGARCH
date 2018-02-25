@@ -15,11 +15,11 @@
 #' @param switch.spec \code{list} with element \code{do.mix} and \code{K}.\cr
 #'  \code{do.mix} is a \code{logical} indicating if the specification is a mixture type.
 #' If \code{do.mix = TRUE}, a Mixture of GARCH is created, while if \code{do.mix = FALSE},
-#' a Markov-Switching GARCH is created (see *Details*). (Default: \code{do.mix = FALSE})\cr
+#' a Markov-Switching GARCH is created (see *Details*). Default: \code{do.mix = FALSE}.\cr
 #' \code{K} is a optional \code{numeric} scalar indicating the number of regime.
 #'  In the case where a single regime is specified in \code{variance.spec} and \code{distribution.spec},
 #'  this parameter allows to automatically expand this single regime to \code{K} similar
-#'  regime without the need to explicitly define them in \code{variance.spec}
+#'  regimes without the need to explicitly define them in \code{variance.spec}
 #'  and \code{distribution.spec} (see *Examples*).
 #' @param constraint.spec  \code{list} with element \code{fixed} and \code{regime.const}.
 #' Only one of \code{fixed} and \code{regime.const}
@@ -69,17 +69,17 @@
 #' \item \code{\link{Volatility}}: In-sample conditional volatility filterting of the overall process.
 #' \item \code{predict}: Forecast of the conditional volatility of the overall process.
 #' \item \code{\link{UncVol}}: Unconditional volatility in each regime and the overall process.
-#' \item \code{\link{PredPdf}}: Predictive method.
+#' \item \code{\link{PredPdf}}: Predictive density method.
 #' \item \code{\link{PIT}}: Probability Integral Transform.
 #' \item \code{\link{Risk}}: Value-at-Risk and Expected-Shortfall methods.
-#' \item \code{\link{State}}: State probabilities method (Smoothed, Filtered, Predictive, Viterbi).
+#' \item \code{\link{State}}: State probabilities method (smoothed, filtered, predictive, Viterbi).
 #' \item \code{\link{FitML}}: Maximum Likelihood estimation.
 #' \item \code{\link{FitMCMC}}: Bayesian estimation.
 #' \item \code{print} and \code{summary}: Summary of the created specification.
 #' }
 #' @details The Markov-Switching specification is based on the
 #' Haas et al. (2004a) MSGARCH specification. It is a MSGARCH model that is separated
-#' in K single-regimes specifications  which are updated in parallel. Under the Haas et al. (2004a)
+#' in K single-regime specifications  which are updated in parallel. Under the Haas et al. (2004a)
 #' specification, the conditional variance is a function of past data and the current state.
 #' The Mixture of GARCH option (\code{do.mix = TRUE}) is based on Haas et al. (2004b). A Mixture of GARCH is a mixture of distributions
 #' where the variance process of each distribution is a single-regime process.\cr
@@ -100,7 +100,8 @@
 #' The \code{list} \code{mean} and \code{sd} in \code{prior} will adjust the prior mean and
 #' prior standard deviation of the truncated Normal prior for MCMC
 #' estimation via \code{\link{FitMCMC}} according to the inputed prior mean and standard deviation.
-#' Those prior means and standard deviations that are not set will take on preset default values.
+#' Those prior means and standard deviations that are not set will take on preset default values (a mean 
+#' of zero and a variance of 1,000).
 #' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. & Trottier, D.-A. (2017).
 #' Markov-switching GARCH models in \R: The MSGARCH package.
 #' \url{https://ssrn.com/abstract=2845809}

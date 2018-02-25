@@ -16,7 +16,7 @@
 #' When optimization is performed, we ensure that the variance in each regime is covariance-stationary
 #' and strictly positive (refer to the vignette for more information).\cr
 #' We refer to Ardia et al. (2017) \url{https://ssrn.com/abstract=2845809} for a detailed
-#' introduction of the package and its usage.\cr
+#' introduction to the package and its usage.\cr
 #' The authors acknowledge Google for financial support via the Google Summer of Code 2016 & 2017,
 #' the International Institute of Forecasters and Industrielle-Alliance.
 #' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. & Trottier, D.-A. (2017).

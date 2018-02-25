@@ -31,7 +31,8 @@ created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT} created with \code{\
 parameter estimates where d must have
 the same length as the default parameters of the specification.}
 
-\item{do.cumulative}{logical indicating if the conditional volatility prediction is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
+\item{do.cumulative}{Logical indicating if the conditional volatility 
+prediction is computed on the cumulative simulations (typically log-returns, as they can be aggregated).
 (Default: \code{do.cumulative = FALSE})}
 
 \item{ctr}{A list of control parameters:
@@ -41,37 +42,54 @@ Number indicating the number of simulation done for the
 conditional volatlity forecast at \code{nahead > 1}. (Default: \code{nsim = 10000L})
 }}
 
-\item{...}{Not used. Other arguments to \code{Forecast}.}
+\item{...}{Not used. Other arguments to \code{predict}.}
 }
 \value{
-A list of class \code{MSGARCH_CONDVOL} with the following elements:
+A list of class \code{MSGARCH_FORECAST} with the following elements:
 \itemize{
- \item \code{vol}: Condititional volatility Forecast (vector of size \code{nahead}).
+ \item \code{vol}: Condititional volatility forecast (vector of size \code{nahead}).
  \item \code{draw}: If \code{do.return.draw = TRUE}:\cr
- Draws sample from the predictive distributions  (matrix of size \code{nahead} x \code{nsim}).\cr
- If \code{do.return.draw = FALSE}: \code{NULL}
+ Draws sampled from the predictive distributions (matrix of size \code{nahead} x \code{nsim}).\cr
+ If \code{do.return.draw = FALSE}:\cr
+ \code{NULL}
  }
 The \code{MSGARCH_FORECAST} class contains the \code{plot} method.
 }
 \description{
-Method returning conditional volatility forecasts and density forecasts  of the process.
+Out-of-sample conditional volatility (and density) forecasts.
 }
 \details{
 If a matrix of MCMC posterior draws is given, the
-Bayesian predictive conditional volatility forecasts are calculated.
+Bayesian predictive conditional volatility forecasts are calculated and draws are generated 
+from the Bayesian predictive distribution.
 }
 \examples{
-# load data
-data("SMI", package = "MSGARCH")
-
+# !!!! FIXME !!!!
 # create model specification
 # MS(2)-GARCH(1,1)-Normal (default)
 spec <- CreateSpec()
 
+# load data
+data("SMI", package = "MSGARCH")
+y1 <- SMI[1:1000]
+
+# new data
+y2 <- SMI[1001:1100]
+
+# 1. predict with a specification
+par <- c(0.10 0.10 0.80 0.20 0.10 0.80 0.99 0.01)
+predic(spec, par)
+# 2. predict with a fitted model
+
 # fit the model on the data by ML
 fit <- FitML(spec = spec, data = SMI)
 
-# compute the In-sample conditional volatility from the fitted model
-forecast <- predict(object = fit, nahead = 5L)
-plot(forecast)
+# compute the 10-day ahead conditional volatility from the fitted model
+pred <- predict(object = fit, nahead = 10)
+plot(pred)
+
+compute the 10-day ahead distribution from the fitted model
+set.seed(1234)
+pred <- predict(object = fit, nahead = 10, do.return.draw = TRUE)
+plot(pred)
 }

@@ -4,7 +4,7 @@
 #' @param object Fit object of type \code{MSGARCH_ML_FIT}
 #' created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
 #' created with \code{\link{FitMCMC}}.
-#' @return A list of with \code{K} element where each element is a fit object of type \code{MSGARCH_ML_FIT} or
+#' @return A list of \code{K} elements where each element is a fit object of type \code{MSGARCH_ML_FIT} or
 #' \code{MSGARCH_MCMC_FIT}.
 #' @examples
 #' # load data

@@ -41,6 +41,7 @@ If a matrix of MCMC posterior draws is given, the
 Bayesian predictive conditional volatility is calculated.
 }
 \examples{
+#' # !!!! FIXME !!!!
 # load data
 data("SMI", package = "MSGARCH")
 

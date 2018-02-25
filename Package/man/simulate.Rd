@@ -23,8 +23,7 @@ created with \code{\link{FitMCMC}}.}
 \item{nsim}{Number of simulations. (Default: \code{nsim = 1L})}
 
 \item{seed}{Integer indicateing if and how the random number generator should be initialized. 
-If \code{seed = NULL},the state of the random generator will not change. (Default: \code{seed = NULL})
-estimates where d must have the same length as the default parameters of the specification.}
+If \code{seed = NULL}, the state of the random generator will not change. (Default: \code{seed = NULL})}
 
 \item{nahead}{Simulation length. (Default: \code{nahead = 1L})}
 
@@ -50,6 +49,7 @@ Method for simulating \code{MSGARCH} processes.
 If a matrix of parameters estimates is provided, \code{nsim} simuations will be done for each row.
 }
 \examples{
+#' # !!!! FIXME !!!!
 # create model specification
 # MS(2)-GARCH(1,1)-Normal (default)
 spec <- CreateSpec()
