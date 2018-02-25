@@ -10,3 +10,9 @@ Files src/*:
 Copyright: 2017 -       Ardia, Bluteau, Boudt, Catania, Trottier
 Copyright: 2014 - 2016  Ardia, Trottier
 License: GPL (>= 2)
+
+Files pdf_c.cpp:
+Copyright: rugarch package by Ghalanos
+License: GPL 3
+Copyright: fGarch package by Wuertz, Setz, Chalabi, Boudt, Chausse, Miklovac
+License: GPL (>= 2)

@@ -1,4 +1,4 @@
-# MSGARCH
+﻿# MSGARCH
 
 Markov-switching GARCH models in R
 
@@ -51,4 +51,5 @@ _MSGARCH package_
 
 ## Acknowledgements
 
-The MSGARCH team is grateful to Samuel Borms, Peter Carl, Dirk Eddelbuettel, Laurent Fastnacht, Felix-Antoine Fortin, Richard Gerlach, Lennart Hoogerheide, Eliane Maalouf, Brian Peterson, Enrico Schumann, and participants at the R/Finance 2017 conference (Chicago), the 37th International Symposium on Forecasting (Cairns), UseR 2017 (Brussels), and Quant Insights 2017 (London). We acknowledge Industrielle-Alliance, International Institute of Forecasters, Google Summer of Code 2016 & 2017, FQRSC (Grant # 2015-NP-179931), and Fonds des Donations at the University of Neuchâtel for their financial support, and Calcul Quebec for computational support.
+The MSGARCH team is grateful to Samuel Borms, Peter Carl, Yohan Chalabi, Dirk Eddelbuettel, Alexios Ghalanos, 
+Richard Gerlach, Laurent Fastnacht, Félix-Antoine Fortin, Lennart Hoogerheide, Rob J Hyndman, Eliane Maalouf, Brian Peterson, Tobias Setz, Enrico Schumann, Diethelm Wuertz, and participants at the R/Finance 2017 conference (Chicago), the 37th International Symposium on Forecasting (Cairns), UseR 2017 (Brussels), and Quant Insights 2017 (London). We acknowledge Industrielle-Alliance, International Institute of Forecasters, Google Summer of Code 2016 & 2017, FQRSC (Grant # 2015-NP-179931), and Fonds des Donations at the University of Neuchâtel for their financial support, and Calcul Quebec for computational support.

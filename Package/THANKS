@@ -1,5 +1,7 @@
 The authors are grateful to Samuel Borms, Peter Carl, Dirk Eddelbuettel, Laurent Fastnacht, 
-Félix-Antoine Fortin, Richard Gerlach, Lennart Hoogerheide, Eliane Maalouf, Brian Peterson, and Enrico Schumann.
+Félix-Antoine Fortin, Richard Gerlach, Lennart Hoogerheide, Rob J Hyndman, Eliane Maalouf, Brian Peterson, and Enrico Schumann.
+
+We also thank Alexios Ghalanos, Diethelm Wuertz, Tobias Setz and Yohan Chalabi for sharing the function pdf_c.cpp under the GPL-3 license.
 
 The authors acknowledge Google for financial support via the Google Summer of Code 2016 and 2017
 project "MSGARCH", the International Institute of Forecasters (IIF, https://forecasters.org), Industrielle-Alliance, 
