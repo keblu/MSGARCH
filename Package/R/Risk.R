@@ -200,7 +200,6 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
 #' @rdname Risk
 #' @export
 Risk.MSGARCH_ML_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
-                                do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
   data <- c(object$data, newdata)
   if(is.ts(object$data)){
     if(is.null(newdata)){
@@ -211,14 +210,14 @@ Risk.MSGARCH_ML_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
     data = as.ts(data)
   }
   out  <- Risk(object = object$spec, par = object$par, data = data, alpha = alpha,
-               do.es = do.es, do.its = do.its, nahead = nahead, ctr = ctr)
+               do.es = do.es, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative, ctr = ctr)
   return(out)
 }
 
 #' @rdname Risk
 #' @export
 Risk.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
-                                  do.es = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+                                  do.es = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
   data <- c(object$data, newdata)
   if(is.ts(object$data)){
     if(is.null(newdata)){
@@ -229,6 +228,6 @@ Risk.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
     data = as.ts(data)
   }
   out  <- Risk(object = object$spec, par = object$par, data = data, alpha = alpha,
-               do.es = do.es, do.its = do.its, nahead = nahead, ctr = ctr)
+               do.es = do.es, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative, ctr = ctr)
   return(out)
 }

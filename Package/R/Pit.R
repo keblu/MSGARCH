@@ -190,7 +190,7 @@ PIT.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
 #' @rdname PIT
 #' @export
 PIT.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
-                               do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+                               do.norm = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
   data = c(object$data, newdata)
   if(is.ts(object$data)){
     if(is.null(newdata)){
@@ -201,14 +201,14 @@ PIT.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
     data = as.ts(data)
   }
   out <- PIT(object = object$spec, x = x, par = object$par, data = data,
-             do.norm = do.norm, do.its = do.its, nahead = nahead, ctr = ctr)
+             do.norm = do.norm, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative,  ctr = ctr)
   return(out)
 }
 
 #' @rdname PIT
 #' @export
 PIT.MSGARCH_MCMC_FIT <- function(object, x = NULL, newdata = NULL,
-                                 do.norm = TRUE, do.its = FALSE, nahead = 1L, ctr = list(), ...) {
+                                 do.norm = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
   data = c(object$data, newdata)
   if(is.ts(object$data)){
     if(is.null(newdata)){
@@ -219,6 +219,6 @@ PIT.MSGARCH_MCMC_FIT <- function(object, x = NULL, newdata = NULL,
     data = as.ts(data)
   }
   out <- PIT(object = object$spec, x = x, par = object$par, data = data,
-             do.norm = do.norm, do.its = do.its, nahead = nahead, ctr = ctr)
+             do.norm = do.norm, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative,  ctr = ctr)
   return(out)
 }
