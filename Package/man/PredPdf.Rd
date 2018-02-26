@@ -62,7 +62,7 @@ If \code{do.its = TRUE}: In-sample predictive of \code{data} if \code{x = NULL}
 (vector of size T + T*) or in-sample predictive of \code{x} (matrix of size (T + T*) x n).
 }
 \description{
-Method returning the predictive density.
+Method returning the predictive density (pdf).
 }
 \details{
 If a matrix of MCMC posterior draws is given, the Bayesian
@@ -78,12 +78,11 @@ Finally, if \code{x = NULL} the vector \code{data} is evaluated for sample
 evaluation of the predictive denisty ((log-)likelihood of each sample points).
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on the data by ML
 fit <- FitML(spec = spec, data = SMI)

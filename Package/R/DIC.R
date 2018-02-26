@@ -15,12 +15,11 @@
 #' Bayesian measures of model complexity and fit.
 #' \emph{Journal of the Royal Statistical Society: Series B}, 64, 583-639
 #' @examples
+#' # create model specification
+#' spec <- CreateSpec()
+#' 
 #' # load data
 #' data("SMI", package = "MSGARCH")
-#'
-#' # create model specification
-#' # MS(2)-GARCH(1,1)-Normal (default)
-#' spec <- CreateSpec()
 #'
 #' # fit the model on data by MCMC
 #' set.seed(123)

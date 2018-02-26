@@ -1,12 +1,13 @@
 #' @rdname predict
 #' @title predict method.
-#' @description Out-of-sample conditional volatility (and density) forecasts.
+#' @description Conditional volatility (and predictive density) forecasts.
 #' @param object Model specification of class \code{MSGARCH_SPEC}
 #' created with \code{\link{CreateSpec}} or fit object of type \code{MSGARCH_ML_FIT}
 #' created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT} created with \code{\link{FitMCMC}}.
 #' @param newdata Vector (of size T*) of new observations. (Default \code{newdata = NULL})
 #' @param nahead  Scalar indicating the number of step-ahead evaluation.
-#' @param do.return.draw  Are the sampled simulation draws returned? (Default \code{do.return.draw = FALSE})
+#' @param do.return.draw  Are simulation draws from the predictive distribution 
+#' returned? (Default \code{do.return.draw = FALSE})
 #' @param par Vector (of size d) or matrix (of size \code{nmcmc} x d) of
 #' parameter estimates where d must have
 #' the same length as the default parameters of the specification.
@@ -30,38 +31,36 @@
 #'  }
 #' The \code{MSGARCH_FORECAST} class contains the \code{plot} method.
 #' @details If a matrix of MCMC posterior draws is given, the
-#' Bayesian predictive conditional volatility forecasts are calculated and draws are generated 
-#' from the Bayesian predictive distribution.
+#' Bayesian predictive conditional volatility (and predictive distribution) 
+#' forecasts are returned.
 #' @examples
-#' # !!!! FIXME !!!!
-#' # create model specification
-#' # MS(2)-GARCH(1,1)-Normal (default)
+#' # create specification
 #' spec <- CreateSpec()
 #' 
 #' # load data
 #' data("SMI", package = "MSGARCH")
-#' y1 <- SMI[1:1000]
 #' 
-#' # new data
-#' y2 <- SMI[1001:1100]
-#' 
-#' # 1. predict with a specification
-#' par <- c(0.10 0.10 0.80 0.20 0.10 0.80 0.99 0.01)
-#' predic(spec, par)
-#' # 2. predict with a fitted model
-#'
-#' # fit the model on the data by ML
-#' fit <- FitML(spec = spec, data = SMI)
-#'
-#' # compute the 10-day ahead conditional volatility from the fitted model
-#' pred <- predict(object = fit, nahead = 10)
-#' plot(pred)
-#' 
-#' compute the 10-day ahead distribution from the fitted model
+#' # predict from specification
+#' par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
 #' set.seed(1234)
-#' pred <- predict(object = fit, nahead = 10, do.return.draw = TRUE)
+#' pred <- predict(object = spec, par = par, newdata = SMI, nahead = 5L)
+#' head(pred)
 #' plot(pred)
-
+#' 
+#' # predict from ML fit
+#' fit <- FitML(spec = spec, data = SMI)
+#' set.seed(1234)
+#' pred <- predict(object = fit, nahead = 5L, do.return.draw = TRUE)
+#' head(pred)
+#' plot(pred)
+#' 
+#' \dontrun{
+#  # predict from MCMC fit
+#' set.seed(1234)
+#' fit <- FitMCMC(spec = spec, data = SMI)
+#' pred <- predict(object = fit, nahead = 5L, do.return.draw = TRUE)
+#' plot(pred)
+#' }
 #' @rdname predict
 #' @export
 predict.MSGARCH_SPEC <- function(object, newdata = NULL, nahead = 1L, 

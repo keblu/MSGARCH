@@ -22,7 +22,7 @@ created with \code{\link{FitMCMC}}.}
 
 \item{nsim}{Number of simulations. (Default: \code{nsim = 1L})}
 
-\item{seed}{Integer indicateing if and how the random number generator should be initialized. 
+\item{seed}{Integer indicating if and how the random number generator should be initialized. 
 If \code{seed = NULL}, the state of the random generator will not change. (Default: \code{seed = NULL})}
 
 \item{nahead}{Simulation length. (Default: \code{nahead = 1L})}
@@ -38,7 +38,7 @@ A list of class \code{MSGARCH_SIM} with the following elements:.
 \itemize{
 \item \code{draw}: Matrix (of size \code{nahead} x \code{nsim}) of simulated draws.
 \item \code{state}: Matrix (of size \code{nahead} x \code{nsim}) of simulated states.
-\item \code{CondVol}: Array (of size \code{nahead} x \code{nsim} x K) of simulated conditional volatility.  
+\item \code{CondVol}: Array (of size \code{nahead} x \code{nsim} x K) of simulated conditional volatilities.  
 }
 The \code{MSGARCH_SIM} class contains the \code{plot} method.
 }
@@ -49,25 +49,34 @@ Method for simulating \code{MSGARCH} processes.
 If a matrix of parameters estimates is provided, \code{nsim} simuations will be done for each row.
 }
 \examples{
-#' # !!!! FIXME !!!!
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
+# create specification
 spec <- CreateSpec()
 
-# generate process
-par.sim <- c(0.1,0.6,0.2,0.2,0.8,0.1,0.99,0.01)
-set.seed(123)
-sim <- simulate(object = spec, nsim = 1L, nahead = 1000L, nburnin = 500L, par = par.sim)
+# simulation from specification
+par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
+set.seed(1234)
+sim <- simulate(object = spec, nsim = 1L, nahead = 1000L, 
+                nburnin = 500L, par = par)
+head(sim)
 plot(sim)
 
-# generate process after filtering for fitted model
 # load data
 data("SMI", package = "MSGARCH")
 
-# fit the model on the data with ML estimation
+# simulation from ML fit
 fit <- FitML(spec = spec, data = SMI)
-
-set.seed(123)
-sim <- simulate(fit, nsim = 1000L, nahead = 30L)
+set.seed(1234)
+sim <- simulate(object = fit, nsim = 1L, nahead = 1000L, 
+                nburnin = 500L)
+head(sim)
 plot(sim)
+
+\dontrun{
+# simulation from MCMC fit
+fit <- FitMCMC(spec = spec, data = SMI)
+set.seed(1234)
+sim <- simulate(object = fit, nahead = 100L, nburnin = 500L)
+head(sim)
+plot(sim)
+}
 }

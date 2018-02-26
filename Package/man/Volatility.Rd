@@ -30,29 +30,41 @@ estimates where d must have the same length as the default parameters of the spe
 \item{newdata}{Vector (of size T*) of new observations. (Default \code{newdata = NULL})}
 }
 \value{
-Condititional volatility (vector of size T + T*) of class \code{MSGARCH_CONDVOL}.\cr
+In-sample condititional volatility (vector of size T + T*) of class \code{MSGARCH_CONDVOL}.\cr
 The \code{MSGARCH_CONDVOL} class contains the \code{plot} method.
 }
 \description{
-Method returning the conditional volatility of the process.
+Method returning the in-sample conditional volatility.
 }
 \details{
 If a matrix of MCMC posterior draws is given, the
 Bayesian predictive conditional volatility is calculated.
 }
 \examples{
-#' # !!!! FIXME !!!!
+# create specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
 
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
+# in-sample volatility from specification
+par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
+vol <- Volatility(object = spec, par = par, data = SMI)
+head(vol)
+plot(vol)
 
-# fit the model on the data by ML
+# in-sample volatility from ML fit
 fit <- FitML(spec = spec, data = SMI)
+vol <- Volatility(object = fit)
+head(vol)
+plot(vol)
 
-# compute the In-sample conditional volatility from the fitted model
-cond.vol <- Volatility(object = fit)
-plot(cond.vol)
+\dontrun{
+# in-sample volatility from MCMC fit
+set.seed(1234)
+fit <- FitMCMC(spec = spec, data = SMI)
+vol <- Volatility(object = fit)
+head(vol)
+plot(vol)
+}
 }

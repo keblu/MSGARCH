@@ -1,5 +1,5 @@
 #' @title Predictive density.
-#' @description Method returning the predictive density.
+#' @description Method returning the predictive density (pdf).
 #' @param object Model specification of class \code{MSGARCH_SPEC} created with \code{\link{CreateSpec}}
 #' or fit object of type \code{MSGARCH_ML_FIT} created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT}
 #' created with \code{\link{FitMCMC}}.
@@ -40,12 +40,11 @@
 #' Finally, if \code{x = NULL} the vector \code{data} is evaluated for sample 
 #' evaluation of the predictive denisty ((log-)likelihood of each sample points).
 #' @examples
+#' # create model specification
+#' spec <- CreateSpec()
+#' 
 #' # load data
 #' data("SMI", package = "MSGARCH")
-#'
-#' # create model specification
-#' # MS(2)-GARCH(1,1)-Normal (default)
-#' spec <- CreateSpec()
 #'
 #' # fit the model on the data by ML
 #' fit <- FitML(spec = spec, data = SMI)

@@ -68,7 +68,7 @@ By default, \code{OptimFUN} is set such that optimization is done via the well-k
 Fletcher-Goldfarb-Shanno (BFGS) algorithm using the \code{optim} function with \code{method =
 "BFGS"}.
 Starting values when \code{par0} is not provided are chosen automatically
-before optimization (see Ardia et al. (2016) for more details)\cr
+before optimization (see Ardia et al. (2017) for more details)\cr
 \code{OptimFUN} allows for a custom optimizer to be used. The function must take
 the form: \cr \code{function(vPw, f_nll, spec, data, do.plm)}, \cr
 where \code{vPw} are starting parameters (transformed), \code{f_nll} is the function
@@ -83,12 +83,11 @@ It must output a list with the following elements:
 }
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on the data by ML
 fit <- FitML(spec = spec, data = SMI)

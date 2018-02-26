@@ -1,5 +1,6 @@
 Changes in Version 2.1
-  o Documentation updated / improved
+  o spec can now be used with predict
+  o Documentation updated / examples improved
   o THANKS updated
   o COPYRIGHTS updated
   o run_jss.R file updated in GitHub

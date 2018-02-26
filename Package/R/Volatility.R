@@ -1,5 +1,5 @@
 #' @title Volatility filtering.
-#' @description Method returning the conditional volatility of the process.
+#' @description Method returning the in-sample conditional volatility.
 #' @param object Model specification of class \code{MSGARCH_SPEC}
 #' created with \code{\link{CreateSpec}} or fit object of type \code{MSGARCH_ML_FIT}
 #' created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT} created with \code{\link{FitMCMC}}.
@@ -8,25 +8,37 @@
 #' @param data  Vector (of size T) of observations.
 #' @param newdata Vector (of size T*) of new observations. (Default \code{newdata = NULL})
 #' @param ... Not used. Other arguments to \code{Volatility}.
-#' @return Condititional volatility (vector of size T + T*) of class \code{MSGARCH_CONDVOL}.\cr
+#' @return In-sample condititional volatility (vector of size T + T*) of class \code{MSGARCH_CONDVOL}.\cr
 #' The \code{MSGARCH_CONDVOL} class contains the \code{plot} method.
 #' @details If a matrix of MCMC posterior draws is given, the
 #' Bayesian predictive conditional volatility is calculated.
 #' @examples
-#' #' # !!!! FIXME !!!!
+#' # create specification
+#' spec <- CreateSpec()
+#' 
 #' # load data
 #' data("SMI", package = "MSGARCH")
-#'
-#' # create model specification
-#' # MS(2)-GARCH(1,1)-Normal (default)
-#' spec <- CreateSpec()
-#'
-#' # fit the model on the data by ML
+#' 
+#' # in-sample volatility from specification
+#' par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
+#' vol <- Volatility(object = spec, par = par, data = SMI)
+#' head(vol)
+#' plot(vol)
+#' 
+#' # in-sample volatility from ML fit
 #' fit <- FitML(spec = spec, data = SMI)
-#'
-#' # compute the In-sample conditional volatility from the fitted model
-#' cond.vol <- Volatility(object = fit)
-#' plot(cond.vol)
+#' vol <- Volatility(object = fit)
+#' head(vol)
+#' plot(vol)
+#' 
+#' \dontrun{
+#' # in-sample volatility from MCMC fit
+#' set.seed(1234)
+#' fit <- FitMCMC(spec = spec, data = SMI)
+#' vol <- Volatility(object = fit)
+#' head(vol)
+#' plot(vol)
+#' }
 #' @export
 Volatility <- function(object, ...) {
   UseMethod(generic = "Volatility", object)

@@ -7,16 +7,16 @@
 #' @return A list of \code{K} elements where each element is a fit object of type \code{MSGARCH_ML_FIT} or
 #' \code{MSGARCH_MCMC_FIT}.
 #' @examples
+#' # create model specification
+#' spec <- CreateSpec()
+#' 
 #' # load data
 #' data("SMI", package = "MSGARCH")
-#'
-#' # create model specification
-#' # MS(2)-GARCH(1,1)-Normal (default)
-#' spec <- CreateSpec()
 #'
 #' # fit the model on the data with ML estimation
 #' fit <- FitML(spec = spec, data = SMI)
 #' SR.fit <- ExtractStateFit(fit)
+#' print(SR.fit)
 #' @export
 ExtractStateFit <- function(object) {
   UseMethod(generic = "ExtractStateFit", object)

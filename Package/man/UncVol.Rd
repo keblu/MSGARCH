@@ -61,20 +61,25 @@ Bayesian unconditional volatility is calculated.
  Overall, this method allows to compute the unconditional volatilty complex models.
 }
 \examples{
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
+# create specification
 spec <- CreateSpec()
 
 \dontrun{
-  # compute the unconditional volatility of the process
-  par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
-  UncVol(object = spec, par = par)
-  
-  # load data
-  data("SMI", package = "MSGARCH")
-  
-  # fit the model on the data by ML
-  fit <- FitML(spec = spec, data = SMI)
-  UncVol(object = fit)
+# unconditional volatility from specification
+par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
+UncVol(object = spec, par = par)
+
+# load data
+data("SMI", package = "MSGARCH")
+
+# unconditional volatility from ML fit
+fit <- FitML(spec = spec, data = SMI)
+UncVol(object = fit)
+var(SMI)
+
+# unconditional volatility from MCMC fit
+set.seed(1234)
+fit <- FitMCMC(spec = spec, data = SMI)
+UncVol(object = fit)
 }
 }

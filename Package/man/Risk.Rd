@@ -89,20 +89,32 @@ are computed. \code{do.cumulative = TRUE} indicate the function to compute the r
 over aggregated period up to \code{nahead} period using the \code{cumsum} function on the simulated data.
 }
 \examples{
+# create specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
 
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
+# risk from specification
+par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
+set.seed(1234)
+risk <- Risk(object = spec, par = par, data = SMI, nahead = 5L)
+head(risk)
+plot(risk)
 
-# fit the model on the data with ML estimation
+# risk from ML fit
 fit <- FitML(spec = spec, data = SMI)
+set.seed(1234)
+risk <- Risk(object = fit, nahead = 5L)
+head(risk)
+plot(risk)
 
-# compute the Value-at-Risk and Expected-shortfall in-sample
-risk.its <- Risk(object = fit, alpha = 0.05, do.es = FALSE, do.its = TRUE)
-plot(risk.its)
-
-# compute the one-step ahead Value-at-Risk and Expected-shortfall out-of-sample
-Risk(object = fit, alpha = 0.05, do.es = FALSE, do.its = FALSE, nahead = 1L)
+\dontrun{
+# risk from MCMC fit
+set.seed(1234)
+fit <- FitMCMC(spec = spec, data = SMI)
+risk <- Risk(object = fit, nahead = 5L)
+head(risk)
+plot(risk)
+}
 }

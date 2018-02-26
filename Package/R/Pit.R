@@ -44,12 +44,11 @@
 #' Finally if \code{x = NULL} the vector \code{data} is evaluated for sample evaluation of the PIT.\cr
 #' The \code{do.norm} argument transforms the PIT value into Normal variates so that normality test can be done.
 #' @examples
+#' # create model specification
+#' spec <- CreateSpec()
+#' 
 #' # load data
 #' data("SMI", package = "MSGARCH")
-#'
-#' # create model specification
-#' # MS(2)-GARCH(1,1)-Normal (default)
-#' spec <- CreateSpec()
 #'
 #' # fit the model on the data by ML
 #' fit <- FitML(spec = spec, data = SMI)

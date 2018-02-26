@@ -26,14 +26,14 @@ Extracts each regime from a fitted multiple regime specificaton
 and creates a fitted object for each extracted regime.
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on the data with ML estimation
 fit <- FitML(spec = spec, data = SMI)
 SR.fit <- ExtractStateFit(fit)
+print(SR.fit)
 }

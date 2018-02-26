@@ -44,28 +44,35 @@ as input \code{type.prob} which is one of \code{"filtered", "predictive", "smoot
 (Default: \code{type.prob = "smoothed"})
 }
 \description{
-Method returning the filtered, predictive, smoothed probabilities of the states,
-and the most probable path computed with the Viterbi alogirthm.
+Method returning the filtered, predictive, and smoothed probabilities of the states,
+and the most probable path computed with the Viterbi algorithm.
 }
 \details{
 If a matrix of parameter estimates is given, each parameter
 estimate (each row) is evaluated individually.
 }
 \examples{
+# create specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
 
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
+# state from specification
+par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
+state <- State(object = spec, par = par, data = SMI)
+plot(state, type.prob = "filtered")
 
-# fit the model on the data with ML estimation
+# state from ML fit
 fit <- FitML(spec = spec, data = SMI)
-
-# compute the filtered state probabilities
 state <- State(object = fit)
 plot(state, type.prob = "smoothed")
-plot(state, type.prob = "predictive")
-plot(state, type.prob = "filtered")
-plot(state, type.prob = "viterbi")
+
+\dontrun{
+# state from MCMC fit
+set.seed(1234)
+fit <- FitMCMC(spec = spec, data = SMI)
+state <- State(object = fit)
+plot(state, type.prob = "smoothed")
+}
 }

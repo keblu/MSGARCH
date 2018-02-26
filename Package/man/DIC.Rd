@@ -30,12 +30,11 @@ Method which computes the Deviance Information Criterion (DIC) from a fit object
 Computes the Deviance information criterion of Spiegelhalter et al. (2002).
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on data by MCMC
 set.seed(123)

@@ -12,12 +12,11 @@
 #'  or a vector (of size K) in the case of a Mixture of GARCH model.
 #'  The row indicates the starting states while the columns indicates the transition states.
 #' @examples
+#' # create model specification
+#' spec <- CreateSpec()
+#' 
 #' # load data
 #' data("SMI", package = "MSGARCH")
-#'
-#' # create model specification
-#' # MS(2)-GARCH(1,1)-Normal (default)
-#' spec <- CreateSpec()
 #'
 #' # fit the model on the data by ML
 #' fit <- FitML(spec = spec, data = SMI)

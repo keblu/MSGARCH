@@ -79,12 +79,11 @@ The custom sampler must output a matrix containing the MCMC chain. \cr
 When \code{do.sort = TRUE}, sorting of each MCMC draw conditional on the unconditional variance is done across homogeneous regime specification.\cr
 }
 \examples{
+# create model specification
+spec <- CreateSpec()
+
 # load data
 data("SMI", package = "MSGARCH")
-
-# create model specification
-# MS(2)-GARCH(1,1)-Normal (default)
-spec <- CreateSpec()
 
 # fit the model on the data by MCMC
 set.seed(123)
