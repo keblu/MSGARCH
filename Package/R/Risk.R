@@ -200,6 +200,7 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
 #' @rdname Risk
 #' @export
 Risk.MSGARCH_ML_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
+                                do.es = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,  ctr = list(), ...) {
   data <- c(object$data, newdata)
   if(is.ts(object$data)){
     if(is.null(newdata)){
