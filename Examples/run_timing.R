@@ -17,11 +17,13 @@
 # attached base packages:
 #   [1] stats     graphics  grDevices utils     datasets  methods   base     
 # 
+# other attached packages:
+#   [1] microbenchmark_1.4-4 MSGARCH_2.1         
+# 
 # loaded via a namespace (and not attached):
-#   [1] microbenchmark_1.4-4 zoo_1.8-1            compiler_3.4.3       Matrix_1.2-12        MSGARCH_2.0         
-# [6] tools_3.4.3          fanplot_3.4.1        expm_0.999-2         coda_0.19-1          Rcpp_0.12.15        
-# [11] mvtnorm_1.0-7        ellipse_0.4.1        codetools_0.2-15     grid_3.4.3           bayesGARCH_2.1.3    
-# [16] lattice_0.20-35      mcmcse_1.3-2        
+#   [1] Rcpp_0.12.15     codetools_0.2-15 lattice_0.20-35  zoo_1.8-1        digest_0.6.15    withr_2.1.1      grid_3.4.3      
+# [8] R6_2.2.2         git2r_0.21.0     httr_1.3.1       curl_3.1         Matrix_1.2-12    devtools_1.13.5  tools_3.4.3     
+# [15] yaml_2.1.16      fanplot_3.4.1    compiler_3.4.3   memoise_1.1.0    expm_0.999-2
 
 ###############################################################
 ## INSTALL PACKAGES
@@ -53,9 +55,9 @@ f.MCMC <- function() {
 set.seed(1234)
 microbenchmark::microbenchmark(f.ML(), f.MCMC(), times = 4L)
 # Unit: seconds
-# expr     min        lq      mean    median        uq       max neval
-# f.ML()    2.5490  2.638808  2.985428  2.904798  3.332047  3.583115     4
-# f.MCMC() 24.7685 25.580564 26.924724 26.427310 28.268884 30.075782     4
+# expr       min        lq      mean    median        uq       max neval
+# f.ML()    2.593599  2.635715  2.794702  2.799519  2.953688  2.986171     4
+# f.MCMC() 24.651372 25.649904 26.590408 26.680731 27.530913 28.348799     4
 
 
 ###############################################################
@@ -107,8 +109,8 @@ set.seed(1234)
 microbenchmark::microbenchmark(f.MSGARCH(), f.bayesGARCH(), times = 4L)
 # Unit: seconds
 # expr       min        lq      mean    median        uq       max neval
-# f.MSGARCH()     5.737974  5.776521  5.860372  5.864642  5.944222  5.974228     4
-# f.bayesGARCH() 62.773728 63.024597 64.590266 64.213374 66.155935 67.160588     4
+# f.MSGARCH()  6.299445  6.306046  6.495721  6.437732  6.685396  6.807974     4
+# f.bayesGARCH() 64.042822 66.714499 69.111365 70.324409 71.508231 71.753818     4
 
 # Estimate effective sample size (ESS) as described in Gong and Flegal (2015)
 # ESS is the size of an iid sample with the same variance as the current sample

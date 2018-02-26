@@ -57,7 +57,7 @@ A list of class \code{MSGARCH_FORECAST} with the following elements:
 The \code{MSGARCH_FORECAST} class contains the \code{plot} method.
 }
 \description{
-Conditional volatility (and predictive density) forecasts.
+Conditional volatility (and predictive distribution) forecasts.
 }
 \details{
 If a matrix of MCMC posterior draws is given, the

@@ -35,15 +35,15 @@
 #' }
 #' The \code{MSGARCH_MCMC_FIT} with the following methods:
 #' \itemize{
-#' \item \code{\link{DIC}}: Compute Deviance Information Criterion (DIC).
-#' \item \code{\link{Volatility}}: In-sample conditional volatility filterting of the overall process.
-#' \item \code{predict}: Forecast of the conditional volatility of the overall process.
-#' \item \code{\link{UncVol}}: Unconditional volatility in each regime and the overall process.
-#' \item \code{\link{PredPdf}}: Predictive density method.
-#' \item \code{\link{PIT}}: Probability integral transform.
-#' \item \code{\link{Risk}}: Value-at-Risk And Expected-Shortfall methods.
-#' \item \code{simulate}: Simulation method.
-#' \item \code{\link{State}}: State probabilities methods.
+#' \item \code{\link{DIC}}: Deviance Information Criterion (DIC).
+#' \item \code{simulate}: Simulation.
+#' \item \code{\link{Volatility}}: In-sample conditional volatility.
+#' \item \code{predict}: Forecast of the conditional volatility (and predictive distribution).
+#' \item \code{\link{UncVol}}: Unconditional volatility.
+#' \item \code{\link{PredPdf}}: Predictive density (pdf).
+#' \item \code{\link{PIT}}: Probability Integral Transform.
+#' \item \code{\link{Risk}}: Value-at-Risk and Expected-Shortfall.
+#' \item \code{\link{State}}: State probabilities (smoothed, filtered, predictive, Viterbi).
 #' \item \code{\link{ExtractStateFit}}: Single-regime model extractor.
 #' \item \code{summary}: Summary of the fit.
 #' }

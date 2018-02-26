@@ -1,6 +1,6 @@
 #' @rdname predict
 #' @title predict method.
-#' @description Conditional volatility (and predictive density) forecasts.
+#' @description Conditional volatility (and predictive distribution) forecasts.
 #' @param object Model specification of class \code{MSGARCH_SPEC}
 #' created with \code{\link{CreateSpec}} or fit object of type \code{MSGARCH_ML_FIT}
 #' created with \code{\link{FitML}} or \code{MSGARCH_MCMC_FIT} created with \code{\link{FitMCMC}}.
