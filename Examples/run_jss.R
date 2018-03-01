@@ -252,7 +252,7 @@ for (i in 1:n.ots) {
 ## Test the VaR
 # install.packages("GAS")
 library("GAS")
-CC.pval <- DQ.pval <- NULL
+CC.pval <- DQ.pval <- vector("double", length(models))
 for (j in 1:length(models)) { 
   test <- GAS::BacktestVaR(data  = y.ots,
                            VaR   = VaR[,j],
