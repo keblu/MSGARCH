@@ -363,7 +363,7 @@ f_rename_par <- function(vPar, spec) {
 
   if (isTRUE(spec$regime.const.pars.bool)) {
     for (i in 1:length(spec$regime.const.pars)) {
-      vNames <- vNames[vNames != paste0(spec$regime.const.pars[i], "_" ,2:spec$K)]
+      vNames <- vNames[!vNames %in% paste0(spec$regime.const.pars[i],"_", 2:spec$K)]
     }
   }
 

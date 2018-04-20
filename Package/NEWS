@@ -1,3 +1,6 @@
+Changes in Version 2.2
+  o Fix when constraint spec with more than 3 regime and mcmc estimation
+  o Fix for standard error computation
 Changes in Version 2.1
   o spec can now be used with predict
   o Documentation updated / examples improved

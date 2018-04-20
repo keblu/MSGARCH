@@ -37,12 +37,12 @@ f_InferenceFun <- function(vPw, data, spec, do.plm, mNegHessian = NULL) {
   mSandwitch  <- t(mJacob) %*% mInvHessian %*% mJacob
   
   vSE   <- sqrt(diag(mSandwitch))
-  vTest <- vPn/(vSE/sqrt(length(data)))
+  vTest <- vPn/vSE
   
   vPvalues <- 1 - pnorm(abs(vTest))
   
   out[, "Estimate"]   <- vPn
-  out[, "Std. Error"] <- vSE/sqrt(length(data))
+  out[, "Std. Error"] <- vSE
   out[, "t value"]    <- vTest
   out[, "Pr(>|t|)"]   <- vPvalues
   
