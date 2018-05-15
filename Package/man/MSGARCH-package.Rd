@@ -73,6 +73,7 @@ Authors:
 Other contributors:
 \itemize{
   \item Kris Boudt \email{kris.boudt@vub.ac.be} [contributor]
+  \item Alexios Ghalanos \email{alexios@4dscape.com} [contributor]
   \item Brian Peterson \email{brian@braverock.com} [contributor]
 }
 
