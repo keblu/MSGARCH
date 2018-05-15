@@ -1,5 +1,6 @@
 The authors are grateful to Samuel Borms, Peter Carl, Dirk Eddelbuettel, Laurent Fastnacht, 
 Félix-Antoine Fortin, Richard Gerlach, Lennart Hoogerheide, Rob J Hyndman, Eliane Maalouf, Brian Peterson, and Enrico Schumann.
+The package also benefited from comments from two JSS referees.
 
 We also thank Alexios Ghalanos, Diethelm Wuertz, Tobias Setz and Yohan Chalabi for sharing the function pdf_c.cpp under the GPL-3 license.
 

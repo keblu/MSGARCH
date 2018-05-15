@@ -10,19 +10,25 @@ citEntry(entry = "manual",
                              person("Keven","Bluteau"),
                              person("Kris","Boudt"),
                              person("Leopoldo","Catania"),
+                             person("Alexios","Ghalanos"),
                              person("Brian","Peterson"),
                              person("Denis-Alexandre","Trottier")),
 	 url = "https://CRAN.R-project.org/package=MSGARCH",
 	 year = year,
 	 vers = vers,
 	 textVersion =
-         paste("David Ardia, Keven Bluteau, Kris Boudt, Leopoldo Catania, Brian Peterson, Denis-Alexandre Trottier (", year,"). ",
+         paste("David Ardia, Keven Bluteau, Kris Boudt, Leopoldo Catania, Alexios Ghalanos, 
+                Brian Peterson, Denis-Alexandre Trottier (", year,"). ",
                "Markov-Switching GARCH Models in R: The MSGARCH Package. ", vers, ".", sep = "")
 )
 
 
 citEntry(entry = "Misc",
-  author = personList(person("David","Ardia"), person("Keven","Bluteau"), person("Kris","Boudt"), person("Leopoldo","Catania"), person("Denis-Alexandre","Trottier")),
+  author = personList(person("David","Ardia"), 
+person("Keven","Bluteau"), 
+person("Kris","Boudt"), 
+person("Leopoldo","Catania"), 
+person("Denis-Alexandre","Trottier")),
   title = "Markov-Switching {GARCH} Models in {R}: {T}he {MSGARCH} Package",
   year = "2017",
   note = "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2845809",

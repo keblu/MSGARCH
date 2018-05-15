@@ -8,7 +8,7 @@ Markov-switching GARCH models in R
 [![Github Issues](http://githubbadges.herokuapp.com/keblu/MSGARCH/issues.svg)](https://github.com/keblu/MSGARCH/issues)
 ## Introduction
 
-Markov-switching GARCH models have become popular methods to account for regime changes in the conditional variance dynamics of time series. The R package `MSGARCH` ([Ardia et al., 2017](https://ssrn.com/abstract=2845809), Ardia et al., 2017) implements Markov-switching GARCH-type models very effficiently by using C++ object-oriented programming techniques. It allows the user to perform simulations as well as Maximum Likelihood and MCMC/Bayesian estimations of a very large class of Markov-switching GARCH-type models. The package also provides methods to make single-step and multi-step ahead forecasts of the complete conditional density of the variable of interest. Risk management tools to estimate conditional volatility, Value-at-Risk and Expected Shortfall are also available. See [Ardia et al. (2017)](https://ssrn.com/abstract=2845809) for further details. A large-scale empirical study is presented in [Ardia et al. (2017)](https://ssrn.com/abstract=2918413).
+Markov-switching GARCH models have become popular methods to account for regime changes in the conditional variance dynamics of time series. The R package `MSGARCH` ([Ardia et al., 2017](https://ssrn.com/abstract=2845809), Ardia et al., 2018) implements Markov-switching GARCH-type models very effficiently by using C++ object-oriented programming techniques. It allows the user to perform simulations as well as Maximum Likelihood and MCMC/Bayesian estimations of a very large class of Markov-switching GARCH-type models. The package also provides methods to make single-step and multi-step ahead forecasts of the complete conditional density of the variable of interest. Risk management tools to estimate conditional volatility, Value-at-Risk and Expected Shortfall are also available. See [Ardia et al. (2017)](https://ssrn.com/abstract=2845809) for further details. A large-scale empirical study is presented in [Ardia et al. (2017)](https://ssrn.com/abstract=2918413).
 
 ## Contents
 
@@ -46,7 +46,7 @@ _Forecasting risk with Markov-switching GARCH models: A large-scale performance 
 Working paper.    
 https://ssrn.com/abstract=2918413  
 
-Ardia, D., Bluteau, K., Boudt, K., Catania, L., Peterson, B., Trottier, D.-A. (2017).    
+Ardia, D., Bluteau, K., Boudt, K., Catania, A. Ghalanos, L., Peterson, B., Trottier, D.-A. (2018).    
 _MSGARCH package_  
 
 ## Acknowledgements

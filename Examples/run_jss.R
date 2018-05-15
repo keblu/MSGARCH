@@ -17,8 +17,8 @@
 ### LOAD THE PACKAGE
 
 # Load the package from CRAN or from the tar
-# install.packages("MSGARCH") # !!! install version 2.1
-# install.packages("MSGARCH_2.1.tar.gz", repos = NULL)
+# install.packages("MSGARCH") # !!! install version 2.3
+# install.packages("MSGARCH_2.3.tar.gz", repos = NULL)
 
 #################################################################################
 ### PACKAGE MSGARCH
