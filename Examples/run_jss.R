@@ -6,7 +6,7 @@
 ### 'Markov-Switching GARCH Models in R: The MSGARCH Package'.
 
 ### !!! Results of the paper were obtained with the following setup:
-### !!! R version 3.4.3 (2017-11-30)
+### !!! R version 3.5.0 (2018-04-23)
 ### !!! Platform: x86_64-w64-mingw32/x64 (64-bit)
 ### !!! Running under: Windows 7 x64 (build 7601) Service Pack 1
 
