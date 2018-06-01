@@ -469,7 +469,7 @@ f_pw2pn_gjrGARCH_SR <- function(vPw, k, skew = NULL, shape = NULL, sDist) {
 
   dAlpha0 = exp(dAlpha0_tilde)
   dAlpha1 = f_map(dAlpha1_tilde, 1e-10, 0.9999)[1, 1]
-  dAlpha2 = f_map(dAlpha2_tilde, 1e-10, 0.9999 - dAlpha1)[1, 1]
+  dAlpha2 = f_map(dAlpha2_tilde, 1e-10, 2.0 * (0.9999 - dAlpha1))[1, 1]
 
   dBeta = f_map(dBeta_tilde, 1e-10, 0.9999 - dAlpha1 - dAlpha2 * dCdf)[1, 1]
 
@@ -500,7 +500,7 @@ f_pn2pw_gjrGARCH_SR <- function(vPn, k, skew = NULL, shape = NULL, sDist) {
 
   dAlpha0_tilde = log(dAlpha0)
   dAlpha1_tilde = f_unmap(dAlpha1, 1e-10, 0.9999)[1, 1]
-  dAlpha2_tilde = f_unmap(dAlpha2, 1e-10, 0.9999 - dAlpha1)[1, 1]
+  dAlpha2_tilde = f_unmap(dAlpha2, 1e-10, 2.0 * (0.9999 - dAlpha1))[1, 1]
 
   dBeta_tilde = f_unmap(dBeta, 1e-10, 0.9999 - dAlpha1 - dAlpha2 * dCdf)[1, 1]
 
