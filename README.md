@@ -50,7 +50,7 @@ Ardia, D., Bluteau, K., Boudt, K., Catania, A. Ghalanos, L., Peterson, B., Trott
 _MSGARCH package_  
 
 Ardia, D., Bluteau, K., Ruede, M. (2018).
-_Regime changes in Bitcoing GARCH volatility dynamics_.
+_Regime changes in Bitcoin GARCH volatility dynamics_.
 Working paper, Forthcoming in _Finance Research Letters_.
 http://dx.doi.org/10.2139/ssrn.3180830
 
