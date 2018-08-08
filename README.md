@@ -38,20 +38,20 @@ Please cite `MSGARCH` in publications:
 
 Ardia, D., Bluteau, K., Boudt, K., Catania, L., Trottier, D.-A. (2017).  
 _Markov-switching GARCH models in R: The MSGARCH package_.  
-Working paper, Forthcoming in _Journal of Statistical Software_.
+Working paper, Forthcoming in _Journal of Statistical Software_.  
 https://ssrn.com/abstract=2845809
 
 Ardia, D., Bluteau, K., Boudt, K., Catania, L. (2017).    
 _Forecasting risk with Markov-switching GARCH models: A large-scale performance study_.    
-Working paper, Forthcoming in _International Journal of Forecasting_.
+Working paper, Forthcoming in _International Journal of Forecasting_.  
 https://ssrn.com/abstract=2918413  
 
-Ardia, D., Bluteau, K., Boudt, K., Catania, A. Ghalanos, L., Peterson, B., Trottier, D.-A. (2018).    
+Ardia, D., Bluteau, K., Boudt, K., Catania, A. Ghalanos, L., Peterson, B., Trottier, D.-A. (2018).     
 _MSGARCH package_  
 
-Ardia, D., Bluteau, K., Ruede, M. (2018).
-_Regime changes in Bitcoin GARCH volatility dynamics_.
-Working paper, Forthcoming in _Finance Research Letters_.
+Ardia, D., Bluteau, K., Ruede, M. (2018).  
+_Regime changes in Bitcoin GARCH volatility dynamics_.  
+Working paper, Forthcoming in _Finance Research Letters_.  
 http://dx.doi.org/10.2139/ssrn.3180830
 
 ## Acknowledgements
