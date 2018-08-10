@@ -43,8 +43,8 @@ https://ssrn.com/abstract=2845809
 
 Ardia, D., Bluteau, K., Boudt, K., Catania, L. (2017).    
 _Forecasting risk with Markov-switching GARCH models: A large-scale performance study_.    
-Working paper, Forthcoming in _International Journal of Forecasting_.  
-https://ssrn.com/abstract=2918413  
+_International Journal of Forecasting_, 34(4), 733-747.    
+https://doi.org/10.1016/j.ijforecast.2018.05.004
 
 Ardia, D., Bluteau, K., Boudt, K., Catania, A. Ghalanos, L., Peterson, B., Trottier, D.-A. (2018).     
 _MSGARCH package_  
