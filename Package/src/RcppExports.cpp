@@ -6,21 +6,6 @@
 
 using namespace Rcpp;
 
-// f_RCPP_adaptMCMC
-arma::mat f_RCPP_adaptMCMC(const arma::rowvec theta0, Rcpp::Function func, double acc_rate, arma::mat sigma, int n_mcmc);
-RcppExport SEXP _MSGARCH_f_RCPP_adaptMCMC(SEXP theta0SEXP, SEXP funcSEXP, SEXP acc_rateSEXP, SEXP sigmaSEXP, SEXP n_mcmcSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::rowvec >::type theta0(theta0SEXP);
-    Rcpp::traits::input_parameter< Rcpp::Function >::type func(funcSEXP);
-    Rcpp::traits::input_parameter< double >::type acc_rate(acc_rateSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type sigma(sigmaSEXP);
-    Rcpp::traits::input_parameter< int >::type n_mcmc(n_mcmcSEXP);
-    rcpp_result_gen = Rcpp::wrap(f_RCPP_adaptMCMC(theta0, func, acc_rate, sigma, n_mcmc));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Decoding_HMM
 List Decoding_HMM(const arma::mat& allprobs, const arma::mat& mGamma, const int& T, const int& K);
 RcppExport SEXP _MSGARCH_Decoding_HMM(SEXP allprobsSEXP, SEXP mGammaSEXP, SEXP TSEXP, SEXP KSEXP) {
@@ -140,6 +125,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// f_RCPP_adaptMCMC
+arma::mat f_RCPP_adaptMCMC(const arma::rowvec theta0, Rcpp::Function func, double acc_rate, arma::mat sigma, int n_mcmc);
+RcppExport SEXP _MSGARCH_f_RCPP_adaptMCMC(SEXP theta0SEXP, SEXP funcSEXP, SEXP acc_rateSEXP, SEXP sigmaSEXP, SEXP n_mcmcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::rowvec >::type theta0(theta0SEXP);
+    Rcpp::traits::input_parameter< Rcpp::Function >::type func(funcSEXP);
+    Rcpp::traits::input_parameter< double >::type acc_rate(acc_rateSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< int >::type n_mcmc(n_mcmcSEXP);
+    rcpp_result_gen = Rcpp::wrap(f_RCPP_adaptMCMC(theta0, func, acc_rate, sigma, n_mcmc));
+    return rcpp_result_gen;
+END_RCPP
+}
 // dUnivLike
 double dUnivLike(const arma::vec& vZ, const std::string& sDist, const bool& bSkew, const double& dXi, const double& dNu);
 RcppExport SEXP _MSGARCH_dUnivLike(SEXP vZSEXP, SEXP sDistSEXP, SEXP bSkewSEXP, SEXP dXiSEXP, SEXP dNuSEXP) {
@@ -158,16 +158,15 @@ END_RCPP
 
 RcppExport SEXP _rcpp_module_boot_eGARCH();
 RcppExport SEXP _rcpp_module_boot_Ged();
-RcppExport SEXP _rcpp_module_boot_gjrGARCH();
 RcppExport SEXP _rcpp_module_boot_MSgarch();
 RcppExport SEXP _rcpp_module_boot_Normal();
-RcppExport SEXP _rcpp_module_boot_sARCH();
-RcppExport SEXP _rcpp_module_boot_sGARCH();
 RcppExport SEXP _rcpp_module_boot_Student();
 RcppExport SEXP _rcpp_module_boot_tGARCH();
+RcppExport SEXP _rcpp_module_boot_gjrGARCH();
+RcppExport SEXP _rcpp_module_boot_sARCH();
+RcppExport SEXP _rcpp_module_boot_sGARCH();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_MSGARCH_f_RCPP_adaptMCMC", (DL_FUNC) &_MSGARCH_f_RCPP_adaptMCMC, 5},
     {"_MSGARCH_Decoding_HMM", (DL_FUNC) &_MSGARCH_Decoding_HMM, 4},
     {"_MSGARCH_getDelta", (DL_FUNC) &_MSGARCH_getDelta, 2},
     {"_MSGARCH_Viterbi", (DL_FUNC) &_MSGARCH_Viterbi, 3},
@@ -177,16 +176,17 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MSGARCH_UnmapParameters_univ", (DL_FUNC) &_MSGARCH_UnmapParameters_univ, 3},
     {"_MSGARCH_SimplexUnmapping", (DL_FUNC) &_MSGARCH_SimplexUnmapping, 2},
     {"_MSGARCH_SimplexMapping", (DL_FUNC) &_MSGARCH_SimplexMapping, 2},
+    {"_MSGARCH_f_RCPP_adaptMCMC", (DL_FUNC) &_MSGARCH_f_RCPP_adaptMCMC, 5},
     {"_MSGARCH_dUnivLike", (DL_FUNC) &_MSGARCH_dUnivLike, 5},
     {"_rcpp_module_boot_eGARCH", (DL_FUNC) &_rcpp_module_boot_eGARCH, 0},
     {"_rcpp_module_boot_Ged", (DL_FUNC) &_rcpp_module_boot_Ged, 0},
-    {"_rcpp_module_boot_gjrGARCH", (DL_FUNC) &_rcpp_module_boot_gjrGARCH, 0},
     {"_rcpp_module_boot_MSgarch", (DL_FUNC) &_rcpp_module_boot_MSgarch, 0},
     {"_rcpp_module_boot_Normal", (DL_FUNC) &_rcpp_module_boot_Normal, 0},
-    {"_rcpp_module_boot_sARCH", (DL_FUNC) &_rcpp_module_boot_sARCH, 0},
-    {"_rcpp_module_boot_sGARCH", (DL_FUNC) &_rcpp_module_boot_sGARCH, 0},
     {"_rcpp_module_boot_Student", (DL_FUNC) &_rcpp_module_boot_Student, 0},
     {"_rcpp_module_boot_tGARCH", (DL_FUNC) &_rcpp_module_boot_tGARCH, 0},
+    {"_rcpp_module_boot_gjrGARCH", (DL_FUNC) &_rcpp_module_boot_gjrGARCH, 0},
+    {"_rcpp_module_boot_sARCH", (DL_FUNC) &_rcpp_module_boot_sARCH, 0},
+    {"_rcpp_module_boot_sGARCH", (DL_FUNC) &_rcpp_module_boot_sGARCH, 0},
     {NULL, NULL, 0}
 };
 

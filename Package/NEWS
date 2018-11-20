@@ -1,3 +1,5 @@
+Changes in Version 2.4
+  o Fixed issue with Fixed parameter
 Changes in Version 2.3
   o Alexios added as contributor
   o run_jss.R file updated
