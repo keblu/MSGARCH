@@ -246,6 +246,10 @@ f_StargingValues <- function(y, spec, ctr = NULL) {
       vPn <- f_remove_regimeconstpar(vPn, spec$regime.const.pars, K)
     }
 
+    if (isTRUE(spec$fixed.pars.bool)) {
+      vPn <- f_remove_fixedpar(vPn, spec$fixed.pars)
+    }
+    
     vPw <- f_unmapPar(vPn, spec, ctr$do.plm)
 
     dLLK <- f_nll(vPw, y, spec, ctr$do.plm)
@@ -263,6 +267,11 @@ f_StargingValues <- function(y, spec, ctr = NULL) {
       if (isTRUE(spec$regime.const.pars.bool)) {
         vPn <- f_remove_regimeconstpar(vPn, spec$regime.const.pars, K)
       }
+      
+      if (isTRUE(spec$fixed.pars.bool)) {
+        vPn <- f_remove_fixedpar(vPn, spec$fixed.pars)
+      }
+      
       vPw <- f_unmapPar(vPn, spec, ctr$do.plm)
 
     }

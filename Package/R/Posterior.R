@@ -7,7 +7,7 @@ f_posterior <- function(vPw, data, spec, PriorFun) {
 
   if (isTRUE(spec$fixed.pars.bool)) {
     vPn <- f_add_fixedpar(vPn, spec$fixed.pars)
-    vPn <- vPn[colnames(spec$par0)]
+    vPn <- vPn[names(spec$par0)]
   }
 
   if (isTRUE(spec$regime.const.pars.bool)) {
@@ -22,3 +22,4 @@ f_posterior <- function(vPw, data, spec, PriorFun) {
 
   return(dLLK)
 }
+

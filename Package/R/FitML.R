@@ -109,7 +109,7 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
   
   if (is.null(ctr$par0)) {
     vPw  <- f_StargingValues(data_, spec, ctr)
-    par0 <- matrix(f_mapPar(vPw, spec, ctr$do.plm), nrow = 1L, dimnames = list(NULL, names(vPw)))
+    par0 <- f_mapPar(vPw, spec, ctr$do.plm)
   } else {
     par0 = ctr$par0
     vPw <- f_unmapPar(par0, spec, ctr$do.plm)
@@ -117,7 +117,7 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
       vPw <- f_remove_regimeconstpar(vPw, spec$regime.const.pars, spec$K)
     }
     if (isTRUE(spec$fixed.pars.bool)) {
-      vPw <- f_substitute_fixedpar(vPw, spec$fixed.pars)
+      vPw <- f_remove_fixedpar(vPw, spec$fixed.pars)
     }
   }
   optimizer <- ctr$OptimFUN(vPw, f_nll, spec, data_, ctr$do.plm)
@@ -135,8 +135,8 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
   np <- length(vPw)
   
   if (isTRUE(spec$fixed.pars.bool)) {
-    vPn <- f_add_fixedpar(vPn, spec$fixed.pars)
-    vPn <- vPn[colnames(spec$par0)]
+    vPn <-  f_add_fixedpar(vPn, spec$fixed.pars)
+    vPn <- vPn[names(spec$par0)]
   }
   
   if (isTRUE(spec$regime.const.pars.bool)) {
@@ -152,8 +152,9 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
   if (isTRUE(spec$regime.const.pars.bool)) {
     vPww <- f_remove_regimeconstpar(vPww, spec$regime.const.pars, spec$K, for.se = TRUE)
   }
+
   if (isTRUE(spec$fixed.pars.bool)) {
-    vPww <- f_substitute_fixedpar(vPww, spec$fixed.pars)
+    vPww <- f_remove_fixedpar(vPww, spec$fixed.pars)
   }
   
   elapsed.time <- Sys.time() - time.start
