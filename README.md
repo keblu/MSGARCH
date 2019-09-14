@@ -7,6 +7,8 @@ Markov-switching GARCH models in R
 [![Pending Pull-Requests](http://githubbadges.herokuapp.com/keblu/MSGARCH/pulls.svg?style=flat)](https://github.com/keblu/MSGARCH/pulls)
 [![Github Issues](http://githubbadges.herokuapp.com/keblu/MSGARCH/issues.svg)](https://github.com/keblu/MSGARCH/issues)
 
+<a href='http://keblu.github.io/MSGARCH/'><img src='logo.png' align="right" height="138.5" /></a>
+
 ## Introduction
 
 Check the `MSGARCH` webpage at http://keblu.github.io/MSGARCH/
