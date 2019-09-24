@@ -1,0 +1,206 @@
+R version 3.5.0 (2018-04-23)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 17134)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.1252 
+[2] LC_CTYPE=English_United States.1252   
+[3] LC_MONETARY=English_United States.1252
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods  
+[7] base     
+
+other attached packages:
+[1] mcmc_0.9-5     zoo_1.8-4      GAS_0.2.6      MSGARCH_2.3   
+[5] usethis_1.5.0  devtools_2.0.2
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_0.12.16      compiler_3.5.0    xts_0.10-2       
+ [4] prettyunits_1.0.2 remotes_2.1.0     tools_3.5.0      
+ [7] testthat_2.0.0    digest_0.6.19     pkgbuild_1.0.3   
+[10] pkgload_1.0.2     memoise_1.1.0     lattice_0.20-38  
+[13] rlang_0.2.2.9000  Matrix_1.2-17     cli_1.1.0        
+[16] rstudioapi_0.7    parallel_3.5.0    expm_0.999-3     
+[19] coda_0.19-2       withr_2.1.2       desc_1.2.0       
+[22] fs_1.3.1          rprojroot_1.3-2   grid_3.5.0       
+[25] glue_1.3.0        R6_2.3.0          processx_3.3.1   
+[28] sessioninfo_1.1.1 Rsolnp_1.16       callr_3.2.0      
+[31] magrittr_1.5      backports_1.1.2   ps_1.3.0         
+[34] codetools_0.2-15  MASS_7.3-51.4     assertthat_0.2.0 
+[37] fanplot_3.4.1     numDeriv_2016.8-1 truncnorm_1.0-8  
+[40] crayon_1.3.4     
+
+
+SECTION 3.1
+-----------
+
+Specification type: Markov-switching
+Specification name: sGARCH_norm sGARCH_norm
+Number of parameters in each variance model: 3 3
+Number of parameters in each distribution: 0 0
+------------------------------------------
+Fixed parameters:
+None
+------------------------------------------
+Across regime constrained parameters:
+None
+------------------------------------------
+
+
+SECTION 3.2
+-----------
+
+Specification type: Markov-switching
+Specification name: sGARCH_norm sGARCH_norm
+Number of parameters in each variance model: 3 3
+Number of parameters in each distribution: 0 0
+------------------------------------------
+Fixed parameters:
+None
+------------------------------------------
+Across regime constrained parameters:
+None
+------------------------------------------
+Fitted parameters:
+         Estimate Std. Error t value  Pr(>|t|)
+alpha0_1   0.0007     0.0003   2.307 1.053e-02
+alpha1_1   0.0515     0.0184   2.796 2.590e-03
+beta_1     0.9178     0.0061 149.819    <1e-16
+alpha0_2   0.2813     0.1495   1.882 2.994e-02
+alpha1_2   0.4805     0.4764   1.008 1.566e-01
+beta_2     0.3996     0.2202   1.815 3.479e-02
+P_1_1      0.9109     0.0680  13.394    <1e-16
+P_2_1      0.5947     0.0369  16.127    <1e-16
+------------------------------------------
+Transition matrix:
+      t+1|k=1 t+1|k=2
+t|k=1  0.9109  0.0891
+t|k=2  0.5947  0.4053
+------------------------------------------
+Stable probabilities:
+State 1 State 2 
+ 0.8697  0.1303 
+------------------------------------------
+LL: -971.911
+AIC: 1959.822
+BIC: 2004.5245
+------------------------------------------
+Specification type: Markov-switching
+Specification name: sGARCH_norm sGARCH_norm
+Number of parameters in each variance model: 3 3
+Number of parameters in each distribution: 0 0
+------------------------------------------
+Fixed parameters:
+None
+------------------------------------------
+Across regime constrained parameters:
+None
+------------------------------------------
+Posterior sample (size: 1000)
+           Mean     SD     SE   TSSE    RNE
+alpha0_1 0.0011 0.0003 0.0000 0.0000 0.5000
+alpha1_1 0.0315 0.0074 0.0002 0.0003 0.4944
+beta_1   0.9401 0.0118 0.0004 0.0005 0.4751
+alpha0_2 0.6341 0.1200 0.0038 0.0061 0.3807
+alpha1_2 0.0756 0.0475 0.0015 0.0034 0.1900
+beta_2   0.0431 0.0680 0.0022 0.0043 0.2535
+P_1_1    0.9565 0.0095 0.0003 0.0004 0.5135
+P_2_1    0.1785 0.0286 0.0009 0.0018 0.2500
+------------------------------------------
+Posterior mean transition matrix:
+      t+1|k=1 t+1|k=2
+t|k=1  0.9565  0.0435
+t|k=2  0.1785  0.8215
+------------------------------------------
+Posterior mean stable probabilities:
+State 1 State 2 
+ 0.8042  0.1958 
+------------------------------------------
+Acceptance rate MCMC sampler: 27.6%
+nmcmc: 10000
+nburn: 5000
+nthin: 10
+------------------------------------------
+DIC: 1986.655
+------------------------------------------
+
+
+SECTION 3.3
+-----------
+
+   h=1    h=2    h=3    h=4    h=5 
+0.4006 0.3967 0.3836 0.3938 0.4004 
+
+      Sim #1   Sim #2  Sim #3    Sim #4
+h=1  0.27169  0.39881  0.3893 -0.185686
+h=2 -0.04223 -0.08693 -0.1556 -0.083054
+h=3 -0.03076 -0.55994  0.2884 -0.060956
+h=4  0.00159  0.27208 -0.1725  0.086989
+h=5 -0.18180 -0.06522 -1.6092  0.004029
+
+
+SECTION 3.4
+-----------
+
+      0.01    0.05
+h=1 -1.211 -0.5851
+h=2 -1.153 -0.5403
+h=3 -1.101 -0.5469
+h=4 -1.166 -0.5641
+h=5 -1.085 -0.5614
+      0.01    0.05
+h=1 -1.549 -0.9403
+h=2 -1.556 -0.9024
+h=3 -1.588 -0.9075
+h=4 -1.587 -0.9265
+h=5 -1.551 -0.9068
+
+
+SECTION 3.5
+-----------
+
+$draw
+     Sim #1 Sim #2
+t=1 -0.1322 0.1943
+t=2 -0.5581 0.2910
+t=3 -0.5703 0.6642
+t=4 -0.3568 0.2495
+
+$state
+    Sim #1 Sim #2
+t=1      1      2
+t=2      1      2
+t=3      2      2
+t=4      2      1
+
+$CondVol
+, , k=1
+
+    Sim #1 Sim #2
+t=1 0.2962 0.4212
+t=2 0.2866 0.4067
+t=3 0.3035 0.3961
+t=4 0.3193 0.4091
+
+, , k=2
+
+    Sim #1 Sim #2
+t=1 0.7095 0.7025
+t=2 0.7006 0.7047
+t=3 0.7919 0.7214
+t=4 0.8295 0.8374
+
+
+[1] 2005
+
+    State 1 State 2
+h=1 -0.4411  -1.293
+h=2 -0.4314  -1.515
+h=3 -0.4244  -1.633
+h=4 -0.4322  -1.724
+h=5 -0.4206  -1.742

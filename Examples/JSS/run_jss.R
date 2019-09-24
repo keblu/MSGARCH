@@ -1,8 +1,10 @@
+
 #################################################################################
 ### DESCRIPTION
+#################################################################################
 
 ### This code is used in the illustrations of
-### Ardia, Bluteau, Boudt, Catania & Trottier (2017)
+### Ardia, Bluteau, Boudt, Catania & Trottier
 ### 'Markov-Switching GARCH Models in R: The MSGARCH Package'.
 
 ### !!! Results of the paper were obtained with the following setup:
@@ -10,19 +12,10 @@
 ### !!! Platform: x86_64-w64-mingw32/x64 (64-bit)
 ### !!! Running under: Windows 7 x64 (build 7601) Service Pack 1
 
-### !!! RESULTS ARE PLATFORM DEPENDENT (but similar up to the 8th digits) !!!
-### !!! ALSO SET THE SEED PROPERLY !!!
-
-#################################################################################
-### LOAD THE PACKAGE
-
-# Load the package from CRAN or from the tar
-# install.packages("MSGARCH") # !!! install version 2.3
-# install.packages("MSGARCH_2.3.tar.gz", repos = NULL)
+### !!! RESULTS DEPEND ON THE SEED AND THE LINEAR ALGEBRA USED !!!
 
 #################################################################################
 ### PACKAGE MSGARCH
-### Reports the code used to generate full results in the paper
 #################################################################################
 
 rm(list = ls())
@@ -44,8 +37,8 @@ spec <- CreateSpec()
 summary(spec)
 
 ## Example 1: A single-regime model
-spec <- CreateSpec(variance.spec = list(model = c("sGARCH")),
-                   distribution.spec = list(distribution = c("norm")))
+spec <- CreateSpec(variance.spec = list(model = "sGARCH"),
+                   distribution.spec = list(distribution = "norm"))
 
 ## Example 2: A model with heterogeneous regimes
 spec <- CreateSpec(variance.spec = list(model = c("sGARCH", "tGARCH", "eGARCH")),
@@ -62,8 +55,8 @@ cat("SECTION 3.2\n")
 cat("-----------\n\n")
 
 data("dem2gbp", package = "MSGARCH")
-ms2.garch.n <- CreateSpec(variance.spec = list(model = c("sGARCH")),
-                          distribution.spec = list(distribution = c("norm")),
+ms2.garch.n <- CreateSpec(variance.spec = list(model = "sGARCH"),
+                          distribution.spec = list(distribution = "norm"),
                           switch.spec = list(K = 2))
 
 fit.ml <- FitML(spec = ms2.garch.n, data = dem2gbp)
@@ -73,7 +66,8 @@ set.seed(1234)
 fit.mcmc <- FitMCMC(spec = ms2.garch.n, data = dem2gbp)
 summary(fit.mcmc)
 
-######################################################
+####################################################
+
 cat("\n\n")
 cat("SECTION 3.3\n")
 cat("-----------\n\n")
@@ -97,7 +91,7 @@ cat("\n\n")
 cat("SECTION 3.5\n")
 cat("-----------\n\n")
 
-simulate(fit.ml, nsim = 2, nahead = 4, nburin = 500)
+simulate(fit.ml, nsim = 2, nahead = 4, nburn = 500)
 
 BIC(fit.ml)
 
@@ -112,7 +106,6 @@ sink()
 
 #################################################################################
 ### EMPIRICAL ILLUSTRATIONS
-### Reports the code used to generate full results in the paper
 #################################################################################
 
 rm(list = ls())
@@ -129,22 +122,19 @@ print(tmp)
 data("SMI", package = "MSGARCH")
 
 ## Create MS(2)-GJR-std specification (Ardia 2008 and Ardia et al. 2008)
-ms2.gjr.s <- CreateSpec(variance.spec = list(model = c("gjrGARCH")),
-                        distribution.spec = list(distribution = c("std")),
+ms2.gjr.s <- CreateSpec(variance.spec = list(model = "gjrGARCH"),
+                        distribution.spec = list(distribution = "std"),
                         switch.spec = list(K = 2),
                         constraint.spec = list(regime.const = "nu"))
 
 ## ML estimation
 fit.ml <- FitML(ms2.gjr.s, data = SMI)
 
-## BIC
-BIC(fit.ml)
-
 ## Summary
 summary(fit.ml)
 
 ## Unconditional vol
-set.seed(1234) 
+set.seed(1234)
 sqrt(250) * sapply(ExtractStateFit(fit.ml), UncVol)
 
 ## Smoothed probabilities in regime 2 and volatility
@@ -193,12 +183,12 @@ unlist(ucvol.bay)
 sapply(ucvol.draws, quantile, probs = c(0.025, 0.975))
 
 ## Impact of paramter uncertainty in pred
-n.mesh <- 1000
-x <- seq(from = -5, to = 0, length.out = n.mesh)
+nmesh <- 1000
+x <- seq(from = -5, to = 0, length.out = nmesh)
 pred.mle <- as.vector(PredPdf(fit.ml, x = x, nahead = 1))
 pred.bay <- as.vector(PredPdf(fit.mcmc, x = x, nahead = 1))
 
-pred.draws <- matrix(data = NA, nrow = nrow(draws), ncol = n.mesh)
+pred.draws <- matrix(data = NA, nrow = nrow(draws), ncol = nmesh)
 for (i in 1:nrow(draws)) {
   tmp <- PredPdf(ms2.gjr.s, par = draws[i,], x = x, data = SMI, nahead = 1)
   pred.draws[i,] <- as.vector(tmp)
@@ -207,36 +197,36 @@ for (i in 1:nrow(draws)) {
 ## Backtesting
 
 ## Create GJR-std specification for comparison
-gjr.s <- CreateSpec(variance.spec = list(model = c("gjrGARCH")),
-                    distribution.spec = list(distribution = c("std")),
+gjr.s <- CreateSpec(variance.spec = list(model = "gjrGARCH"),
+                    distribution.spec = list(distribution = "std"),
                     switch.spec = list(K = 1))
 
 models <- list(gjr.s, ms2.gjr.s)
 
-n.ots    <- 1000 # number of out-of-sample evaluation 
+n.ots    <- 1000 # number of out-of-sample evaluation
 n.its    <- 1500 # fit sample size
-alpha    <- 0.05 # risk Level 
+alpha    <- 0.05 # risk Level
 k.update <- 100  # estimation frequency
 
-## Initialization 
+## Initialization
 VaR   <- matrix(NA, nrow = n.ots, ncol = length(models))
 y.ots <- matrix(NA, nrow = n.ots, ncol = 1)
 model.fit <- vector(mode = "list", length = length(models))
 
 # iterate over out-of-sample time
-for (i in 1:n.ots) { 
+for (i in 1:n.ots) {
   cat("Backtest - Iteration: ", i, "\n")
-  y.its    <- SMI[i:(n.its + i - 1)] # in-sample data 
+  y.its    <- SMI[i:(n.its + i - 1)] # in-sample data
   y.ots[i] <- SMI[n.its + i]         # out-of-sample data
   
   # iterate over models
-  for (j in 1:length(models)) { 
+  for (j in 1:length(models)) {
     
     # do we update the model estimation
     if (k.update == 1 || i %% k.update == 1) {
       cat("Model", j, "is reestimated\n")
-      model.fit[[j]] <- FitML(spec = models[[j]], data = y.its, 
-                              ctr = list(do.se = FALSE)) 
+      model.fit[[j]] <- FitML(spec = models[[j]], data = y.its,
+                              ctr = list(do.se = FALSE))
     }
     
     # calculate VaR 1-step ahead
@@ -246,20 +236,20 @@ for (i in 1:n.ots) {
                      alpha   = alpha,
                      do.es   = FALSE,
                      do.its  = FALSE)$VaR
-  }                                
+  }
 }
 
 ## Test the VaR
 # install.packages("GAS")
 library("GAS")
 CC.pval <- DQ.pval <- vector("double", length(models))
-for (j in 1:length(models)) { 
+for (j in 1:length(models)) {
   test <- GAS::BacktestVaR(data  = y.ots,
                            VaR   = VaR[,j],
                            alpha = alpha)
   
-  CC.pval[j] <- test$LRcc[2]      
-  DQ.pval[j] <- test$DQ$pvalue  
+  CC.pval[j] <- test$LRcc[2]
+  DQ.pval[j] <- test$DQ$pvalue
 }
 names(CC.pval) <- names(DQ.pval) <- c("GJR-std", "MS2-GJR-std")
 
@@ -393,7 +383,7 @@ plot(y_ots, type = 'p', las = 1, lwd = 1, xlab = "Date (year)",
      ylab = "", col = "black", cex.axis = 1.5, cex.lab = 1.5, pch = 19)
 lines(VaR[,1], type = 'l', col = "red", lwd = 3, lty = "dashed")
 lines(VaR[,2], type = 'l', col = "blue", lwd = 3)
-legend("topleft", legend = c("VaR 5% - GJR-std", "VaR 5% - MS2-GJR-std"), 
+legend("topleft", legend = c("VaR 5% - GJR-std", "VaR 5% - MS2-GJR-std"),
        col = c("red", "blue"), lwd = 3, cex = 1.5, lty = c("dashed", "solid"))
 abline(h = 0)
 title("Backtesing VaR at 5% risk level", cex.main = 1.5)
