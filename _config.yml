@@ -1,4 +1,4 @@
-theme: jekyll-theme-cayman
+theme: jekyll-theme-tactile
 encoding: UTF-8
 Exclude: [Package,bin,test]
 plugins:
