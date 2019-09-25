@@ -1,4 +1,4 @@
-theme: jekyll-theme-midnight
+theme: jekyll-theme-cayman
 encoding: UTF-8
 Exclude: [Package,bin,test]
 plugins:
