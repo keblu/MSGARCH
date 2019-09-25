@@ -1,4 +1,4 @@
-theme: jekyll-theme-time-machine
+theme: jekyll-theme-slate
 encoding: UTF-8
 Exclude: [Package,bin,test]
 plugins:
