@@ -1,11 +1,9 @@
 ﻿[![Build Status](https://travis-ci.org/keblu/MSGARCH.svg?branch=master)](https://travis-ci.org/keblu/MSGARCH)
 [![CRAN](http://www.r-pkg.org/badges/version/MSGARCH)](https://cran.r-project.org/package=MSGARCH) [![Downloads](http://cranlogs.r-pkg.org/badges/MSGARCH?color=brightgreen)](http://www.r-pkg.org/pkg/MSGARCH)[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/MSGARCH?color=brightgreen)](http://www.r-pkg.org/pkg/MSGARCH)
- # MSGARCH
 <a href='http://keblu.github.io/MSGARCH/'><img src='hexmsgarch_small.png' align="right"  height="120"/></a>
+ # MSGARCH
+ 
 Markov-switching GARCH models in R
-
-
-
 
 ## Introduction
 
