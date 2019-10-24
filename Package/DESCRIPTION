@@ -25,6 +25,7 @@ Author: David Ardia [aut],
     Brian Peterson [ctb],
     Denis-Alexandre Trottier [aut]
 Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
+Description: Fit (by Maximum Likelihood or MCMC/Bayesian), simulate, and forecast various Markov-Switching GARCH models as described in Ardia et al. (2019) <doi:10.18637/jss.v091.i04>.
 License: GPL (>= 2)
 BugReports: https://github.com/keblu/MSGARCH/issues
 URL: https://github.com/keblu/MSGARCH

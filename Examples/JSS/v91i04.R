@@ -218,14 +218,17 @@ for (i in 1:n.ots) {
   cat("Backtest - Iteration: ", i, "\n")
   y.its    <- SMI[i:(n.its + i - 1)] # in-sample data
   y.ots[i] <- SMI[n.its + i]         # out-of-sample data
+
   # iterate over models
   for (j in 1:length(models)) {
+
     # do we update the model estimation
     if (k.update == 1 || i %% k.update == 1) {
       cat("Model", j, "is reestimated\n")
       model.fit[[j]] <- FitML(spec = models[[j]], data = y.its,
                               ctr = list(do.se = FALSE))
     }
+
     # calculate VaR 1-step ahead
     VaR[i,j] <- Risk(model.fit[[j]]$spec, par = model.fit[[j]]$par,
                      data = y.its,
@@ -244,6 +247,7 @@ for (j in 1:length(models)) {
   test <- GAS::BacktestVaR(data  = y.ots,
                            VaR   = VaR[,j],
                            alpha = alpha)
+
   CC.pval[j] <- test$LRcc[2]
   DQ.pval[j] <- test$DQ$pvalue
 }
