@@ -1,3 +1,4 @@
+#' @importFrom stats pnorm
 f_InferenceFun <- function(vPw, data, spec, do.plm, mNegHessian = NULL) {
   spec <- f_check_spec(spec)
   out  <- matrix(data = NA, nrow = length(vPw), ncol = 4L, dimnames = list(names(vPw), c("Estimate", "Std. Error",

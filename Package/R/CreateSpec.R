@@ -90,7 +90,7 @@
 #' Student-t distribution, and \code{"ged"} the GED distribution.
 #' Their skewed version, implemented via the Fernandez and & Steel (1998) transformation,
 #' are \code{"snorm"}, \code{"sstd"} and \code{"sged"}.
-#' Please see Ardia et al. (2017) for more details on the models and distributions.\cr
+#' Please see Ardia et al. (2019) for more details on the models and distributions.\cr
 #' The user must choose between \code{fixed} or \code{regime.const} in \code{contraint.spec}
 #' as both cannot be set at the same time. The \code{list} \code{fixed.pars}
 #' will ensure that the chosen fixed parameters will be fixed during optimization according to
@@ -102,33 +102,50 @@
 #' estimation via \code{\link{FitMCMC}} according to the inputed prior mean and standard deviation.
 #' Those prior means and standard deviations that are not set will take on preset default values (a mean 
 #' of zero and a variance of 1,000).
-#' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. & Trottier, D.-A. (2017).
-#' Markov-switching GARCH models in \R: The MSGARCH package.
-#' \url{https://ssrn.com/abstract=2845809}
+#' 
+#' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. Trottier, D.-A. (2019).
+#' Markov-switching GARCH models in \R: The \pkg{MSGARCH} package.
+#' \emph{Journal of Statistical Software}, 91(4), 1-38.
+#' \url{http://doi.org/10.18637/jss.v091.i04}
+#' 
 #' @references Engle, R. (1982).
 #' Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation
 #' \emph{Econometrica}, 50, 987-1008.
+#' 
 #' @references Bollerslev, T. (1986).
 #' Generalized autoregressive conditional heteroskedasticity.
 #' \emph{Journal of Econometrics}, 31, 307-327.
+#' \url{http://doi.org/10.1016/0304-4076(86)90063-1}
+#' 
 #' @references Fernandez, C. & Steel, M. F. (1998).
 #' On Bayesian modeling of fat tails and skewness.
 #' \emph{Journal of the American Statistical Association}, 93, 359-371.
+#' \url{http://doi.org/10.1080/01621459.1998.10474117}
+#' 
 #' @references Glosten, L. R. Jagannathan, R. & Runkle, D. E. (1993).
 #' On the relation between the expected value and the volatility of the nominal excess return on stocks.
 #' \emph{Journal of Finance}, 48, 1779-1801.
+#' \url{http://doi.org/10.1111/j.1540-6261.1993.tb05128.x}
+#' 
 #' @references Haas, M. Mittnik, S. & Paolella, M. S. (2004a).
 #' A new approach to Markov-switching GARCH models.
 #' \emph{Journal of Financial Econometrics}, 2, 493-530.
+#' \url{http://doi.org/10.1093/jjfinec/nbh020}
+#' 
 #' @references Haas, M. Mittnik, S. & Paolella, M. S. (2004b).
 #' Mixed normal conditional heteroskedasticity.
 #' \emph{Journal of Financial Econometrics}, 2, 211-250.
+#' \url{http://doi.org/10.1093/jjfinec/nbh009}
+#' 
 #' @references Nelson, D. B. (1991).
 #' Conditional heteroskedasticity in asset returns: A new approach.
 #' \emph{Econometrica}, 59, 347-370.
+#' 
 #' @references Zakoian, J.-M. (1994).
 #' Threshold heteroskedastic models.
 #' \emph{Journal of Economic Dynamics and Control}, 18, 931-955.
+#' \url{http://doi.org/10.1016/0165-1889(94)90039-6}
+#' 
 #' @examples
 #' # create a Markov-switching specification
 #' # MS-GARCH(1,1)-GJR(1,1)-Student

@@ -52,7 +52,7 @@
 #' Fletcher-Goldfarb-Shanno (BFGS) algorithm using the \code{optim} function with \code{method =
 #' "BFGS"}.
 #' Starting values when \code{par0} is not provided are chosen automatically
-#' before optimization (see Ardia et al. (2017) for more details)\cr
+#' before optimization (see Ardia et al. (2019) for more details)\cr
 #' \code{OptimFUN} allows for a custom optimizer to be used. The function must take
 #' the form: \cr \code{function(vPw, f_nll, spec, data, do.plm)}, \cr
 #' where \code{vPw} are starting parameters (transformed), \code{f_nll} is the function
@@ -65,6 +65,12 @@
 #' \item \code{value}: Optimal negative log-likelihood.
 #' \item \code{par}: Optimal parameters.
 #' }
+#' 
+#' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. Trottier, D.-A. (2019).
+#' Markov-switching GARCH models in \R: The \pkg{MSGARCH} package.
+#' \emph{Journal of Statistical Software}, 91(4), 1-38.
+#' \url{http://doi.org/10.18637/jss.v091.i04}
+#' 
 #' @examples
 #' # create model specification
 #' spec <- CreateSpec()

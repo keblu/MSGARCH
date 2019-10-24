@@ -23,9 +23,11 @@ Periodic autoregressive conditional heteroscedasticity.
 
 Brooks C., Burke S. P., Persand G. (2001)
 \emph{International Journal of Forecasting}, 17, 45-57.
+\url{http://doi.org/10.1016/S0169-2070(00)00070-4}
 
 McCullough B. D., Renfro C. G. (1999)
 Benchmarks and software standards: A case study of GARCH procedures. 
 \emph{Journal of Economic and Social Measurement}, 25, 59-71.
+\url{http://doi.org/10.3233/JEM-1999-0160}
 }
 \keyword{datasets}

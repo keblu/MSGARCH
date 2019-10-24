@@ -22,25 +22,37 @@ environment for Markov-switching GARCH models. Each single-regime process
 is a one-lag process (e.g., GARCH(1,1)).
 When optimization is performed, we ensure that the variance in each regime is covariance-stationary
 and strictly positive (refer to the vignette for more information).\cr
-We refer to Ardia et al. (2017) \url{https://ssrn.com/abstract=2845809} for a detailed
-introduction to the package and its usage.\cr
+We refer to Ardia et al. (2019a) for a detailed
+introduction to the package and its usage. Refer to Ardia et al. (2018) and Ardia et al. (2019b) for
+further applications. \cr
 The authors acknowledge Google for financial support via the Google Summer of Code 2016 & 2017,
 the International Institute of Forecasters and Industrielle-Alliance.
 }
 \references{
-Ardia, D. Bluteau, K. Boudt, K. Catania, L. & Trottier, D.-A. (2017).
+Ardia, D. Bluteau, K. Boudt, K. Catania, L. (2018).
+Forecasting risk with Markov-switching GARCH models: A large-scale performance study.
+\emph{International Journal of Forecasting}, 34(4), 733-747.
+\url{http://doi.org/10.1016/j.ijforecast.2018.05.004}
+
+Ardia, D. Bluteau, K. Boudt, K. Catania, L. Trottier, D.-A. (2019a).
 Markov-switching GARCH models in \R: The \pkg{MSGARCH} package.
-\url{https://ssrn.com/abstract=2845809}
+\emph{Journal of Statistical Software}, 91(4), 1-38.
+\url{http://doi.org/10.18637/jss.v091.i04}
+
+Ardia, D. Bluteau, K. Ruede, M. (2019b).
+Regime changes in Bitcoin GARCH volatility dynamics.
+\emph{Finance Research Letters}, 29, 266-271.
+\url{http://doi.org/10.1016/j.frl.2018.08.009}
 
 Eddelbuettel, D. & Francois, R. (2011).
 \pkg{Rcpp}: Seamless \R and \code{C++} integration.
 \emph{Journal of Statistical Software}, 40, 1-18.
-\url{http://www.jstatsoft.org/v40/i08/}
+\url{http://doi.org/10.18637/jss.v040.i08}
 
 Eddelbuettel, D. & Sanderson, C. (2014).
 \pkg{RcppArmadillo}: Accelerating \R with high-performance \code{C++} linear algebra.
 \emph{Computational Statistics & Data Analysis}, 71, 1054-1063.
-\url{http://dx.doi.org/10.1016/j.csda.2013.02.005}
+\url{http://doi.org/10.1016/j.csda.2013.02.005}
 
 Haas, M. Mittnik, S. & Paolella, MS. (2004).
 A new approach to Markov-switching GARCH models.

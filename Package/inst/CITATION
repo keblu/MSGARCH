@@ -1,39 +1,24 @@
-if(!exists("meta") || is.null(meta)) meta <- packageDescription("MSGARCH")
-year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
-vers <- paste("Version", meta$Version)
-
-citHeader("To cite 'MSGARCH' in publications use:")
-
-citEntry(entry = "manual",
-	 title = "{M}arkov-{S}witching {GARCH} Models in {R}: The {MSGARCH} Package",
-	 author = personList(person("David","Ardia"),
-                             person("Keven","Bluteau"),
-                             person("Kris","Boudt"),
-                             person("Leopoldo","Catania"),
-                             person("Alexios","Ghalanos"),
-                             person("Brian","Peterson"),
-                             person("Denis-Alexandre","Trottier")),
-	 url = "https://CRAN.R-project.org/package=MSGARCH",
-	 year = year,
-	 vers = vers,
-	 textVersion =
-         paste("David Ardia, Keven Bluteau, Kris Boudt, Leopoldo Catania, Alexios Ghalanos, 
-                Brian Peterson, Denis-Alexandre Trottier (", year,"). ",
-               "Markov-Switching GARCH Models in R: The MSGARCH Package. ", vers, ".", sep = "")
+bibentry(bibtype = "Article",
+  title        = "{M}arkov-Switching {GARCH} Models in {R}: The {MSGARCH} Package",
+  author       = c(person(given = "David",
+                          family = "Ardia"),
+                   person(given = "Kevin",
+                          family = "Bluteau"),
+                   person(given = "Kris",
+                          family = "Boudt",
+                          email = "kris.boudt@vub.be"),
+                   person(given = "Leopoldo",
+                          family = "Catania",
+                          email = "leopoldo.catania@econ.au.dk"),
+                   person(given = "Denis-Alexandre",
+                          family = "Trottier",
+                          email = "denis-alexandre.trottier.1@ulaval.ca")),
+  journal      = "Journal of Statistical Software",
+  year         = "2019",
+  volume       = "91",
+  number       = "4",
+  pages        = "1--38",
+  doi          = "10.18637/jss.v091.i04",
+  header       = "To cite MSGARCH in publications use:"
 )
 
-
-citEntry(entry = "Misc",
-  author = personList(person("David","Ardia"), 
-person("Keven","Bluteau"), 
-person("Kris","Boudt"), 
-person("Leopoldo","Catania"), 
-person("Denis-Alexandre","Trottier")),
-  title = "Markov-Switching {GARCH} Models in {R}: {T}he {MSGARCH} Package",
-  year = "2017",
-  note = "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2845809",
-  textVersion = paste(
-                "Ardia, David and Bluteau, Keven and Boudt, Kris and Catania, Leopoldo and Trottier, Denis-Alexandre (2017).",
-                "Markov-Switching GARCH Models in R: The MSGARCH Package.",
-                "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2845809/")
-)

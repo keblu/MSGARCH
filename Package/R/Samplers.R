@@ -1,4 +1,3 @@
-#' @import adaptMCMC
 f_SamplerFUNDefault <- function(f_posterior, data, spec, par0, ctr) {
   p.log <- function(vPw) {
     return(f_posterior(vPw = vPw, data = data, spec = spec, PriorFun = TRUE))

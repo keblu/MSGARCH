@@ -13,9 +13,9 @@ Risk(object, ...)
   nahead = 1L, do.es = TRUE, do.its = FALSE, do.cumulative = FALSE,
   ctr = list(), ...)
 
-\method{Risk}{MSGARCH_ML_FIT}(object, newdata = NULL, alpha = c(0.01, 0.05),
-  do.es = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
-  ctr = list(), ...)
+\method{Risk}{MSGARCH_ML_FIT}(object, newdata = NULL, alpha = c(0.01,
+  0.05), do.es = TRUE, do.its = FALSE, nahead = 1L,
+  do.cumulative = FALSE, ctr = list(), ...)
 
 \method{Risk}{MSGARCH_MCMC_FIT}(object, newdata = NULL, alpha = c(0.01,
   0.05), do.es = TRUE, do.its = FALSE, nahead = 1L,

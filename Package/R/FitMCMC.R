@@ -51,7 +51,7 @@
 #' The MCMC/Bayesian estimation relies on an \pkg{Rcpp} implementation of the adaptive sampler of Vihola (2012). 
 #' The implementation is based on the R package \pkg{adaptMCMC} (Andreas, 2012).
 #' Starting values when \code{par0} is not provided are chosen automatically
-#' before sampling (see Ardia et al. (2017) for more details).\cr
+#' before sampling (see Ardia et al. (2019) for more details).\cr
 #' \code{SamplerFUN} allows for a custom sampler to be used. The function
 #' must take the form: \cr \code{function(f_posterior, data, spec, par0, ctr)}, \cr
 #' where  \code{f_posterior} is the function to optimize, \code{data} is
@@ -61,25 +61,35 @@
 #' must be passed as inputs in the sampler (see *Examples*).
 #' The custom sampler must output a matrix containing the MCMC chain. \cr
 #' When \code{do.sort = TRUE}, sorting of each MCMC draw conditional on the unconditional variance is done across homogeneous regime specification.\cr
+#' 
 #' @references Andreas, S. (2012).
 #' \code{adaptMCMC}: Implementation of a generic adaptive Monte Carlo Markov chain sampler.
 #' \url{https://cran.r-project.org/package=adaptMCMC}
-#' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. & Trottier, D.-A. (2017).
-#' Markov-switching GARCH models in \R: The MSGARCH package.
-#' \url{https://ssrn.com/abstract=2845809}
+#' 
+#' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. Trottier, D.-A. (2019).
+#' Markov-switching GARCH models in \R: The \pkg{MSGARCH} package.
+#' \emph{Journal of Statistical Software}, 91(4), 1-38.
+#' \url{http://doi.org/10.18637/jss.v091.i04}
+#' 
 #' @references Geweke J (2007).
 #' Interpretation and Inference in Mixture Models: Simple MCMC Works.
 #' \emph{Computational Statistics & Data Analysis}, 51(7), 3529-3550.
+#' \url{http://doi.org/10.1016/j.csda.2006.11.026}
+#' 
 #' @references MacDonald, I.L., Zucchini, W. (1997).
 #' \emph{Hidden Markov and other models for discrete-valued time series}.
 #' CRC press.
+#' 
 #' @references Plummer, M. Best, N. Cowles, K. & Vines, K. (2006).
 #' \code{coda}: Convergence diagnosis and output analysis for MCMC.
 #' \emph{R News}, 6, 7-11.
 #' \url{https://cran.r-project.org/package=coda}
+#' 
 #' @references Vihola, M. (2012).
 #' Robust adaptive Metropolis algorithm with coerced acceptance rate.
 #' \emph{Statistics and Computing}, 22, 997-1008.
+#' \url{http://doi.org/10.1007/s11222-011-9269-5}
+#' 
 #' @examples
 #' # create model specification
 #' spec <- CreateSpec()

@@ -26,7 +26,7 @@
 #' par <- c(0.1, 0.1, 0.8, 0.2, 0.1, 0.8, 0.99, 0.01)
 #' set.seed(1234)
 #' sim <- simulate(object = spec, nsim = 1L, nahead = 1000L, 
-#'                 nburnin = 500L, par = par)
+#'                 nburn = 500L, par = par)
 #' head(sim)
 #' plot(sim)
 #' 
@@ -37,7 +37,7 @@
 #' fit <- FitML(spec = spec, data = SMI)
 #' set.seed(1234)
 #' sim <- simulate(object = fit, nsim = 1L, nahead = 1000L, 
-#'                 nburnin = 500L)
+#'                 nburn = 500L)
 #' head(sim)
 #' plot(sim)
 #' 
@@ -45,11 +45,12 @@
 #' # simulation from MCMC fit
 #' fit <- FitMCMC(spec = spec, data = SMI)
 #' set.seed(1234)
-#' sim <- simulate(object = fit, nahead = 100L, nburnin = 500L)
+#' sim <- simulate(object = fit, nahead = 100L, nburn = 500L)
 #' head(sim)
 #' plot(sim)
 #' }
 #' @rdname simulate
+#' @importFrom stats simulate
 #' @export
 simulate.MSGARCH_SPEC  <- function(object, nsim = 1L, seed = NULL, nahead = 1L,
                                    par = NULL, nburn = 500L, ...) {

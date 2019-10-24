@@ -134,6 +134,7 @@ summary.MSGARCH_ML_FIT <- function(object, ...) {
   return(invisible(out))
 }
 
+#' @export
 print.MSGARCH_ML_FIT <- function(x, ...) {
   out <- summary(x, ...)
   return(invisible(out))
@@ -201,6 +202,7 @@ summary.MSGARCH_MCMC_FIT <- function(object, ...) {
   return(invisible(out))
 }
 
+#' @export
 print.MSGARCH_MCMC_FIT <- function(x, ...) {
   out <- summary(x, ...)
   return(invisible(out))

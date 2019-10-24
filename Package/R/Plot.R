@@ -115,8 +115,9 @@ plot.MSGARCH_PSTATE <- function(x, type.prob = c("Smoothed"), date = NULL, main 
     }
     plot.func(tmp, generated.main = generate_main(i), ...)
   }
-  }
+}
 
+#'@export
 plot.MSGARCH_FORECAST <- function(x, ...){
   plot.MSGARCH_CONDVOL(x$vol)
   if(!is.null(x$draw)){

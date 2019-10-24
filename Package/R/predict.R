@@ -62,6 +62,7 @@
 #' plot(pred)
 #' }
 #' @rdname predict
+#' @importFrom stats predict
 #' @export
 predict.MSGARCH_SPEC <- function(object, newdata = NULL, nahead = 1L, 
                                  do.return.draw = FALSE, par = NULL, 
