@@ -5,16 +5,18 @@
  
 Markov-switching GARCH models in R
 
-## Introduction
-
-Check the `MSGARCH` webpage at http://keblu.github.io/MSGARCH/
-
-## References
+Cite the package in publications!
 
 **Ardia, D., Bluteau, K., Boudt, K., Catania, L., Trottier, D.-A. (2019).**  
 *Markov-switching GARCH models in R: The MSGARCH package</em>.*  
 Journal of Statistical Software, Vol 91, Issue 4, pp. 1-38.  
 https://doi.org/10.18637/jss.v091.i04
+
+## Introduction
+
+Check the `MSGARCH` webpage at http://keblu.github.io/MSGARCH/
+
+## References
 
 **Ardia, D., Bluteau, K., Boudt, K., Catania, L. (2018).**  
 *Forecasting risk with Markov-switching GARCH models: A large-scale performance study*  
