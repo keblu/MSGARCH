@@ -10,7 +10,7 @@ More about `MSGARCH` available at http://keblu.github.io/MSGARCH/.
 
 By using `MSGARCH` you agree to the following rules: 
 
-1) You must cite Ardia et al. (2019) in working papers and published papers that use `MSGARCH`.
+1) You must cite [Ardia et al. (2019)](https://doi.org/10.18637/jss.v091.i04) in working papers and published papers that use `MSGARCH`.
 2) You must place the following URL in a footnote to help others find `MSGARCH`: https://CRAN.R-project.org/package=MSGARCH. 
 3) You assume all risk for the use of `MSGARCH`.
 
