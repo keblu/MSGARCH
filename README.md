@@ -5,7 +5,7 @@
  
 Markov-switching GARCH models in R
 
-Please, cite the package in publications!
+**Please, cite the package in publications!**
 
 **Ardia, D., Bluteau, K., Boudt, K., Catania, L., Trottier, D.-A. (2019).**  
 *Markov-switching GARCH models in R: The MSGARCH package</em>.*  
