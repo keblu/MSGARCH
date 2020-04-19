@@ -7,8 +7,6 @@ More about `MSGARCH` available at http://keblu.github.io/MSGARCH/
 
 ## Please cite the package in publications!
 
-**Please cite the package in publications!**
-
 By using `MSGARCH` you agree to the following rules: 
 
 1) You must cite Ardia et al. (2019) in working papers and published papers that use `MSGARCH`.
