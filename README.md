@@ -1,7 +1,9 @@
-﻿[![Build Status](https://travis-ci.org/keblu/MSGARCH.svg?branch=master)](https://travis-ci.org/keblu/MSGARCH)
+# MSGARCH
+[![JSS](https://img.shields.io/badge/JSS-10.18637%2Fjss.v091.i04-brightgreen)](https://doi.org/10.18637/jss.v091.i04)
+[![Build Status](https://travis-ci.org/keblu/MSGARCH.svg?branch=master)](https://travis-ci.org/keblu/MSGARCH)
 [![CRAN](http://www.r-pkg.org/badges/version/MSGARCH)](https://cran.r-project.org/package=MSGARCH) [![Downloads](http://cranlogs.r-pkg.org/badges/MSGARCH?color=brightgreen)](http://www.r-pkg.org/pkg/MSGARCH)[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/MSGARCH?color=brightgreen)](http://www.r-pkg.org/pkg/MSGARCH)
 <a href='http://keblu.github.io/MSGARCH/'><img src='hexmsgarch_small.png' align="right"  height="120"/></a>
- # MSGARCH
+[![status](http://joss.theoj.org/papers/b52ded01411ff8f9f007b84a27e4d6d9/status.svg)](http://joss.theoj.org/papers/b52ded01411ff8f9f007b84a27e4d6d9)
  
 More about `MSGARCH` available at http://keblu.github.io/MSGARCH/.
 
