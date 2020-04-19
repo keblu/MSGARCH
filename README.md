@@ -9,13 +9,11 @@ Check the `MSGARCH` webpage at http://keblu.github.io/MSGARCH/
 
 **Please cite the package in publications!**
 
-When using `MSGARCH` in your publication, you agree that
+By using `MSGARCH` you agree to the following rules: 
 
-By using the package for your research, you agree to the following rules: 
-
-1) You must cite Ardia et al. (2019) in working papers and published papers that use the package.
+1) You must cite Ardia et al. (2019) in working papers and published papers that use `MSGARCH`.
 2) You must place the following URL in a footnote to help others find the package: https://CRAN.R-project.org/package=MSGARCH 
-3) You assume all risk for the use of the package.
+3) You assume all risk for the use of `MSGARCH`.
 
 **Ardia, D., Bluteau, K., Boudt, K., Catania, L., Trottier, D.-A. (2019).**  
 *Markov-switching GARCH models in R: The MSGARCH package</em>.*  
