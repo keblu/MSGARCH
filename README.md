@@ -3,7 +3,7 @@
 <a href='http://keblu.github.io/MSGARCH/'><img src='hexmsgarch_small.png' align="right"  height="120"/></a>
  # MSGARCH
  
-Markov-switching GARCH models in R
+Check the `MSGARCH` webpage at http://keblu.github.io/MSGARCH/
 
 ## Citation
 
@@ -13,10 +13,6 @@ Markov-switching GARCH models in R
 *Markov-switching GARCH models in R: The MSGARCH package</em>.*  
 Journal of Statistical Software, Vol 91, Issue 4, pp. 1-38.  
 https://doi.org/10.18637/jss.v091.i04
-
-## Introduction
-
-Check the `MSGARCH` webpage at http://keblu.github.io/MSGARCH/
 
 ## Other references
 
