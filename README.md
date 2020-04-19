@@ -15,18 +15,18 @@ By using `MSGARCH` you agree to the following rules:
 3) You assume all risk for the use of `MSGARCH`.
 
 **Ardia, D., Bluteau, K., Boudt, K., Catania, L., Trottier, D.-A. (2019).**  
-*Markov-switching GARCH models in R: The MSGARCH package</em>.*  
-Journal of Statistical Software, Vol 91, Issue 4, pp. 1-38.  
+Markov-switching GARCH models in R: The MSGARCH package.  
+_Journal of Statistical Software_, 91(4), 1-38.  
 https://doi.org/10.18637/jss.v091.i04
 
 ## Other references
 
 **Ardia, D., Bluteau, K., Boudt, K., Catania, L. (2018).**  
-*Forecasting risk with Markov-switching GARCH models: A large-scale performance study*  
-International Journal of Forecasting, Vol 34, Issue 4, pp. 733-747.                                             
+Forecasting risk with Markov-switching GARCH models: A large-scale performance study 
+_International Journal of Forecasting_, 34(4), 733-747.                                             
 https://doi.org/10.1016/j.ijforecast.2018.05.004
 
 **Ardia, D., Bluteau, K., Ruede, M. (2019).**  
-*Regime changes in Bitcoin GARCH volatility dynamics</em>.*  
-Finance Research Letters, Vol 29, pp. 266-271.                                       
+Regime changes in Bitcoin GARCH volatility dynamics.  
+_Finance Research Letters_, 29, 266-271.                                       
 https://doi.org/10.1016/j.frl.2018.08.009
