@@ -5,7 +5,7 @@
  
 More about `MSGARCH` available at http://keblu.github.io/MSGARCH/.
 
-## Please cite `MSGARCH` in publications!
+## Please cite the package in publications!
 
 By using `MSGARCH` you agree to the following rules: 
 
