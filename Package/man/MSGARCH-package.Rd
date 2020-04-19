@@ -28,6 +28,16 @@ further applications. \cr
 The authors acknowledge Google for financial support via the Google Summer of Code 2016 & 2017,
 the International Institute of Forecasters and Industrielle-Alliance.
 }
+\note{
+By using \pkg{MSGARCH} you agree to the following rules:
+\itemize{
+\item You must cite Ardia et al. (2019a) in working papers and published papers that use \pkg{MSGARCH}.
+Use \code{citation("MSGARCH")}.
+\item You must place the following URL in a footnote to help others find \pkg{MSGARCH}: 
+\url{https://CRAN.R-project.org/package=MSGARCH}.
+\item You assume all risk for the use of \pkg{MSGARCH}.
+}
+}
 \references{
 Ardia, D. Bluteau, K. Boudt, K. Catania, L. (2018).
 Forecasting risk with Markov-switching GARCH models: A large-scale performance study.
@@ -73,7 +83,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Keven Bluteau \email{Keven.Bluteau@unine.ch}
+\strong{Maintainer}: Keven Bluteau \email{Keven.Bluteau@hec.ca}
 
 Authors:
 \itemize{

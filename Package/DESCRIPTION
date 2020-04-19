@@ -1,12 +1,12 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 2.41
+Version: 2.42
 Date: 2019-10-24
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com"),
              person("Keven", "Bluteau", role = c("aut", "cre"),
-             email = "Keven.Bluteau@unine.ch"),
+             email = "Keven.Bluteau@hec.ca"),
              person("Kris", "Boudt", role = c("ctb"),
              email = "kris.boudt@vub.ac.be"),
              person("Leopoldo", "Catania", role = c("aut"),
@@ -24,7 +24,7 @@ Author: David Ardia [aut],
     Alexios Ghalanos [ctb],
     Brian Peterson [ctb],
     Denis-Alexandre Trottier [aut]
-Maintainer: Keven Bluteau <Keven.Bluteau@unine.ch>
+Maintainer: Keven Bluteau <Keven.Bluteau@hec.ca>
 Description: Fit (by Maximum Likelihood or MCMC/Bayesian), simulate, and forecast various Markov-Switching GARCH models as described in Ardia et al. (2019) <doi:10.18637/jss.v091.i04>.
 License: GPL (>= 2)
 BugReports: https://github.com/keblu/MSGARCH/issues
@@ -33,5 +33,5 @@ Imports: Rcpp, coda, methods,
          zoo, expm, fanplot, MASS, numDeriv
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: mcmc, testthat
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 NeedsCompilation: yes

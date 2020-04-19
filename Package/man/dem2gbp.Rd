@@ -4,7 +4,9 @@
 \name{dem2gbp}
 \alias{dem2gbp}
 \title{DEM/GBP exchange rate log-returns}
-\format{\code{vector} of size 1,974.}
+\format{
+\code{vector} of size 1,974.
+}
 \usage{
 data("dem2gbp")
 }

@@ -6,15 +6,36 @@
 \alias{predict.MSGARCH_MCMC_FIT}
 \title{predict method.}
 \usage{
-\method{predict}{MSGARCH_SPEC}(object, newdata = NULL, nahead = 1L,
-  do.return.draw = FALSE, par = NULL, do.cumulative = FALSE,
-  ctr = list(), ...)
+\method{predict}{MSGARCH_SPEC}(
+  object,
+  newdata = NULL,
+  nahead = 1L,
+  do.return.draw = FALSE,
+  par = NULL,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 
-\method{predict}{MSGARCH_ML_FIT}(object, newdata = NULL, nahead = 1L,
-  do.return.draw = FALSE, do.cumulative = FALSE, ctr = list(), ...)
+\method{predict}{MSGARCH_ML_FIT}(
+  object,
+  newdata = NULL,
+  nahead = 1L,
+  do.return.draw = FALSE,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 
-\method{predict}{MSGARCH_MCMC_FIT}(object, newdata = NULL, nahead = 1L,
-  do.return.draw = FALSE, do.cumulative = FALSE, ctr = list(), ...)
+\method{predict}{MSGARCH_MCMC_FIT}(
+  object,
+  newdata = NULL,
+  nahead = 1L,
+  do.return.draw = FALSE,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}

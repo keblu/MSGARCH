@@ -9,17 +9,42 @@
 \usage{
 PIT(object, ...)
 
-\method{PIT}{MSGARCH_SPEC}(object, x = NULL, par = NULL, data = NULL,
-  do.norm = FALSE, do.its = FALSE, nahead = 1L,
-  do.cumulative = FALSE, ctr = list(), ...)
+\method{PIT}{MSGARCH_SPEC}(
+  object,
+  x = NULL,
+  par = NULL,
+  data = NULL,
+  do.norm = FALSE,
+  do.its = FALSE,
+  nahead = 1L,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 
-\method{PIT}{MSGARCH_ML_FIT}(object, x = NULL, newdata = NULL,
-  do.norm = TRUE, do.its = FALSE, nahead = 1L,
-  do.cumulative = FALSE, ctr = list(), ...)
+\method{PIT}{MSGARCH_ML_FIT}(
+  object,
+  x = NULL,
+  newdata = NULL,
+  do.norm = TRUE,
+  do.its = FALSE,
+  nahead = 1L,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 
-\method{PIT}{MSGARCH_MCMC_FIT}(object, x = NULL, newdata = NULL,
-  do.norm = TRUE, do.its = FALSE, nahead = 1L,
-  do.cumulative = FALSE, ctr = list(), ...)
+\method{PIT}{MSGARCH_MCMC_FIT}(
+  object,
+  x = NULL,
+  newdata = NULL,
+  do.norm = TRUE,
+  do.its = FALSE,
+  nahead = 1L,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}

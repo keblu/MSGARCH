@@ -4,11 +4,13 @@
 \alias{CreateSpec}
 \title{Model specification.}
 \usage{
-CreateSpec(variance.spec = list(model = c("sGARCH", "sGARCH")),
+CreateSpec(
+  variance.spec = list(model = c("sGARCH", "sGARCH")),
   distribution.spec = list(distribution = c("norm", "norm")),
   switch.spec = list(do.mix = FALSE, K = NULL),
   constraint.spec = list(fixed = list(), regime.const = NULL),
-  prior = list(mean = list(), sd = list()))
+  prior = list(mean = list(), sd = list())
+)
 }
 \arguments{
 \item{variance.spec}{\code{list} with element \code{model}.

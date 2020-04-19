@@ -9,17 +9,42 @@
 \usage{
 PredPdf(object, ...)
 
-\method{PredPdf}{MSGARCH_SPEC}(object, x = NULL, par = NULL,
-  data = NULL, log = FALSE, do.its = FALSE, nahead = 1L,
-  do.cumulative = FALSE, ctr = list(), ...)
+\method{PredPdf}{MSGARCH_SPEC}(
+  object,
+  x = NULL,
+  par = NULL,
+  data = NULL,
+  log = FALSE,
+  do.its = FALSE,
+  nahead = 1L,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 
-\method{PredPdf}{MSGARCH_ML_FIT}(object, x = NULL, newdata = NULL,
-  log = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
-  ctr = list(), ...)
+\method{PredPdf}{MSGARCH_ML_FIT}(
+  object,
+  x = NULL,
+  newdata = NULL,
+  log = FALSE,
+  do.its = FALSE,
+  nahead = 1L,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 
-\method{PredPdf}{MSGARCH_MCMC_FIT}(object, x = NULL, newdata = NULL,
-  log = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,
-  ctr = list(), ...)
+\method{PredPdf}{MSGARCH_MCMC_FIT}(
+  object,
+  x = NULL,
+  newdata = NULL,
+  log = FALSE,
+  do.its = FALSE,
+  nahead = 1L,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{CreateSpec}}

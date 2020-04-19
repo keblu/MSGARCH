@@ -6,14 +6,19 @@
 \alias{simulate.MSGARCH_MCMC_FIT}
 \title{Simulation of MSGARCH processes.}
 \usage{
-\method{simulate}{MSGARCH_SPEC}(object, nsim = 1L, seed = NULL,
-  nahead = 1L, par = NULL, nburn = 500L, ...)
+\method{simulate}{MSGARCH_SPEC}(
+  object,
+  nsim = 1L,
+  seed = NULL,
+  nahead = 1L,
+  par = NULL,
+  nburn = 500L,
+  ...
+)
 
-\method{simulate}{MSGARCH_ML_FIT}(object, nsim = 1L, seed = NULL,
-  nahead = 1L, nburn = 500L, ...)
+\method{simulate}{MSGARCH_ML_FIT}(object, nsim = 1L, seed = NULL, nahead = 1L, nburn = 500L, ...)
 
-\method{simulate}{MSGARCH_MCMC_FIT}(object, nsim = 1L, seed = NULL,
-  nahead = 1L, nburn = 500L, ...)
+\method{simulate}{MSGARCH_MCMC_FIT}(object, nsim = 1L, seed = NULL, nahead = 1L, nburn = 500L, ...)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC} created with \code{\link{CreateSpec}}

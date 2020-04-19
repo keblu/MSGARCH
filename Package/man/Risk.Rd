@@ -9,17 +9,42 @@
 \usage{
 Risk(object, ...)
 
-\method{Risk}{MSGARCH_SPEC}(object, par, data, alpha = c(0.01, 0.05),
-  nahead = 1L, do.es = TRUE, do.its = FALSE, do.cumulative = FALSE,
-  ctr = list(), ...)
+\method{Risk}{MSGARCH_SPEC}(
+  object,
+  par,
+  data,
+  alpha = c(0.01, 0.05),
+  nahead = 1L,
+  do.es = TRUE,
+  do.its = FALSE,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 
-\method{Risk}{MSGARCH_ML_FIT}(object, newdata = NULL, alpha = c(0.01,
-  0.05), do.es = TRUE, do.its = FALSE, nahead = 1L,
-  do.cumulative = FALSE, ctr = list(), ...)
+\method{Risk}{MSGARCH_ML_FIT}(
+  object,
+  newdata = NULL,
+  alpha = c(0.01, 0.05),
+  do.es = TRUE,
+  do.its = FALSE,
+  nahead = 1L,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 
-\method{Risk}{MSGARCH_MCMC_FIT}(object, newdata = NULL, alpha = c(0.01,
-  0.05), do.es = TRUE, do.its = FALSE, nahead = 1L,
-  do.cumulative = FALSE, ctr = list(), ...)
+\method{Risk}{MSGARCH_MCMC_FIT}(
+  object,
+  newdata = NULL,
+  alpha = c(0.01, 0.05),
+  do.es = TRUE,
+  do.its = FALSE,
+  nahead = 1L,
+  do.cumulative = FALSE,
+  ctr = list(),
+  ...
+)
 }
 \arguments{
 \item{object}{Model specification of class \code{MSGARCH_SPEC}

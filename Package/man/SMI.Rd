@@ -4,7 +4,9 @@
 \name{SMI}
 \alias{SMI}
 \title{Swiss market index dataset}
-\format{\code{zoo} object containing 2,500 observations ranging from 1990-11-12 to 2000-10-20.}
+\format{
+\code{zoo} object containing 2,500 observations ranging from 1990-11-12 to 2000-10-20.
+}
 \source{
 \code{DEoptim} package
 }
