@@ -3,14 +3,14 @@
 <a href='http://keblu.github.io/MSGARCH/'><img src='hexmsgarch_small.png' align="right"  height="120"/></a>
  # MSGARCH
  
-More about `MSGARCH` available at http://keblu.github.io/MSGARCH/
+More about `MSGARCH` available at http://keblu.github.io/MSGARCH/.
 
 ## Please cite the package in publications!
 
 By using `MSGARCH` you agree to the following rules: 
 
 1) You must cite Ardia et al. (2019) in working papers and published papers that use `MSGARCH`.
-2) You must place the following URL in a footnote to help others find the package: https://CRAN.R-project.org/package=MSGARCH 
+2) You must place the following URL in a footnote to help others find the package: https://CRAN.R-project.org/package=MSGARCH. 
 3) You assume all risk for the use of `MSGARCH`.
 
 **Ardia, D., Bluteau, K., Boudt, K., Catania, L., Trottier, D.-A. (2019).**  
