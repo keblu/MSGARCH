@@ -2,7 +2,7 @@ Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
 Version: 2.42
-Date: 2019-10-24
+Date: 2020-04-19
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com",
 			 comment = c(ORCID = "0000-0003-2823-782X")),
@@ -21,13 +21,6 @@ Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "brian@braverock.com"),
              person("Denis-Alexandre", "Trottier", role = c("aut"),
              email = "denis-alexandre.trottier.1@ulaval.ca"))
-Author: David Ardia [aut],
-    Keven Bluteau [aut, cre],
-    Kris Boudt [ctb],
-    Leopoldo Catania [aut],
-    Alexios Ghalanos [ctb],
-    Brian Peterson [ctb],
-    Denis-Alexandre Trottier [aut]
 Maintainer: Keven Bluteau <Keven.Bluteau@hec.ca>
 Description: Fit (by Maximum Likelihood or MCMC/Bayesian), simulate, and forecast various Markov-Switching GARCH models as described in Ardia et al. (2019) <doi:10.18637/jss.v091.i04>.
 License: GPL (>= 2)
