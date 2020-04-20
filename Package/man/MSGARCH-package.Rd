@@ -83,18 +83,18 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Keven Bluteau \email{Keven.Bluteau@hec.ca}
+\strong{Maintainer}: Keven Bluteau \email{Keven.Bluteau@hec.ca} (\href{https://orcid.org/0000-0003-2990-4807}{ORCID})
 
 Authors:
 \itemize{
-  \item David Ardia \email{david.ardia.ch@gmail.com}
-  \item Leopoldo Catania \email{leopoldo.catania@econ.au.dk}
+  \item David Ardia \email{david.ardia.ch@gmail.com} (\href{https://orcid.org/0000-0003-2823-782X}{ORCID})
+  \item Leopoldo Catania \email{leopoldo.catania@econ.au.dk} (\href{https://orcid.org/0000-0002-0981-1921}{ORCID})
   \item Denis-Alexandre Trottier \email{denis-alexandre.trottier.1@ulaval.ca}
 }
 
 Other contributors:
 \itemize{
-  \item Kris Boudt \email{kris.boudt@vub.ac.be} [contributor]
+  \item Kris Boudt \email{kris.boudt@ugent.be} (\href{https://orcid.org/0000-0002-1000-5142}{ORCID}) [contributor]
   \item Alexios Ghalanos \email{alexios@4dscape.com} [contributor]
   \item Brian Peterson \email{brian@braverock.com} [contributor]
 }
