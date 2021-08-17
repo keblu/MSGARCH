@@ -16,7 +16,7 @@ using namespace arma;
 
 double dnormstd(const double& x) {
   double pdf;
-  pdf = exp(-0.5 * x * x) / sqrt(2.0 * PI);
+  pdf = exp(-0.5 * x * x) / sqrt(2.0 * M_PI);
   if (pdf == 0.0) pdf = 0.0 + 2.22507e-24;
   return pdf;
 }
@@ -45,7 +45,7 @@ double depsilon(void) {
 
 double xdt(const double& x, const double& nu) {
   double a, b, pdf;
-  a = Rf_gammafn((nu + 1.0) / 2.0) / sqrt(PI * nu);
+  a = Rf_gammafn((nu + 1.0) / 2.0) / sqrt(M_PI * nu);
   b = Rf_gammafn(nu / 2.0) * pow((1.0 + (x * x) / nu), ((nu + 1.0) / 2.0));
   pdf = a / b;
   return pdf;
@@ -98,7 +98,7 @@ double dsstdstd(const double& x, const double& xi, const double& nu) {
 double dsnormstd(const double& x, const double& xi) {
   double pdf;
   double mu, sigma, z, xxi, g;
-  double m1 = 2.0 / sqrt(2.0 * PI);
+  double m1 = 2.0 / sqrt(2.0 * M_PI);
   double m12 = m1 * m1;
   double xi2 = xi * xi;
   mu = m1 * (xi - 1.0 / xi);
