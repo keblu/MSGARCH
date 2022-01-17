@@ -114,12 +114,12 @@ Andreas, S. (2012).
 Ardia, D. Bluteau, K. Boudt, K. Catania, L. Trottier, D.-A. (2019).
 Markov-switching GARCH models in \R: The \pkg{MSGARCH} package.
 \emph{Journal of Statistical Software}, 91(4), 1-38.
-\url{http://doi.org/10.18637/jss.v091.i04}
+\doi{10.18637/jss.v091.i04}
 
 Geweke J (2007).
 Interpretation and Inference in Mixture Models: Simple MCMC Works.
 \emph{Computational Statistics & Data Analysis}, 51(7), 3529-3550.
-\url{http://doi.org/10.1016/j.csda.2006.11.026}
+\doi{10.1016/j.csda.2006.11.026}
 
 MacDonald, I.L., Zucchini, W. (1997).
 \emph{Hidden Markov and other models for discrete-valued time series}.
@@ -133,5 +133,5 @@ Plummer, M. Best, N. Cowles, K. & Vines, K. (2006).
 Vihola, M. (2012).
 Robust adaptive Metropolis algorithm with coerced acceptance rate.
 \emph{Statistics and Computing}, 22, 997-1008.
-\url{http://doi.org/10.1007/s11222-011-9269-5}
+\doi{10.1007/s11222-011-9269-5}
 }

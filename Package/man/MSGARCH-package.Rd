@@ -42,37 +42,37 @@ Use \code{citation("MSGARCH")}.
 Ardia, D. Bluteau, K. Boudt, K. Catania, L. (2018).
 Forecasting risk with Markov-switching GARCH models: A large-scale performance study.
 \emph{International Journal of Forecasting}, 34(4), 733-747.
-\url{http://doi.org/10.1016/j.ijforecast.2018.05.004}
+\doi{10.1016/j.ijforecast.2018.05.004}
 
 Ardia, D. Bluteau, K. Boudt, K. Catania, L. Trottier, D.-A. (2019a).
 Markov-switching GARCH models in \R: The \pkg{MSGARCH} package.
 \emph{Journal of Statistical Software}, 91(4), 1-38.
-\url{http://doi.org/10.18637/jss.v091.i04}
+\doi{10.18637/jss.v091.i04}
 
 Ardia, D. Bluteau, K. Ruede, M. (2019b).
 Regime changes in Bitcoin GARCH volatility dynamics.
 \emph{Finance Research Letters}, 29, 266-271.
-\url{http://doi.org/10.1016/j.frl.2018.08.009}
+\doi{10.1016/j.frl.2018.08.009}
 
 Eddelbuettel, D. & Francois, R. (2011).
 \pkg{Rcpp}: Seamless \R and \code{C++} integration.
 \emph{Journal of Statistical Software}, 40, 1-18.
-\url{http://doi.org/10.18637/jss.v040.i08}
+\doi{10.18637/jss.v040.i08}
 
 Eddelbuettel, D. & Sanderson, C. (2014).
 \pkg{RcppArmadillo}: Accelerating \R with high-performance \code{C++} linear algebra.
 \emph{Computational Statistics & Data Analysis}, 71, 1054-1063.
-\url{http://doi.org/10.1016/j.csda.2013.02.005}
+\doi{10.1016/j.csda.2013.02.005}
 
 Haas, M. Mittnik, S. & Paolella, MS. (2004).
 A new approach to Markov-switching GARCH models.
 \emph{Journal of Financial Econometrics}, 2, 493-530.
-\url{http://doi.org/10.1093/jjfinec/nbh020}
+\doi{10.1093/jjfinec/nbh020}
 
 Haas, M. Mittnik, S. & Paolella, M. S. (2004b).
 Mixed normal conditional heteroskedasticity.
 \emph{Journal of Financial Econometrics}, 2, 211-250.
-\url{http://doi.org/10.1093/jjfinec/nbh009}
+\doi{10.1093/jjfinec/nbh009}
 }
 \seealso{
 Useful links:
@@ -83,7 +83,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Keven Bluteau \email{Keven.Bluteau@hec.ca} (\href{https://orcid.org/0000-0003-2990-4807}{ORCID})
+\strong{Maintainer}: Keven Bluteau \email{Keven.Bluteau@usherbrooke.ca} (\href{https://orcid.org/0000-0003-2990-4807}{ORCID})
 
 Authors:
 \itemize{

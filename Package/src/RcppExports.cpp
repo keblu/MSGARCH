@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // Decoding_HMM
 List Decoding_HMM(const arma::mat& allprobs, const arma::mat& mGamma, const int& T, const int& K);
 RcppExport SEXP _MSGARCH_Decoding_HMM(SEXP allprobsSEXP, SEXP mGammaSEXP, SEXP TSEXP, SEXP KSEXP) {

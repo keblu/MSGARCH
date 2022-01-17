@@ -20,6 +20,6 @@ See Mullen et al. (2011) for a description of this dataset.
 Mullen, K.M, Ardia, D., Gil, D., Windover, D., Cline, J. (2011).
 \code{DEoptim}: An R Package for Global Optimization by Differential Evolution. 
 \emph{Journal of Statistical Software}, 40(6), 1-26.
-\url{http://doi.org/10.18637/jss.v040.i06}
+\doi{10.18637/jss.v040.i06}
 }
 \keyword{datasets}

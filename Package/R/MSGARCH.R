@@ -32,37 +32,37 @@
 #' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. (2018).
 #' Forecasting risk with Markov-switching GARCH models: A large-scale performance study.
 #' \emph{International Journal of Forecasting}, 34(4), 733-747.
-#' \url{http://doi.org/10.1016/j.ijforecast.2018.05.004}
+#' \doi{10.1016/j.ijforecast.2018.05.004}
 #' 
 #' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. Trottier, D.-A. (2019a).
 #' Markov-switching GARCH models in \R: The \pkg{MSGARCH} package.
 #' \emph{Journal of Statistical Software}, 91(4), 1-38.
-#' \url{http://doi.org/10.18637/jss.v091.i04}
+#' \doi{10.18637/jss.v091.i04}
 #' 
 #' @references Ardia, D. Bluteau, K. Ruede, M. (2019b).
 #' Regime changes in Bitcoin GARCH volatility dynamics.
 #' \emph{Finance Research Letters}, 29, 266-271.
-#' \url{http://doi.org/10.1016/j.frl.2018.08.009}
+#' \doi{10.1016/j.frl.2018.08.009}
 #' 
 #' @references Eddelbuettel, D. & Francois, R. (2011).
 #' \pkg{Rcpp}: Seamless \R and \code{C++} integration.
 #' \emph{Journal of Statistical Software}, 40, 1-18.
-#' \url{http://doi.org/10.18637/jss.v040.i08}
+#' \doi{10.18637/jss.v040.i08}
 #' 
 #' @references Eddelbuettel, D. & Sanderson, C. (2014).
 #' \pkg{RcppArmadillo}: Accelerating \R with high-performance \code{C++} linear algebra.
 #' \emph{Computational Statistics & Data Analysis}, 71, 1054-1063.
-#' \url{http://doi.org/10.1016/j.csda.2013.02.005}
+#' \doi{10.1016/j.csda.2013.02.005}
 #' 
 #' @references Haas, M. Mittnik, S. & Paolella, MS. (2004).
 #' A new approach to Markov-switching GARCH models.
 #' \emph{Journal of Financial Econometrics}, 2, 493-530.
-#' \url{http://doi.org/10.1093/jjfinec/nbh020} 
+#' \doi{10.1093/jjfinec/nbh020} 
 #' 
 #' @references Haas, M. Mittnik, S. & Paolella, M. S. (2004b).
 #' Mixed normal conditional heteroskedasticity.
 #' \emph{Journal of Financial Econometrics}, 2, 211-250.
-#' \url{http://doi.org/10.1093/jjfinec/nbh009}
+#' \doi{10.1093/jjfinec/nbh009}
 #' 
 #' @useDynLib MSGARCH, .registration = TRUE
 "_PACKAGE"
@@ -80,7 +80,7 @@
 #'@references Mullen, K.M, Ardia, D., Gil, D., Windover, D., Cline, J. (2011).
 #'\code{DEoptim}: An R Package for Global Optimization by Differential Evolution. 
 #'\emph{Journal of Statistical Software}, 40(6), 1-26.
-#'\url{http://doi.org/10.18637/jss.v040.i06}
+#'\doi{10.18637/jss.v040.i06}
 #'
 #'@keywords datasets
 NULL
@@ -106,12 +106,12 @@ NULL
 #'@references Brooks C., Burke S. P., Persand G. (2001)
 # Benchmarks and the accuracy of GARCH model estimation.
 #'\emph{International Journal of Forecasting}, 17, 45-57.
-#'\url{http://doi.org/10.1016/S0169-2070(00)00070-4}
+#'\doi{10.1016/S0169-2070(00)00070-4}
 #'
 #'@references McCullough B. D., Renfro C. G. (1999)
 #'Benchmarks and software standards: A case study of GARCH procedures. 
 #'\emph{Journal of Economic and Social Measurement}, 25, 59-71.
-#'\url{http://doi.org/10.3233/JEM-1999-0160}
+#'\doi{10.3233/JEM-1999-0160}
 #'
 #'@keywords datasets
 NULL

@@ -69,7 +69,7 @@
 #' @references Ardia, D. Bluteau, K. Boudt, K. Catania, L. Trottier, D.-A. (2019).
 #' Markov-switching GARCH models in \R: The \pkg{MSGARCH} package.
 #' \emph{Journal of Statistical Software}, 91(4), 1-38.
-#' \url{http://doi.org/10.18637/jss.v091.i04}
+#' \doi{10.18637/jss.v091.i04}
 #' 
 #' @examples
 #' # create model specification

@@ -47,5 +47,5 @@ DIC(fit)
 Spiegelhalter, David J., et al. (2002).
 Bayesian measures of model complexity and fit.
 \emph{Journal of the Royal Statistical Society: Series B}, 64, 583-639
-\url{http://doi.org/10.1111/1467-9868.00353}
+\doi{10.1111/1467-9868.00353}
 }

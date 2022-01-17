@@ -61,7 +61,6 @@
 #' pred <- predict(object = fit, nahead = 5L, do.return.draw = TRUE)
 #' plot(pred)
 #' }
-#' @rdname predict
 #' @importFrom stats predict
 #' @export
 predict.MSGARCH_SPEC <- function(object, newdata = NULL, nahead = 1L, 

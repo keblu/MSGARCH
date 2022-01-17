@@ -26,6 +26,7 @@
 #' print(trans.mat)
 #' @importFrom stats quantile
 #' @import expm
+#' @rdname TransMat 
 #' @export
 TransMat <- function(object, ...) {
   UseMethod(generic = "TransMat", object = object)

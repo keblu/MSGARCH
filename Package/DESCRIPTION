@@ -1,13 +1,13 @@
 Package: MSGARCH
 Type: Package
 Title: Markov-Switching GARCH Models
-Version: 2.42
-Date: 2020-04-19
+Version: 2.50
+Date: 2022-01-11
 Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "david.ardia.ch@gmail.com",
 			 comment = c(ORCID = "0000-0003-2823-782X")),
              person("Keven", "Bluteau", role = c("aut", "cre"),
-             email = "Keven.Bluteau@hec.ca",
+             email = "Keven.Bluteau@usherbrooke.ca",
 			 comment = c(ORCID = "0000-0003-2990-4807")),
              person("Kris", "Boudt", role = c("ctb"),
              email = "kris.boudt@ugent.be",
@@ -21,7 +21,7 @@ Authors@R: c(person("David", "Ardia", role = c("aut"),
              email = "brian@braverock.com"),
              person("Denis-Alexandre", "Trottier", role = c("aut"),
              email = "denis-alexandre.trottier.1@ulaval.ca"))
-Maintainer: Keven Bluteau <Keven.Bluteau@hec.ca>
+Maintainer: Keven Bluteau <Keven.Bluteau@usherbrooke.ca>
 Description: Fit (by Maximum Likelihood or MCMC/Bayesian), simulate, and forecast various Markov-Switching GARCH models as described in Ardia et al. (2019) <doi:10.18637/jss.v091.i04>.
 License: GPL (>= 2)
 BugReports: https://github.com/keblu/MSGARCH/issues
@@ -30,5 +30,6 @@ Imports: Rcpp, coda, methods,
          zoo, expm, fanplot, MASS, numDeriv
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: mcmc, testthat
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 NeedsCompilation: yes
+Encoding: UTF-8

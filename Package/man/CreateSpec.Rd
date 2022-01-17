@@ -178,7 +178,7 @@ print(spec)
 Ardia, D. Bluteau, K. Boudt, K. Catania, L. Trottier, D.-A. (2019).
 Markov-switching GARCH models in \R: The \pkg{MSGARCH} package.
 \emph{Journal of Statistical Software}, 91(4), 1-38.
-\url{http://doi.org/10.18637/jss.v091.i04}
+\doi{10.18637/jss.v091.i04}
 
 Engle, R. (1982).
 Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation
@@ -187,27 +187,27 @@ Autoregressive conditional heteroscedasticity with estimates of the variance of 
 Bollerslev, T. (1986).
 Generalized autoregressive conditional heteroskedasticity.
 \emph{Journal of Econometrics}, 31, 307-327.
-\url{http://doi.org/10.1016/0304-4076(86)90063-1}
+\doi{10.1016/0304-4076(86)90063-1}
 
 Fernandez, C. & Steel, M. F. (1998).
 On Bayesian modeling of fat tails and skewness.
 \emph{Journal of the American Statistical Association}, 93, 359-371.
-\url{http://doi.org/10.1080/01621459.1998.10474117}
+\doi{10.1080/01621459.1998.10474117}
 
 Glosten, L. R. Jagannathan, R. & Runkle, D. E. (1993).
 On the relation between the expected value and the volatility of the nominal excess return on stocks.
 \emph{Journal of Finance}, 48, 1779-1801.
-\url{http://doi.org/10.1111/j.1540-6261.1993.tb05128.x}
+\doi{10.1111/j.1540-6261.1993.tb05128.x}
 
 Haas, M. Mittnik, S. & Paolella, M. S. (2004a).
 A new approach to Markov-switching GARCH models.
 \emph{Journal of Financial Econometrics}, 2, 493-530.
-\url{http://doi.org/10.1093/jjfinec/nbh020}
+\doi{10.1093/jjfinec/nbh020}
 
 Haas, M. Mittnik, S. & Paolella, M. S. (2004b).
 Mixed normal conditional heteroskedasticity.
 \emph{Journal of Financial Econometrics}, 2, 211-250.
-\url{http://doi.org/10.1093/jjfinec/nbh009}
+\doi{10.1093/jjfinec/nbh009}
 
 Nelson, D. B. (1991).
 Conditional heteroskedasticity in asset returns: A new approach.
@@ -216,5 +216,5 @@ Conditional heteroskedasticity in asset returns: A new approach.
 Zakoian, J.-M. (1994).
 Threshold heteroskedastic models.
 \emph{Journal of Economic Dynamics and Control}, 18, 931-955.
-\url{http://doi.org/10.1016/0165-1889(94)90039-6}
+\doi{10.1016/0165-1889(94)90039-6}
 }
