@@ -1,3 +1,5 @@
+Changes in Version 2.51
+  o Fix warning: use of bitwise '|' with boolean operands
 Changes in Version 2.5
   o Fix for Rcpp change
 Changes in Version 2.43
