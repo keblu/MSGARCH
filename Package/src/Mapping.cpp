@@ -50,7 +50,7 @@ arma::vec MapParameters_univ(const arma::vec& vTheta_tilde,
   arma::vec vTheta(iL);
 
   if (!bSkew) {
-    if ((Dist == "std") | (Dist == "ged")) {
+    if ((Dist == "std") || (Dist == "ged")) {
       double dNu_tilde = vTheta_tilde(0);
 
       double dNu = Map(dNu_tilde, dLowerShape, dUpperShape);
@@ -58,7 +58,7 @@ arma::vec MapParameters_univ(const arma::vec& vTheta_tilde,
       vTheta(0) = dNu;
     }
   } else {
-    if ((Dist == "std") | (Dist == "ged")) {
+    if ((Dist == "std") || (Dist == "ged")) {
       double dNu_tilde = vTheta_tilde(0);
       double dXi_tilde = vTheta_tilde(1);
 
@@ -88,7 +88,7 @@ arma::vec UnmapParameters_univ(const arma::vec& vTheta, const std::string& Dist,
   arma::vec vTheta_tilde(iL);
 
   if (!bSkew) {
-    if ((Dist == "std") | (Dist == "ged")) {
+    if ((Dist == "std") || (Dist == "ged")) {
       double dNu = vTheta(0);
 
       double dNu_tilde = Unmap(dNu, dLowerShape, dUpperShape);
@@ -96,7 +96,7 @@ arma::vec UnmapParameters_univ(const arma::vec& vTheta, const std::string& Dist,
       vTheta_tilde(0) = dNu_tilde;
     }
   } else {
-    if ((Dist == "std") | (Dist == "ged")) {
+    if ((Dist == "std") || (Dist == "ged")) {
       double dNu = vTheta(0);
       double dXi = vTheta(1);
 
