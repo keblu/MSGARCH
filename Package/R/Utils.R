@@ -421,5 +421,8 @@ f_check_parameterPriorSd <- function(prior.sd, vParNames) {
 
 
 dofMSGARCH = function(object){
-  return(length(object$spec$par0) - length(object$spec[["regime.const.pars"]]) - length(object$spec[["fixed.pars"]]))
+  # each regime-constant parameter removes K - 1 free parameters, not one
+  return(length(object$spec$par0)
+         - length(object$spec[["regime.const.pars"]]) * (object$spec$K - 1L)
+         - length(object$spec[["fixed.pars"]]))
 }
