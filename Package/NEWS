@@ -1,3 +1,10 @@
+Changes in Version 2.52
+  o Fixed the standard errors reported by summary(): the delta-method sandwich was transposed
+  o Pr(>|t|) in summary() is now the two-sided p-value, as its label states
+  o AIC/BIC now drop K-1 degrees of freedom per regime-constant parameter, not one
+  o Saved specifications and fits (saveRDS/readRDS) are usable again: the Rcpp modules are rebuilt
+  o predict() on an MCMC fit now averages over the posterior draws instead of returning the first draw
+  o Added regression tests for all of the above
 Changes in Version 2.51
   o Fix warning: use of bitwise '|' with boolean operands
 Changes in Version 2.5
