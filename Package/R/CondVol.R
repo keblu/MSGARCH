@@ -29,7 +29,7 @@ f_CondVol <- function(object, par, data, do.its = FALSE, nahead = 1L, do.cumulat
   vol <- sqrt(vol)
   draw <- NULL
   if (!isTRUE(do.its)) {
-    tmp    <- mean(vol[dim(PredProb)[1]])
+    tmp    <- mean(vol[dim(PredProb)[1], ])
     vol    <- vector(mode = "numeric", length = nahead)
     vol[1] <- tmp
     if (nahead > 1) {
