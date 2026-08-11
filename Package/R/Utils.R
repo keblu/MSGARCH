@@ -345,15 +345,18 @@ f_check_spec <- function(spec) {
     FALSE
   })
   if (!isTRUE(is.OK)) {
+    # The Rcpp module objects behind spec$rcpp.func do not survive
+    # serialization (saveRDS / parallel workers), so rebuild them. The prior
+    # mean and sd must be read from the R-side copies kept in the spec: the
+    # C++ getters go through the very pointer that is already dead.
     spec.new = f_spec(models = spec$name, do.mix = spec$is.mix)
-    prior.mean = spec$rcpp.func$get_mean()
-    prior.sd = spec$rcpp.func$get_sd()
-    names(prior.mean) = names(prior.sd) = spec$label[1:length(prior.mean)]
-    prior.mean[names(spec$prior.mean)] = spec$prior.mean
-    prior.sd[names(spec$prior.sd)] = spec$prior.sd
     spec$rcpp.func = spec.new$rcpp.func
-    spec$rcpp.func$set_mean(spec$prior.mean)
-    spec$rcpp.func$set_sd(spec$prior.sd)
+    if (!is.null(spec$prior.mean)) {
+      spec$rcpp.func$set_mean(spec$prior.mean)
+    }
+    if (!is.null(spec$prior.sd)) {
+      spec$rcpp.func$set_sd(spec$prior.sd)
+    }
   }
   return(spec)
 }
