@@ -35,12 +35,12 @@ f_InferenceFun <- function(vPw, data, spec, do.plm, mNegHessian = NULL) {
   
   mJacob      <- numDeriv::jacobian(f_mapPar, vPw_mod, spec = spec, do.plm = do.plm)
   mInvHessian <- MASS::ginv(mNegHessian)
-  mSandwitch  <- t(mJacob) %*% mInvHessian %*% mJacob
+  mSandwitch  <- mJacob %*% mInvHessian %*% t(mJacob)
   
   vSE   <- sqrt(diag(mSandwitch))
   vTest <- vPn/vSE
   
-  vPvalues <- 1 - pnorm(abs(vTest))
+  vPvalues <- 2 * (1 - pnorm(abs(vTest)))
   
   out[, "Estimate"]   <- vPn
   out[, "Std. Error"] <- vSE
