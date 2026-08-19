@@ -396,7 +396,7 @@ inline NumericVector MSgarch::f_pdf(const NumericVector& x,
   
   if (is_log) {
     for (int i = 0; i < nx; i++) {
-      out[i] = log(tmp[i]);
+      out[i] = log(out[i]);
     }
   }
   
@@ -471,7 +471,7 @@ inline NumericVector MSgarch::f_cdf(const NumericVector& x,
   
   if (is_log) {
     for (int i = 0; i < nx; i++) {
-      out[i] = log(tmp[i]);
+      out[i] = log(out[i]);
     }
   }
   

@@ -39,3 +39,21 @@ testthat::test_that("In-sample CDF accepts a grid longer than the sample", {
   )
 
 })
+
+testthat::test_that("The log branches return the mixture, not the last regime", {
+
+  x <- c(-3, -1, 0, 1, 3)
+
+  pdf.lin <- spec$rcpp.func$pdf_Rcpp(x, par, y, FALSE)
+  pdf.log <- spec$rcpp.func$pdf_Rcpp(x, par, y, TRUE)
+  testthat::expect_true(max(abs(exp(pdf.log) - pdf.lin)) < 1e-12)
+
+  cdf.lin <- spec$rcpp.func$cdf_Rcpp(x, par, y, FALSE)
+  cdf.log <- spec$rcpp.func$cdf_Rcpp(x, par, y, TRUE)
+  testthat::expect_true(max(abs(exp(cdf.log) - cdf.lin)) < 1e-12)
+
+  # guard: the regimes must actually differ here, otherwise "mixture" and
+  # "last regime" would coincide and this would prove nothing
+  testthat::expect_true(diff(range(spec$rcpp.func$unc_vol_Rcpp(matrix(par, nrow = 1L)))) > 1)
+
+})
