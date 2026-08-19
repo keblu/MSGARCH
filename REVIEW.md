@@ -21,7 +21,20 @@ density, CDF, quantile function and truncated moment in `Normal.h` / `Student.h`
 > (new) and one block appended to `tests/testthat/test_Volatility.R`: 11 blocks / 34
 > assertions, all passing on the patched build and all 11 failing on stock 2.51.
 > `DESCRIPTION`'s version and `NEWS` are untouched — that is a release decision for the
-> maintainer. Everything from **B2** onwards is still open.
+> maintainer.
+>
+> **Second pass (2026-08-19).** A CRAN-readiness audit by Codex over the patched tree
+> re-found **C2** and **C1** and added four items this review had not covered: an obsolete
+> `Rcpp:::LdFlags()` in both `Makevars`, a vacuous assertion in the shipped BIC test
+> (`abs(exp.BIC - exp.BIC)`), cancellation in the two-sided p-value formula introduced by the
+> A2 fix above, and the observation that the two `Sim.*_FIT` methods behind the standing
+> `R CMD check` NOTE are unreachable dead code. All six are now **fixed**, with tests; the
+> package-origin NOTE is gone. Its "critical / undefined behaviour" framing of C2 did not
+> hold up — RcppArmadillo leaves bounds checking on, so the over-long-grid case raised
+> `Cube::operator(): index out of bounds` rather than writing out of bounds; the damaging
+> case was the silent one. **Still open: B2, B3, B4, B5, C3, C4, C5** and the input-validation
+> hardening (`f_check_y` accepts partial `NA`/`NaN`/`Inf`, after which `Volatility()` returns
+> a full plausible-looking series), which is a behaviour change and needs a separate decision.
 
 > **Independent cross-check (Codex).** The whole of this document — the 14 claims, the five
 > fixes and the tests — was re-audited read-only by `codex-cli 0.139.0` working from source
@@ -365,7 +378,7 @@ and make `f_check_y` reject `any(!is.finite(y))`.
 
 ## Tier 3 — silently wrong results in specific calls
 
-### C1. `pdf_Rcpp` / `cdf_Rcpp` with `is_log = TRUE` return the last regime, not the mixture — `src/MSgarch.h:397-401, 472-476`
+### C1. `pdf_Rcpp` / `cdf_Rcpp` with `is_log = TRUE` return the last regime, not the mixture — `src/MSgarch.h:397-401, 472-476` — **FIXED**
 
 ```cpp
 for (many::iterator it = specs.begin(); it != specs.end(); ++it) {
@@ -393,7 +406,7 @@ Not reachable from `PredPdf`/`PIT` (both always pass `FALSE` and take the log in
 are live methods on `spec$rcpp.func` and the flag is part of the C++ signature. Fix:
 accumulate into a scratch vector and take `log(out[i])`.
 
-### C2. `MSgarch::f_cdf_its` writes the first observation transposed — `src/MSgarch.h:497`
+### C2. `MSgarch::f_cdf_its` writes the first observation transposed — `src/MSgarch.h:497` — **FIXED**
 
 ```cpp
 tmp(ix, 0, s) = (*it)->spec_calc_cdf(x(ix, 0) / sig);   // t=0 block
