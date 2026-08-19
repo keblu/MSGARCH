@@ -4,6 +4,11 @@ Changes in Version 2.52
   o AIC/BIC now drop K-1 degrees of freedom per regime-constant parameter, not one
   o Saved specifications and fits (saveRDS/readRDS) are usable again: the Rcpp modules are rebuilt
   o predict() on an MCMC fit now averages over the posterior draws instead of returning the first draw
+  o Fixed a transposed cube write in the multi-regime in-sample CDF, which corrupted the first row of PIT(do.its = TRUE) and could overrun the buffer
+  o The is_log branches of the native mixture density and CDF now return the mixture instead of the last regime
+  o Two-sided p-values are evaluated on the lower tail, so they no longer cancel to zero for large statistics
+  o Removed the unreachable Sim methods for fit objects, which R CMD check flagged as unregistered
+  o Dropped the obsolete Rcpp:::LdFlags() call from src/Makevars
   o Added regression tests for all of the above
 Changes in Version 2.51
   o Fix warning: use of bitwise '|' with boolean operands
