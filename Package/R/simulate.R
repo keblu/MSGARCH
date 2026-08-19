@@ -175,19 +175,3 @@ Sim.MSGARCH_SPEC <- function(object, data = NULL, nahead = 1L,
   class(out) <- "MSGARCH_SIM"
   return(out)
 }
-
-Sim.MSGARCH_ML_FIT <- function(object, newdata = NULL, nahead = 1L,
-                               nsim = 1L,  nburn = 500L, seed = NULL, ...) {
-  data <- c(object$data, newdata)
-  out  <- Sim(object = object$spec, data = data, nahead = nahead,
-              nsim = nsim, par = object$par, nburn = nburn, seed = seed)
-  return(out)
-}
-
-Sim.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, nahead = 1L,
-                                 nsim = 1L, nburn = 500L, seed = NULL, ...) {
-  data <- c(object$data, newdata)
-  out  <- Sim(object = object$spec, data = data, nahead = nahead,
-              nsim = nsim, par = object$par, nburn = nburn, seed = seed)
-  return(out)
-}
