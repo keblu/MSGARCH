@@ -97,8 +97,14 @@ testthat::test_that("Pr(>|t|) is a two-sided p-value", {
 
   mCoef <- fit.sr$Inference$MatCoef
   testthat::expect_true(max(abs(mCoef[, "Pr(>|t|)"] -
-                                2 * (1 - stats::pnorm(abs(mCoef[, "t value"]))))) < 1e-12)
+                                2 * stats::pnorm(-abs(mCoef[, "t value"])))) < 1e-12)
   testthat::expect_true(all(mCoef[, "Pr(>|t|)"] >= 0 & mCoef[, "Pr(>|t|)"] <= 1))
+
+  # 2 * (1 - pnorm(abs(t))) cancels to exactly zero once abs(t) exceeds about 8.3,
+  # while the lower tail stays representable out to about 38
+  vLive <- abs(mCoef[, "t value"]) < 37
+  testthat::expect_true(any(abs(mCoef[vLive, "t value"]) > 9))
+  testthat::expect_true(all(mCoef[vLive, "Pr(>|t|)"] > 0))
 
 })
 
