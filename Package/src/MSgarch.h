@@ -494,7 +494,7 @@ inline arma::cube MSgarch::f_cdf_its(const NumericVector& theta,
   for (many::iterator it = specs.begin(); it != specs.end(); ++it) {
     sig = sqrt(vol[s].h);
     for (int ix = 0; ix < nx; ix++) {
-      tmp(ix, 0, s) = (*it)->spec_calc_cdf(x(ix, 0) / sig);  //
+      tmp(0, ix, s) = (*it)->spec_calc_cdf(x(ix, 0) / sig);  //
     }
     s++;
   }
