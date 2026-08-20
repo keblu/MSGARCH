@@ -85,7 +85,10 @@ UncVol.MSGARCH_SPEC <- function(object, par = NULL, ctr = list(), ...) {
                  do.its = FALSE,
                  nahead = ctr$nburn + ctr$nahead,
                  ctr = list(nsim = nsim))$vol
-  out <- mean(tmp[ctr$nburn:ctr$nahead])
+  # discard the first nburn horizons and keep the following nahead ones; the
+  # old expression, nburn:nahead, is a descending sequence under the shipped
+  # defaults and in general keeps part of the transient
+  out <- mean(tmp[seq.int(from = ctr$nburn + 1L, length.out = ctr$nahead)])
   return(out)
 }
 

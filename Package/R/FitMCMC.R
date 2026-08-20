@@ -148,6 +148,10 @@ FitMCMC.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
       par0 <- f_substitute_fixedpar(par0, spec$fixed.pars)
     }
     par0 <- f_unmapPar(par0, spec, do.plm = TRUE)
+    if (isTRUE(spec$fixed.pars.bool)) {
+      # as in FitML: the sampler works on the free parameters only
+      par0 <- f_remove_fixedpar(par0, spec$fixed.pars)
+    }
   }
   par    <- ctr$SamplerFUN(f_posterior = f_posterior, data = data_, spec = spec, par0 = par0, ctr = ctr)
   np     <- length(par0)
@@ -193,8 +197,15 @@ FitMCMC.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
       par <- f_add_regimeconstpar_matrix(par, spec$K, spec$label)
     }
   }
-  if(isTRUE(ctr$do.sort)){
-    par <- f_sort_par(spec, par)
+  if (isTRUE(ctr$do.sort)) {
+    if (isTRUE(spec$fixed.pars.bool)) {
+      # sorting relabels the regimes by unconditional variance, which would move
+      # a parameter fixed in one regime into another; the constraint wins
+      message("do.sort is ignored: constraint.spec$fixed ties parameters to ",
+              "specific regimes, which the identification sort would relabel.")
+    } else {
+      par <- f_sort_par(spec, par)
+    }
   }
   par <- coda::mcmc(par)
   ctr$par0 <- par0

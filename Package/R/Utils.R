@@ -174,8 +174,13 @@ f_check_y <- function(y) {
   if (!is.numeric(y)) {
     stop("y must be numeric")
   }
-  if (all(is.nan(y))) {
-    stop("nan dectected in y")
+  if (length(y) < 2L) {
+    stop("the data must contain at least two observations: the first one ",
+         "initialises the variance recursion and the likelihood is evaluated ",
+         "on the remainder.")
+  }
+  if (anyNA(y) || any(!is.finite(y))) {
+    stop("the data must not contain NA, NaN or infinite values.")
   }
   return(y)
 }
@@ -188,8 +193,8 @@ f_check_par <- function(spec, par) {
   if (!is.numeric(par)) {
     stop("par must be a numeric")
   }
-  if (all(is.nan(par))) {
-    stop("nan dectected in par")
+  if (anyNA(par) || any(!is.finite(par))) {
+    stop("par must not contain NA, NaN or infinite values.")
   }
   len.par <- length(spec$par0)
   if (is.vector(par)) {
@@ -337,6 +342,69 @@ f_match <- function(x, target) {
   return(toupper(substr(x, 1, 3)) == target)
 }
 
+# Combine a fit's data with newdata, keeping the time index of the original
+# series. Index and values must stay the same length: deriving the index from
+# the already-concatenated series and then appending length(newdata) further
+# points makes zooreg() recycle observations, so the model would be conditioned
+# on values that are not in the sample.
+f_combine_data <- function(data, newdata = NULL) {
+  if (is.null(newdata) || length(newdata) == 0L) {
+    return(data)
+  }
+  bIsTs  <- is.ts(data)
+  bIsZoo <- zoo::is.zoo(data)
+  vValues <- c(as.numeric(data), as.numeric(newdata))
+  if (!bIsTs && !bIsZoo) {
+    return(vValues)
+  }
+  if (bIsTs) {
+    # keep the original start and frequency; only the length changes
+    return(stats::ts(vValues, start = stats::start(data),
+                     frequency = stats::frequency(data)))
+  }
+  vIndex <- zoo::index(data)
+  n      <- length(vIndex)
+  dStep  <- if (n > 1L) vIndex[n] - vIndex[n - 1L] else 1
+  vIndex <- c(vIndex, vIndex[n] + dStep * seq_len(length(newdata)))
+  return(zoo::zoo(vValues, order.by = vIndex))
+}
+
+# Index for nahead points beyond the end of the series, advancing by the
+# series' own spacing. Adding 1:nahead to the last index value instead moves a
+# monthly series forward by whole years.
+f_future_index <- function(data, nahead) {
+  vIndex <- zoo::index(data)
+  n      <- length(vIndex)
+  dStep  <- if (is.ts(data)) {
+    1 / stats::frequency(data)
+  } else if (n > 1L) {
+    vIndex[n] - vIndex[n - 1L]
+  } else {
+    1
+  }
+  return(vIndex[n] + dStep * seq_len(nahead))
+}
+
+# Attach the time index of `data` to a result. `nahead = NULL` means the result
+# is in-sample and shares the index of `data`; otherwise it covers nahead points
+# beyond the end of the sample. For a ts the series is rebuilt from start and
+# frequency rather than round-tripped through zoo, whose index-regularity test
+# fails on the floating-point spacing of, say, a monthly series.
+f_index_result <- function(x, data, nahead = NULL) {
+  if (is.ts(data)) {
+    dFreq <- stats::frequency(data)
+    if (is.null(nahead)) {
+      return(stats::ts(x, start = stats::start(data), frequency = dFreq))
+    }
+    return(stats::ts(x, start = stats::tsp(data)[2L] + 1 / dFreq, frequency = dFreq))
+  }
+  if (zoo::is.zoo(data)) {
+    vIndex <- if (is.null(nahead)) zoo::index(data) else f_future_index(data, nahead)
+    return(zoo::zoo(x, order.by = vIndex))
+  }
+  return(x)
+}
+
 f_check_spec <- function(spec) {
   is.OK = tryCatch({
     spec$rcpp.func$get_sd()
@@ -406,7 +474,11 @@ f_rbindrep = function(mat, n) {
 f_check_parameterPriorMean <- function(prior.mean, vParNames) {
   if (any(!names(prior.mean) %in% vParNames)) {
     vWrongPars <- names(prior.mean)[!names(prior.mean) %in% vParNames]
-    stop(cat(paste("Wrong name in prior.mean:", vWrongPars)))
+    stop("Wrong name in prior.mean: ", paste(vWrongPars, collapse = ", "))
+  }
+  vMean <- unlist(prior.mean)
+  if (length(vMean) > 0L && (!is.numeric(vMean) || any(!is.finite(vMean)))) {
+    stop("Every entry of prior$mean must be a finite number.")
   }
   return(prior.mean)
 }
@@ -414,7 +486,11 @@ f_check_parameterPriorMean <- function(prior.mean, vParNames) {
 f_check_parameterPriorSd <- function(prior.sd, vParNames) {
   if (any(!names(prior.sd) %in% vParNames)) {
     vWrongPars <- names(prior.sd)[!names(prior.sd) %in% vParNames]
-    stop(cat(paste("Wrong name in prior.sd:", vWrongPars)))
+    stop("Wrong name in prior.sd: ", paste(vWrongPars, collapse = ", "))
+  }
+  vSd <- unlist(prior.sd)
+  if (length(vSd) > 0L && (!is.numeric(vSd) || any(!is.finite(vSd)) || any(vSd <= 0))) {
+    stop("Every entry of prior$sd must be a finite number strictly greater than zero.")
   }
   return(prior.sd)
 }

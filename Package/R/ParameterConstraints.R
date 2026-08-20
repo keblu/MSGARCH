@@ -1,14 +1,30 @@
 #################################################### fixed.pars ####
 
 f_check_parameterConstraints <- function(fixed.pars, vParNames) {
-  
+
   if (any(!names(fixed.pars) %in% vParNames)) {
     vWrongPars <- names(fixed.pars)[!names(fixed.pars) %in% vParNames]
-    stop(cat(paste("Wrong name in fixed.pars:", vWrongPars)))
+    stop("Wrong name in fixed.pars: ", paste(vWrongPars, collapse = ", "))
   }
-  
+
+  # Transition probabilities are named in vParNames but cannot be fixed: the
+  # starting-value routine splits fixed parameters by regime and hands them to a
+  # single-regime specification that has no P_i_j, and the prior correction in
+  # Kernel() indexes prior.mean, which only covers the within-regime
+  # coefficients, so the log-posterior would silently become NA.
+  vIsP <- grepl("^P_", names(fixed.pars))
+  if (any(vIsP)) {
+    stop("Transition probabilities cannot be fixed through constraint.spec$fixed: ",
+         paste(names(fixed.pars)[vIsP], collapse = ", "))
+  }
+
+  vFixed <- unlist(fixed.pars)
+  if (length(vFixed) > 0L && (!is.numeric(vFixed) || any(!is.finite(vFixed)))) {
+    stop("Every entry of constraint.spec$fixed must be a finite number.")
+  }
+
   return(fixed.pars)
-  
+
 }
 
 f_remove_fixedpar <- function(vPar, fixed.pars) {

@@ -89,7 +89,7 @@ State.MSGARCH_SPEC <- function(object, par, data, ...) {
     if (object$K > 1) {
       P <- TransMat(object = object, par = par[i, ], nahead = 1)
       if (isTRUE(object$is.mix)) {
-        P <- matrix(rep(P, object$K), nrow = object$K, ncol = object$K)
+        P <- matrix(rep(P, object$K), nrow = object$K, ncol = object$K, byrow = TRUE)
       }
       out$Viterbi[2:length(data), i] <- Viterbi(tmp$LL, P, object$K)
     } else {
