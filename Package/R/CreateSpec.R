@@ -200,6 +200,12 @@ CreateSpec <- function(variance.spec = list(model = c("sGARCH", "sGARCH")),
                        constraint.spec  = list(fixed = list(), regime.const = NULL),
                        prior = list(mean = list(), sd = list())) {
   
+  # whether the caller supplied these, as opposed to falling back on the
+  # two-regime defaults in the signature; only an explicit vector conflicts
+  # with expanding a single regime through switch.spec$K
+  bVarGiven  <- !missing(variance.spec)
+  bDistGiven <- !missing(distribution.spec)
+
   ## check
   variance.spec     <- f_check_variance_spec(variance.spec)
   distribution.spec <- f_check_distribution_spec(distribution.spec, length(variance.spec$model))
@@ -210,12 +216,18 @@ CreateSpec <- function(variance.spec = list(model = c("sGARCH", "sGARCH")),
   prior.sd          <- prior$sd
   
   if (!is.null(switch.spec$K)) {
-    if (length(variance.spec$model) > 1 | length(distribution.spec$model) > 1) {
+    if (length(switch.spec$K) != 1L || !is.numeric(switch.spec$K) ||
+        !is.finite(switch.spec$K) || switch.spec$K < 1 ||
+        switch.spec$K != round(switch.spec$K)) {
+      stop("switch.spec$K has to be a single positive whole number.")
+    }
+    if ((bVarGiven && length(variance.spec$model) > 1L) ||
+        (bDistGiven && length(distribution.spec$distribution) > 1L)) {
       stop("you can only use the variable K if you specified one
            regime in variance.spec and distribution.spec")
     } else {
-      variance.spec$model = rep(variance.spec$model, switch.spec$K)
-      distribution.spec$distribution = rep(distribution.spec$distribution, switch.spec$K)
+      variance.spec$model = rep(variance.spec$model[1L], switch.spec$K)
+      distribution.spec$distribution = rep(distribution.spec$distribution[1L], switch.spec$K)
     }
   }
   
@@ -309,7 +321,7 @@ CreateSpec <- function(variance.spec = list(model = c("sGARCH", "sGARCH")),
   }
   ## prior Sd
   if (length(prior.sd) >= 1) {
-    prior.sd <- f_check_parameterPriorMean(prior.sd, out$label)
+    prior.sd <- f_check_parameterPriorSd(prior.sd, out$label)
     out$prior.sd <- f_substitute_fixedpar(out$prior.sd, prior.sd)
     out$rcpp.func$set_sd(out$prior.sd)
   }

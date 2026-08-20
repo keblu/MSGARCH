@@ -15,6 +15,12 @@ f_nll <- function(vPw, data, spec, do.plm) {
     vPn <- f_add_regimeconstpar(vPn, spec$K, spec$label)
   }
 
+  # the working-to-natural map can overflow for extreme trial values; treat that
+  # as an infeasible point rather than letting the strict parameter check throw
+  if (anyNA(vPn) || any(!is.finite(vPn))) {
+    return(1e+10)
+  }
+
   dLLK <- Kernel(spec, vPn, data, log = TRUE, do.prior = FALSE)
 
   if (!is.finite(dLLK)) {

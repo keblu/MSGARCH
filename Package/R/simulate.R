@@ -126,9 +126,12 @@ Sim.MSGARCH_SPEC <- function(object, data = NULL, nahead = 1L,
       start <- start + nsim
       end   <- end + nsim
     }
-    draw  <- draw[-(1:nburn),,drop = FALSE]
-    state <- state[-(1:nburn),,drop = FALSE]
-    CondVol <- CondVol[-(1:nburn),,,drop = FALSE]
+    if (nburn > 0L) {
+      # 1:0 is c(1, 0), so the plain negative index would drop the first draw
+      draw  <- draw[-seq_len(nburn), , drop = FALSE]
+      state <- state[-seq_len(nburn), , drop = FALSE]
+      CondVol <- CondVol[-seq_len(nburn), , , drop = FALSE]
+    }
     rownames(draw) = rownames(state) = paste0("t=",1:nahead)
     colnames(draw) = colnames(state) =  paste0("Sim #",1:(nsim * nrow(par)))
     dimnames(CondVol)[[1]] = paste0("t=",1:nahead)
@@ -160,34 +163,12 @@ Sim.MSGARCH_SPEC <- function(object, data = NULL, nahead = 1L,
     }
     rownames(draw) = rownames(state) = paste0("h=",1:nahead)
     colnames(draw) = colnames(state) =  paste0("Sim #",1:(nsim * nrow(par)))
-    if(zoo::is.zoo(data)){
-      draw = zoo::zooreg(draw, order.by =  zoo::index(data)[length(data)]+(1:nahead))
-    }
-    if(is.ts(data)){
-      draw = zoo::zooreg(draw, order.by =  zoo::index(data)[length(data)]+(1:nahead))
-      draw = as.ts(draw)
-    }
+    draw <- f_index_result(draw, data, nahead)
   }
   out <- list()
   out$draw <- draw
   out$state <- state + 1
   out$CondVol <- CondVol
   class(out) <- "MSGARCH_SIM"
-  return(out)
-}
-
-Sim.MSGARCH_ML_FIT <- function(object, newdata = NULL, nahead = 1L,
-                               nsim = 1L,  nburn = 500L, seed = NULL, ...) {
-  data <- c(object$data, newdata)
-  out  <- Sim(object = object$spec, data = data, nahead = nahead,
-              nsim = nsim, par = object$par, nburn = nburn, seed = seed)
-  return(out)
-}
-
-Sim.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, nahead = 1L,
-                                 nsim = 1L, nburn = 500L, seed = NULL, ...) {
-  data <- c(object$data, newdata)
-  out  <- Sim(object = object$spec, data = data, nahead = nahead,
-              nsim = nsim, par = object$par, nburn = nburn, seed = seed)
   return(out)
 }

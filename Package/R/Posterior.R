@@ -14,6 +14,10 @@ f_posterior <- function(vPw, data, spec, PriorFun) {
     vPn <- f_add_regimeconstpar(vPn, spec$K, spec$label)
   }
 
+  if (anyNA(vPn) || any(!is.finite(vPn))) {
+    return(-1e10)
+  }
+
   dLLK <- Kernel(spec, vPn, data, log = TRUE, do.prior = TRUE) + sum(log(diag(abs(mJacob))))
 
   if (!is.finite(dLLK)) {

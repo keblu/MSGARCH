@@ -81,15 +81,7 @@ predict.MSGARCH_SPEC <- function(object, newdata = NULL, nahead = 1L,
 predict.MSGARCH_ML_FIT <- function(object, newdata = NULL, 
                                    nahead = 1L, do.return.draw = FALSE, 
                                    do.cumulative = FALSE, ctr = list(), ...) {
-  data <- c(object$data, newdata)
-  if(is.ts(object$data)){
-    if(is.null(newdata)){
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
-    } else {
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
-    }
-    data = as.ts(data)
-  }
+  data <- f_combine_data(object$data, newdata)
   out  <- f_CondVol(object = object$spec, par = object$par, data = data, nahead = nahead,
                     do.its = FALSE, do.cumulative = do.cumulative, ctr = ctr)
   if(!isTRUE(do.return.draw)){
@@ -103,15 +95,7 @@ predict.MSGARCH_ML_FIT <- function(object, newdata = NULL,
 #' @export
 predict.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, nahead = 1L, 
                                      do.return.draw = FALSE, do.cumulative = FALSE, ctr = list(), ...) {
-  data <- c(object$data, newdata)
-  if(is.ts(object$data)){
-    if(is.null(newdata)){
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
-    } else {
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
-    }
-    data = as.ts(data)
-  }
+  data <- f_combine_data(object$data, newdata)
   out  <- f_CondVol(object = object$spec, par = object$par, data = data, nahead = nahead,
                     do.its = FALSE, do.cumulative = do.cumulative, ctr = ctr)
   if(!isTRUE(do.return.draw)){

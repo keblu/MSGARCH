@@ -106,36 +106,58 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
   object  <- f_check_spec(object)
   data_    <- f_check_y(data)
   ctr     <- f_process_ctr(ctr)
+
+  if (!is.numeric(alpha) || length(alpha) < 1L || any(!is.finite(alpha)) ||
+      any(alpha <= 0) || any(alpha >= 1)) {
+    stop("alpha must contain finite probabilities strictly between 0 and 1.")
+  }
+  if (!is.numeric(nahead) || length(nahead) != 1L || !is.finite(nahead) ||
+      nahead < 1 || nahead != round(nahead)) {
+    stop("nahead must be a single positive whole number.")
+  }
+  if (!is.numeric(ctr$nmesh) || length(ctr$nmesh) != 1L || !is.finite(ctr$nmesh) ||
+      ctr$nmesh < 2 || ctr$nmesh != round(ctr$nmesh)) {
+    stop("ctr$nmesh must be a single whole number greater than or equal to two.")
+  }
+
   out     <- list()
   n.alpha <- length(alpha)
-  xmin    <- min(data_) - sd(data_)
-  xmax    <- max(data_) + sd(data_)
+  dSd     <- sd(data_)
+  if (!is.finite(dSd) || dSd <= 0) {
+    stop("the data have zero or undefined dispersion, so no evaluation grid ",
+         "can be built for the predictive distribution.")
+  }
+  xmin    <- min(data_) - dSd
+  xmax    <- max(data_) + dSd
   
   x     <- seq(from = xmin, to = xmax, length.out = ctr$nmesh)
   pdf_x <- PredPdf(object = object, par = par, x = x, data = data_, do.its = do.its, log = FALSE)
   cumul <- apply(pdf_x, 1L, cumsum) * (x[2L] - x[1L])
+
+  # The grid spans the observed range only, so it can miss part of the
+  # predictive distribution. Whatever mass falls outside it is unaccounted for,
+  # and if that exceeds the requested tail probability the quantile read off the
+  # grid is meaningless -- it is pinned to an endpoint rather than solved for.
+  dMissing <- 1 - min(cumul[nrow(cumul), ])
+  if (is.finite(dMissing) && dMissing > min(alpha)) {
+    warning("The evaluation grid covers only ",
+            format(100 * (1 - dMissing), digits = 4),
+            "% of the predictive distribution, which is less than the requested ",
+            "tail probability alpha = ", format(min(alpha), digits = 3),
+            ". VaR and ES are pinned to the grid boundary and should not be used. ",
+            "Use a longer sample, or widen the grid via ctr$nmesh and the data range.",
+            call. = FALSE)
+  }
   out   <- list()
   draw  <- NULL
   if (do.its == TRUE) {
     out$VaR <- matrix(NA, nrow = nrow(pdf_x), ncol = n.alpha)
     rownames(out$VaR) <-  paste0("t=",1:length(data_))
-    if(zoo::is.zoo(data)){
-      out$VaR = zoo::zooreg(out$VaR, order.by = zoo::index(data))
-    }
-    if(is.ts(data)){
-      out$VaR = zoo::zooreg(out$VaR, order.by = zoo::index(data))
-      out$VaR = as.ts(out$VaR)
-    }
+    out$VaR <- f_index_result(out$VaR, data)
   } else {
     out$VaR <- matrix(NA, nrow = nahead, ncol = n.alpha)
     rownames(out$VaR) <-  paste0("h=",1:nahead)
-    if(zoo::is.zoo(data)){
-      out$VaR = zoo::zooreg(out$VaR, order.by = zoo::index(data)[length(data)]+(1:nahead))
-    }
-    if(is.ts(data)){
-      out$VaR = zoo::zooreg(out$VaR, order.by = zoo::index(data)[length(data)]+(1:nahead))
-      out$VaR = as.ts(out$VaR)
-    }
+    out$VaR <- f_index_result(out$VaR, data, nahead)
   }
   for (n in 1:nrow(pdf_x)) {
     for (i in 1:n.alpha) {
@@ -157,23 +179,11 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
     if (do.its == TRUE) {
       out$ES <- matrix(NA, nrow = nrow(pdf_x), ncol = n.alpha)
       rownames(out$ES) <- paste0("t=",1:length(data_))
-      if(zoo::is.zoo(data)){
-        out$ES = zoo::zooreg(out$ES, order.by = zoo::index(data))
-      }
-      if(is.ts(data)){
-        out$ES = zoo::zooreg(out$ES, order.by = zoo::index(data))
-        out$ES = as.ts(out$ES)
-      }
+      out$ES <- f_index_result(out$ES, data)
     } else {
       out$ES <- matrix(NA, nrow = nahead, ncol = n.alpha)
       rownames(out$ES) <- paste0("h=",1:nahead)
-      if(zoo::is.zoo(data)){
-        out$ES = zoo::zooreg(out$ES, order.by = zoo::index(data)[length(data)]+(1:nahead))
-      }
-      if(is.ts(data)){
-        out$ES = zoo::zooreg(out$ES, order.by = zoo::index(data)[length(data)]+(1:nahead))
-        out$ES = as.ts(out$ES)
-      }
+      out$ES <- f_index_result(out$ES, data, nahead)
     }
     for (n in 1:nrow(pdf_x)) {
       for (i in 1:n.alpha) {
@@ -201,15 +211,7 @@ Risk.MSGARCH_SPEC <- function(object, par, data, alpha = c(0.01, 0.05), nahead =
 #' @export
 Risk.MSGARCH_ML_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
                                 do.es = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE,  ctr = list(), ...) {
-  data <- c(object$data, newdata)
-  if(is.ts(object$data)){
-    if(is.null(newdata)){
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
-    } else {
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
-    }
-    data = as.ts(data)
-  }
+  data <- f_combine_data(object$data, newdata)
   out  <- Risk(object = object$spec, par = object$par, data = data, alpha = alpha,
                do.es = do.es, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative, ctr = ctr)
   return(out)
@@ -219,15 +221,7 @@ Risk.MSGARCH_ML_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
 #' @export
 Risk.MSGARCH_MCMC_FIT <- function(object, newdata = NULL, alpha = c(0.01, 0.05),
                                   do.es = TRUE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
-  data <- c(object$data, newdata)
-  if(is.ts(object$data)){
-    if(is.null(newdata)){
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
-    } else {
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
-    }
-    data = as.ts(data)
-  }
+  data <- f_combine_data(object$data, newdata)
   out  <- Risk(object = object$spec, par = object$par, data = data, alpha = alpha,
                do.es = do.es, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative, ctr = ctr)
   return(out)

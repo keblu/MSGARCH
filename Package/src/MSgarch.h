@@ -279,8 +279,19 @@ inline void MSgarch::loadparam(const NumericVector& theta) {
   arma::vec Uvec(K);
   Uvec.fill(1);
   arma::mat foo = (I - as<arma::mat>(P_mat) + Umat).t();
-  
-  arma::vec delta = (foo).i() * Uvec;
+
+  // Stationary distribution of the chain. 'theta' is not restricted to proper
+  // stochastic matrices on every code path (the plain parameter mapping bounds
+  // each free transition probability separately, so a row can leave the
+  // simplex), and 'foo' is then singular. Fall back to the uniform
+  // distribution instead of throwing: 'calc_prior' rejects such a parameter
+  // vector, so the likelihood computed from it is discarded anyway.
+  arma::vec delta;
+  bool solved = arma::solve(delta, foo, Uvec, arma::solve_opts::no_approx);
+  if (!solved || !delta.is_finite()) {
+    delta.set_size(K);
+    delta.fill(1.0 / K);
+  }
   for(int i = 0; i < K; i++){
     P0(i) = delta(i);
   }
@@ -396,7 +407,7 @@ inline NumericVector MSgarch::f_pdf(const NumericVector& x,
   
   if (is_log) {
     for (int i = 0; i < nx; i++) {
-      out[i] = log(tmp[i]);
+      out[i] = log(out[i]);
     }
   }
   
@@ -471,7 +482,7 @@ inline NumericVector MSgarch::f_cdf(const NumericVector& x,
   
   if (is_log) {
     for (int i = 0; i < nx; i++) {
-      out[i] = log(tmp[i]);
+      out[i] = log(out[i]);
     }
   }
   
@@ -494,7 +505,7 @@ inline arma::cube MSgarch::f_cdf_its(const NumericVector& theta,
   for (many::iterator it = specs.begin(); it != specs.end(); ++it) {
     sig = sqrt(vol[s].h);
     for (int ix = 0; ix < nx; ix++) {
-      tmp(ix, 0, s) = (*it)->spec_calc_cdf(x(ix, 0) / sig);  //
+      tmp(0, ix, s) = (*it)->spec_calc_cdf(x(ix, 0) / sig);  //
     }
     s++;
   }
@@ -635,18 +646,28 @@ inline NumericMatrix MSgarch::calc_lndMat(const NumericVector& y) {
 
 //-------------------------------------  Hamilton filter
 //-------------------------------------//
+// Shift applied to a column of regime log densities before exponentiating.
+// Anchoring on the largest entry is the usual log-sum-exp device: the largest
+// exponent becomes exactly zero, so the sum can never overflow, and entries far
+// below it underflow to zero harmlessly. Anchoring on the smallest entry
+// instead (as this code once did) overflows to Inf, and hence to NaN after
+// normalisation, whenever the regimes' log densities differ by more than about
+// 1400 -- reachable with admissible parameters when one regime is very tight.
+inline double lse_shift(const NumericVector& lndCol) {
+  double max_lnd = max(lndCol);
+  return (R_FINITE(max_lnd) ? -max_lnd : 0.0);
+}
+
 inline double MSgarch::HamiltonFilter(const NumericMatrix& lndMat) {
   int n_step = lndMat.ncol();
-  double lnd = 0, min_lnd, delta, sum_tmp;
+  double lnd = 0, delta, sum_tmp;
   NumericVector Pspot, Ppred, lndCol, tmp;
   
   // first step
   Pspot = clone(P0);             // Prob(St | I(t)
   Ppred = matrixProd(Pspot, P);  // one-step-ahead Prob(St | I(t-1))
   lndCol = lndMat(_, 0);
-  min_lnd = min(lndCol),
-    delta =
-      ((min_lnd < LND_MIN) ? LND_MIN - min_lnd : 0);  // handle over/under-flows
+  delta = lse_shift(lndCol);
   tmp = Ppred *
     exp(lndCol + delta);  // unormalized one-step-ahead Prob(St | I(t))
   
@@ -657,9 +678,7 @@ inline double MSgarch::HamiltonFilter(const NumericMatrix& lndMat) {
     Pspot = tmp / sum_tmp;
     Ppred = matrixProd(Pspot, P);
     lndCol = lndMat(_, t);
-    min_lnd = min(lndCol),
-      delta = ((min_lnd < LND_MIN) ? LND_MIN - min_lnd
-                 : 0);  // handle over/under-flows
+    delta = lse_shift(lndCol);
     tmp = Ppred * exp(lndCol + delta);
   }
   sum_tmp = sum(tmp);
@@ -678,7 +697,7 @@ inline List MSgarch::f_get_Pstate(const NumericVector& theta,
   NumericMatrix lndMat = calc_lndMat(y);  // likelihood in each state
   
   int n_step = lndMat.ncol();
-  double lnd = 0, min_lnd, delta, sum_tmp;
+  double delta, sum_tmp;
   NumericVector Pspot, Ppred, lndCol, tmp;
   arma::mat PtmpSpot(n_step + 1, K);
   arma::mat PtmpPred(n_step + 2, K);
@@ -698,16 +717,13 @@ inline List MSgarch::f_get_Pstate(const NumericVector& theta,
     PtmpPred(1, i) = Ppred(i);
   }
   lndCol = lndMat(_, 0);
-  min_lnd = min(lndCol),
-    delta =
-      ((min_lnd < LND_MIN) ? LND_MIN - min_lnd : 0);  // handle over/under-flows
+  delta = lse_shift(lndCol);
   tmp = Ppred *
     exp(lndCol + delta);  // unormalized one-step-ahead Prob(St | I(t))
   
   // remaining steps
   for (int t = 1; t < n_step; t++) {
     sum_tmp = sum(tmp);
-    lnd += -delta + log(sum_tmp);  // increment loglikelihood
     Pspot = tmp / sum_tmp;
     Ppred = matrixProd(Pspot, P);
     for (int i = 0; i < K; i++) {
@@ -717,13 +733,10 @@ inline List MSgarch::f_get_Pstate(const NumericVector& theta,
       PtmpPred(t + 1, i) = Ppred(i);
     }
     lndCol = lndMat(_, t);
-    min_lnd = min(lndCol),
-      delta = ((min_lnd < LND_MIN) ? LND_MIN - min_lnd
-                 : 0);  // handle over/under-flows
+    delta = lse_shift(lndCol);
     tmp = Ppred * exp(lndCol + delta);
   }
   sum_tmp = sum(tmp);
-  lnd += -delta + log(sum_tmp);  // increment loglikelihood
   Pspot = tmp / sum_tmp;
   PLast = matrixProd(Pspot, P);
   

@@ -29,7 +29,7 @@ f_CondVol <- function(object, par, data, do.its = FALSE, nahead = 1L, do.cumulat
   vol <- sqrt(vol)
   draw <- NULL
   if (!isTRUE(do.its)) {
-    tmp    <- mean(vol[dim(PredProb)[1]])
+    tmp    <- mean(vol[dim(PredProb)[1], ])
     vol    <- vector(mode = "numeric", length = nahead)
     vol[1] <- tmp
     if (nahead > 1) {
@@ -41,13 +41,7 @@ f_CondVol <- function(object, par, data, do.its = FALSE, nahead = 1L, do.cumulat
       vol[2:nahead] = apply(draw[2:nahead,, drop = FALSE], 1, sd)
     }
     names(vol) <- paste0("h=", 1:nahead)
-    if(zoo::is.zoo(data)){
-      vol = zoo::zooreg(vol, order.by = zoo::index(data)[length(data)]+(1:nahead))
-    }
-    if(is.ts(data)){
-      vol = zoo::zooreg(vol, order.by = zoo::index(data)[length(data)]+(1:nahead))
-      vol = as.ts(vol)
-    }
+    vol <- f_index_result(vol, data, nahead)
   } else {
     draw <- NULL
     if (nrow(par.check) > 1) {
@@ -58,13 +52,7 @@ f_CondVol <- function(object, par, data, do.its = FALSE, nahead = 1L, do.cumulat
       vol <- vol[1:length(data_)]
     }
     names(vol) <- paste0("t=", 1:(length(data_)))
-    if(zoo::is.zoo(data)){
-      vol = zoo::zooreg(vol, order.by = zoo::index(data))
-    }
-    if(is.ts(data)){
-      vol = zoo::zooreg(vol, order.by = zoo::index(data))
-      vol = as.ts(vol)
-    }
+    vol <- f_index_result(vol, data)
   }
   out = list()
   class(vol) <- c("MSGARCH_CONDVOL",class(vol))

@@ -128,12 +128,20 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
   }
   optimizer <- ctr$OptimFUN(vPw, f_nll, spec, data_, ctr$do.plm)
   
+  if (inherits(optimizer, "try-error")) {
+    stop("FitML: the optimizer failed with: ", as.character(optimizer))
+  }
+  if (is.null(optimizer$value) || is.null(optimizer$par)) {
+    stop("FitML: OptimFUN must return a list with elements 'value' and 'par'.")
+  }
+
   llk <- -optimizer$value
-  
-  if (llk == 1e+10) {
-    str <- "FitML -> Error during optimization"
-    f_error(str)
-    stop()
+
+  # f_nll returns +1e10 when the likelihood cannot be evaluated, so a failed
+  # optimization comes back as llk = -1e10, not +1e10 as this test once assumed
+  if (!is.finite(llk) || llk <= -1e+10) {
+    stop("FitML: optimization failed; the log-likelihood could not be evaluated ",
+         "away from the starting values. Check the data and the specification.")
   }
   
   vPw <- optimizer$par
@@ -150,7 +158,11 @@ FitML.MSGARCH_SPEC <- function(spec, data, ctr = list()) {
   }
   
   par <- matrix(vPn, nrow = 1L, dimnames = list(NULL, names(vPn)))
-  par <- f_sort_par(spec, par)
+  if (!isTRUE(spec$fixed.pars.bool)) {
+    # see FitMCMC: the identification sort would relabel regimes and so break a
+    # parameter fixed in a particular one
+    par <- f_sort_par(spec, par)
+  }
   par <- as.vector(par)
   names(par) <- spec$label
   vPww <- f_unmapPar(par, spec, ctr$do.plm)

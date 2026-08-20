@@ -120,14 +120,7 @@ PredPdf.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
     }
     tmp <- tmp/nrow(par)
     rownames(tmp) <-  paste0("t=",1:length(data_))
-    if(zoo::is.zoo(data)){
-      tmp = zoo::zooreg(tmp, order.by = zoo::index(data))
-    }
-    if(is.ts(data)){
-      tmp = zoo::zooreg(tmp, order.by = zoo::index(data))
-      tmp = as.ts(tmp)
-      colnames(tmp) = rep("",ncol(tmp)) 
-    }
+    tmp <- f_index_result(tmp, data)
   } else {
     if (is.null(x)) {
       stop("x is NULL: x must be a vector or a matrix of size N x 1")
@@ -151,14 +144,7 @@ PredPdf.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
       }
     }
     rownames(tmp) <- paste0("h=",1:nahead)
-    if(zoo::is.zoo(data)){
-      tmp = zoo::zooreg(tmp, order.by = zoo::index(data)[length(data)]+(1:nahead))
-    }
-    if(is.ts(data)){
-      tmp = zoo::zooreg(tmp, order.by = zoo::index(data)[length(data)]+(1:nahead))
-      tmp = as.ts(tmp)
-      colnames(tmp) = rep("",ncol(tmp)) 
-    }
+    tmp <- f_index_result(tmp, data, nahead)
   }
   
   if (!isTRUE(ctr$do.return.draw)) {
@@ -183,15 +169,7 @@ PredPdf.MSGARCH_SPEC <- function(object, x = NULL, par = NULL, data = NULL,
 #' @export
 PredPdf.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
                                 log = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
-  data <- c(object$data, newdata)
-  if(is.ts(object$data)){
-    if(is.null(newdata)){
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
-    } else {
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
-    }
-    data = as.ts(data)
-  }
+  data <- f_combine_data(object$data, newdata)
   out  <- PredPdf(object = object$spec, x = x, par = object$par, data = data,
                log = log, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative, ctr = ctr)
   return(out)
@@ -201,15 +179,7 @@ PredPdf.MSGARCH_ML_FIT <- function(object, x = NULL, newdata = NULL,
 #' @export
 PredPdf.MSGARCH_MCMC_FIT <- function(object, x = NULL, newdata = NULL,
                                   log = FALSE, do.its = FALSE, nahead = 1L, do.cumulative = FALSE, ctr = list(), ...) {
-  data <- c(object$data, newdata)
-  if(is.ts(object$data)){
-    if(is.null(newdata)){
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data)))
-    } else {
-      data = zoo::zooreg(data, order.by =  c(zoo::index(data),zoo::index(data)[length(data)]+(1:length(newdata))))
-    }
-    data = as.ts(data)
-  }
+  data <- f_combine_data(object$data, newdata)
   out  <- PredPdf(object = object$spec, x = x, par = object$par, data = data,
                log = log, do.its = do.its, nahead = nahead, do.cumulative = do.cumulative, ctr = ctr)
   return(out)

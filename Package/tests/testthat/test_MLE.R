@@ -24,7 +24,7 @@ testthat::test_that("Estimation BIC", {
   est.BIC <- BIC(fit)
   exp.BIC <- 6841.1848542696416
   
-  testthat::expect_true(abs(exp.BIC - exp.BIC) < tol)
+  testthat::expect_true(abs(est.BIC - exp.BIC) < tol)
   
 })
 
